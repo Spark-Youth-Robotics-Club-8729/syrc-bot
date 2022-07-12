@@ -16,7 +16,7 @@ module.exports = {
         if (weatherData["cod"] == 200) {
             newEmbed = {
                 color: '#5F75DE',
-                title: "Weather of " + place.charAt(0).toUpperCase() + place.slice(1),
+                title: "Weather of " + loc.charAt(0).toUpperCase() + loc.slice(1),
                 description: weatherData["weather"][0]["main"],
                 fields: [
                     { name: "Temperature", value: (weatherData["main"]["temp"] - 273.15).toString(), inline: true },
