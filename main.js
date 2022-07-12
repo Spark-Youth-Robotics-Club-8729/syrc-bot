@@ -7,7 +7,7 @@ const mysql = require(`mysql`);
 // const syrcdb = mysql.createConnection({
 //     host: 'localhost',
 //     user: 'root',
-//     password: '8538950329292cinthu123!',
+//     password: '!',
 //     database: `syrcbot`
 // })
 
