@@ -1,5 +1,7 @@
-module.exports = (Discord, client, guildMember) => {
+const { execute } = require("../../commands/ping");
 
+module.exports = (Discord, client, member) => {
+    console.log("oghsoih");
     const channelId = '990272152584462426';
     const targetChannelId = '985690065583898694';
 
@@ -9,5 +11,3 @@ module.exports = (Discord, client, guildMember) => {
 
     channel.send(message);
 }
-
-

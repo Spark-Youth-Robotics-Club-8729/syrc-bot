@@ -1,7 +1,7 @@
 module.exports = (Discord, client, message) => {
     const prefix = '!';
     if (!message.content.startsWith(prefix) || message.author.bot) return;
-
+    if (message.channel.id != 984570241193496646 && message.channel.id != 988138295869468743) return;
     const args = message.content.slice(prefix.length).split(/ +/);
     const cmd = args.shift().toLowerCase();
 

@@ -12,8 +12,9 @@ module.exports = {
                 { name: 'help', value: 'Gives a list of commands', inline: true },
                 { name: 'ping', value: 'pong!', inline: true },
                 { name: 'clear (value)', value: 'clears a certain amount of messages', inline: true },
-                { name: 'kick (@username)', value: 'kicks mentioned user' },
-                { name: 'ban (@username)', value: 'bans mentioned user' },
+                { name: 'kick (@username)', value: 'kicks mentioned user', inline: true },
+                { name: 'ban (@username)', value: 'bans mentioned user', inline: true },
+                { name: 'joke', value: 'sends a joke', inline: true },
             )
             .setImage('https://i.postimg.cc/dQjY2YNS/Screen-Shot-2022-03-07-at-9-00-41-PM.png')
         message.channel.send({ embeds: [newEmbed] });
