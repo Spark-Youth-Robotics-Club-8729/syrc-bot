@@ -4,6 +4,7 @@
   "description": " ",
   "main": "main.js",
   "scripts": {
+    "start": "node main.js",
     "test": "echo \"No test specified\""
   },
   "author": "Dhesrune",
