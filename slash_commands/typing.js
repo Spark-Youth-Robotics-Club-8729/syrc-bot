@@ -85,7 +85,6 @@ module.exports = {
             if (message.author.id === interaction.member.user.id) {
                 let endTime = new Date();
                 let timeAllotted = (endTime - startTime)/1000;
-                console.log(timeAllotted);
                 let sim = stringSimilarity.compareTwoStrings(rawtext, message.content);
                 let accuracy = Math.round(sim*100);
                 let words = rawtext.length / 5
