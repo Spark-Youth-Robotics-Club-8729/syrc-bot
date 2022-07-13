@@ -1,5 +1,3 @@
-const { execute } = require("../../commands/ping");
-
 module.exports = (Discord, client, member) => {
     console.log("oghsoih");
     const channelId = '990272152584462426';

@@ -1,5 +1,3 @@
-const { execute } = require("./ping");
-
 module.exports = {
     name: 'clear',
     description: "Clear messages!",

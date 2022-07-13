@@ -1,5 +1,4 @@
 const { MessageSelectMenu } = require("discord.js");
-const { execute } = require("./ping");
 const Discord = require("discord.js");
 
 module.exports = {

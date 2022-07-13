@@ -1,6 +1,5 @@
 const ms = require('ms');
 const Discord = require("discord.js");
-const { execute } = require("./ping");
 module.exports = {
     name: 'mute',
     description: "Mute a member",
