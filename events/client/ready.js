@@ -6,7 +6,7 @@ module.exports = async (Discord, client) => {
             name: "!help | SYRC",
             type: "STREAMING",
             url: "https://www.youtube.com/watch?v=8SIiGo3TVKE",
-            details: "sparky :)"
+            details: "sparky :D"
         }]
     });
 }
