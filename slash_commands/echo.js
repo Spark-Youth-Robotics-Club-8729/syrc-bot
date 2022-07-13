@@ -2,7 +2,6 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { CommandInteraction } = require("discord.js");
 
 module.exports = {
-    // channel, title, description - colour, footer, image url
     ...new SlashCommandBuilder()
         .setName("echo")
         .setDescription("echoes your message in a certain channel")
@@ -20,9 +19,9 @@ module.exports = {
         ),
     run: async (client, interaction, args) => {
         const msg = interaction.options.getString("text");
-        const chnl = interaction.options.getChannel("channel");
-        if (chnl) {
-            chnl.send(msg);
+        const channel = interaction.options.getChannel("channel");
+        if (channel) {
+            channel.send(msg);
         } else {
             interaction.followUp({ content: msg });
         }
