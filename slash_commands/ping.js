@@ -10,10 +10,10 @@ module.exports = {
             color: '#5F75DE',
             title: "Pong! 🏓",
             fields: [
-                { name: "Latency", value: `${Date.now() - interaction.createdTimestamp} ms`, inline: true },
+                { name: "Latency", value: `${Math.abs(Date.now() - interaction.createdTimestamp)} ms`, inline: true },
                 { name: "API Latency", value: `${Math.round(client.ws.ping)} ms`, inline: true }
             ]
         }
-        interaction.followUp({ embeds: [newEmbed] });
+        await interaction.followUp({ embeds: [newEmbed] });
     }
 }

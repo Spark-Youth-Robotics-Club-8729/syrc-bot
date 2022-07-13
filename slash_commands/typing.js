@@ -68,8 +68,8 @@ module.exports = {
             }
         });
         const embed = new Discord.MessageEmbed().setImage('attachment://output.jpg').setTimestamp(new Date()).setColor('#5F75DE');
-        interaction.followUp({ content: "Type the following text as fast as you can!" });
         const channel = interaction.channel;
+        await interaction.followUp({ content: "Type the following text as fast as you can!" });
         const msg = await channel.send(":white_circle::white_circle::white_circle:");
         await sleep(1000);
         await msg.edit(":red_circle::white_circle::white_circle:");
@@ -81,7 +81,7 @@ module.exports = {
         let startTime = new Date();
         await msg.delete();
         const collector = new Discord.MessageCollector(channel, m => m.author.id === interaction.member.user.id, { time: 10000 });
-        collector.on('collect', message => {
+        collector.on('collect', async message => {
             if (message.author.id === interaction.member.user.id) {
                 let endTime = new Date();
                 let timeAllotted = (endTime - startTime)/1000;
@@ -118,11 +118,9 @@ module.exports = {
                         { name: "Gross wpm", value: grosswpm.toFixed(2).toString() },
                     ]
                 }
-                message.reply({ embeds: [newEmbed] });
+                await channel.send({ embeds: [newEmbed] });
+                collector.stop();
             }
         })
-        collector.on('end', collected => {
-            console.log(`Finished execution`);
-        });
     }
 };

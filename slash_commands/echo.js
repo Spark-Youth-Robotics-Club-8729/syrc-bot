@@ -21,9 +21,9 @@ module.exports = {
         const msg = interaction.options.getString("text");
         const channel = interaction.options.getChannel("channel");
         if (channel) {
-            channel.send(msg);
+            await channel.send(msg);
         } else {
-            interaction.followUp({ content: msg });
+            await interaction.followUp({ content: msg });
         }
     }
 };

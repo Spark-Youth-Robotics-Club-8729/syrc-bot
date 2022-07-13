@@ -30,13 +30,13 @@ module.exports = {
                     { name: "Wind Speed", value: weatherData["wind"]["speed"].toString() + " m/s", inline: true },
                 ]
             }
-            interaction.followUp({ embeds: [newEmbed] });
+            await interaction.followUp({ embeds: [newEmbed] });
         } catch {
             const newEmbed = {
                 color: '#5F75DE',
                 description: "City not found :("
             }
-            interaction.followUp({ embeds: [newEmbed] });
+            await interaction.followUp({ embeds: [newEmbed] });
         }
     }
 } 
