@@ -69,7 +69,7 @@ module.exports = {
         });
         const embed = new Discord.MessageEmbed().setImage('attachment://output.jpg').setTimestamp(new Date()).setColor('#5F75DE');
         const channel = interaction.channel;
-        await interaction.followUp({ content: "Type the following text as fast as you can!" });
+        await interaction.reply({ content: "Type the following text as fast as you can!" });
         const msg = await channel.send(":white_circle::white_circle::white_circle:");
         await sleep(1000);
         await msg.edit(":red_circle::white_circle::white_circle:");

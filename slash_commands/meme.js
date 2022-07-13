@@ -20,7 +20,7 @@ module.exports = {
                 .setColor("#5F75DE")
                 .setTimestamp()
                 .setImage(`${post.url}`)
-            await interaction.followUp({ embeds: [newEmbed] });
+            await interaction.reply({ embeds: [newEmbed] });
         });
     }
 }

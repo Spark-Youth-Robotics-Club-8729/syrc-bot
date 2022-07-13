@@ -22,10 +22,10 @@ module.exports = {
         const channel = interaction.options.getChannel("channel");
         if (channel) {
             await channel.send(msg);
-            await interaction.followUp({ content: "Echo successful!" });
+            await interaction.reply({ content: "Echo successful!" , ephemeral: true });
         } else {
             await interaction.channel.send(msg);
-            await interaction.followUp({ content: "Echo successful!" });
+            await interaction.reply({ content: "Echo successful!" , ephemeral: true });
         }
     }
 };

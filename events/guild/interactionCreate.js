@@ -1,6 +1,6 @@
 module.exports = async (Discord, client, interaction) => {
     if (interaction.isCommand()) {
-        await interaction.deferReply({ ephemeral: false }).catch(() => { });
+        // await interaction.deferReply({ ephemeral: false }).catch(() => { });
         const cmd = client.slashCommands.get(interaction.commandName);
         if (!cmd)
             return interaction.followUp({ content: "An error has occured " });
@@ -19,7 +19,7 @@ module.exports = async (Discord, client, interaction) => {
 
     // Context Menu Handling
     if (interaction.isContextMenu()) {
-        await interaction.deferReply({ ephemeral: false });
+        // await interaction.deferReply({ ephemeral: false });
         const command = client.slashCommands.get(interaction.commandName);
         if (command) command.run(client, interaction);
     }

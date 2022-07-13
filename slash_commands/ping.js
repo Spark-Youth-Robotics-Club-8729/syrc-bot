@@ -14,6 +14,6 @@ module.exports = {
                 { name: "API Latency", value: `${Math.round(client.ws.ping)} ms`, inline: true }
             ]
         }
-        await interaction.followUp({ embeds: [newEmbed] });
+        await interaction.reply({ embeds: [newEmbed] });
     }
 }

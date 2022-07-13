@@ -69,9 +69,9 @@ module.exports = {
         }
         try {
             channel.send({ embeds: [newEmbed] });
-            await interaction.followUp({ content: "Embed created successfully!" });
+            await interaction.reply({ content: "Embed created successfully!" , ephemeral: true });
         } catch {
-            await interaction.followUp({ content: "Error creating embed" });
+            await interaction.reply({ content: "Error creating embed" , ephemeral: true });
         }
     }
 };
