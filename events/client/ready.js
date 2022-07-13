@@ -1,4 +1,4 @@
-module.exports = (Discord, client) => {
+module.exports = async (Discord, client) => {
     console.log('Bot is online!');
     client.user.setPresence({
         status: "online",
