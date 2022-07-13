@@ -22,8 +22,10 @@ module.exports = {
         const channel = interaction.options.getChannel("channel");
         if (channel) {
             await channel.send(msg);
+            await interaction.followUp({ content: "Echo successful!" });
         } else {
-            await interaction.followUp({ content: msg });
+            await interaction.channel.send(msg);
+            await interaction.followUp({ content: "Echo successful!" });
         }
     }
 };
