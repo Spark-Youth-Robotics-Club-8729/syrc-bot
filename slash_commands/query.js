@@ -1,6 +1,12 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { CommandInteraction } = require("discord.js");
 
+async function dbquery() {
+    syrcdb.connect(function (err) {
+        
+    }
+}
+
 module.exports = {
     ...new SlashCommandBuilder()
         .setName("query")
