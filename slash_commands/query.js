@@ -1,11 +1,14 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { CommandInteraction } = require("discord.js");
+const mysql = require(`mysql2`);
+const Discord = require("discord.js")
 
-async function dbquery() {
-    syrcdb.connect(function (err) {
-        
-    }
-}
+const syrcdb = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '!',
+    database: `syrcbot`
+});
 
 module.exports = {
     ...new SlashCommandBuilder()
@@ -50,23 +53,29 @@ module.exports = {
         if (target.permissions.has("ADMINISTRATOR")) {
             console.log("HI");
             const func = interaction.options.getString("function");
-            if (func == "テーブルを表示") {
-                await interaction.reply({ content: syrcdb.query(`SELECT * FROM pg_catalog.pg_tables WHERE schemaname != 'pg_catalog' AND schemaname != 'information_schema'`) });
-            } else if (func == "テーブルを作成する") {
-                await interaction.reply({ content: syrcdb.query(`no`) });
-            } else if (func == "テーブルを削除") {
-                await interaction.reply({ content: syrcdb.query(`DROP TABLE ${interaction.options.getString("field1")}`) });
-            } else if (func == "表を表示") {
-                await interaction.reply({ content: syrcdb.query(`SELECT * FROM ${interaction.options.getString("field1")}'`) });
-            } else if (func == "値を挿入") {
-                await interaction.reply({ content: syrcdb.query(`INSERT INTO ${interaction.options.getString("field1")} VALUES ('${interaction.options.getString("field2")}')'`) });
-            } else if (func == "値を更新") {
-                await interaction.reply({ content: syrcdb.query(`UPDATE ${interaction.options.getString("field1")} SET ${interaction.options.getString("field2")} = ('${interaction.options.getString("field3")}')`) });
-            } else if (func == "値を削除") {
-                await interaction.reply({ content: syrcdb.query(`DELETE FROM ${interaction.options.getString("field1")} WHERE ${interaction.options.getString("field2")} ='${interaction.options.getString("field3")}'`) });
-            } else if (func == "カスタム") {
-                await interaction.reply({ content: syrcdb.query(`${interaction.options.getString("field1")}`) });
-            }
+            syrcdb.connect(function (err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    if (func == "テーブルを表示") {
+                        await interaction.reply({ content: syrcdb.query(`SELECT * FROM pg_catalog.pg_tables WHERE schemaname != 'pg_catalog' AND schemaname != 'information_schema'`) });
+                    } else if (func == "テーブルを作成する") {
+                        await interaction.reply({ content: syrcdb.query(`no`) });
+                    } else if (func == "テーブルを削除") {
+                        await interaction.reply({ content: syrcdb.query(`DROP TABLE ${interaction.options.getString("field1")}`) });
+                    } else if (func == "表を表示") {
+                        await interaction.reply({ content: syrcdb.query(`SELECT * FROM ${interaction.options.getString("field1")}'`) });
+                    } else if (func == "値を挿入") {
+                        await interaction.reply({ content: syrcdb.query(`INSERT INTO ${interaction.options.getString("field1")} VALUES ('${interaction.options.getString("field2")}')'`) });
+                    } else if (func == "値を更新") {
+                        await interaction.reply({ content: syrcdb.query(`UPDATE ${interaction.options.getString("field1")} SET ${interaction.options.getString("field2")} = ('${interaction.options.getString("field3")}')`) });
+                    } else if (func == "値を削除") {
+                        await interaction.reply({ content: syrcdb.query(`DELETE FROM ${interaction.options.getString("field1")} WHERE ${interaction.options.getString("field2")} ='${interaction.options.getString("field3")}'`) });
+                    } else if (func == "カスタム") {
+                        await interaction.reply({ content: syrcdb.query(`${interaction.options.getString("field1")}`) });
+                    }
+                }
+            });
         } else {
             await interaction.reply({ content: "Not cool enough, cry about it", ephemeral: true });
         }

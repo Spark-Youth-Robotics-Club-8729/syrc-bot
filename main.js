@@ -6,7 +6,7 @@ const mysql = require(`mysql2`);
 
 // to fix heroku porting issues
 var express = require('express');
-var app     = express();
+var app = express();
 
 app.set('port', (process.env.PORT || 5000));
 
