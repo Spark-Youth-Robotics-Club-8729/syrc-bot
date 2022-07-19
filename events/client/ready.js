@@ -1,5 +1,6 @@
 // const mysql = require(`mysql2`);
-const Discord = require("discord.js")
+const Discord = require("discord.js");
+require("dotenv").config();
 
 module.exports = async (Discord, client) => {
     console.log('Bot is online!');
@@ -13,7 +14,7 @@ module.exports = async (Discord, client) => {
             details: "sparky :D"
         }]
     });
-
+    // password: Xy8YRRSDOTMaxP9e
     //Checking database, and sending reminder for meetings
     // var interval = setInterval(function () {
 

@@ -1,9 +1,9 @@
 const Discord = require('discord.js');
-const config = require('./config.json')
 const { Client, Intents } = require('discord.js');
 const client = new Discord.Client({ partials: ["MESSAGE", "CHANNEL", "REACTION"], intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS] });
 // const mysql = require('mysql2')
-const pg = require('pg')
+const pg = require('pg');
+require("dotenv").config();
 
 // to fix heroku porting issues
 var express = require('express');
@@ -18,18 +18,23 @@ app.get('/', function(request, response) {
     console.log('App is running, server is listening on port ', app.get('port'));
 });
 
-const conf = {
-    user: 'jddzirgvzabydk',
-    database: 'd8769d1odt2t1p',
-    password: 'ada356e77388afa00b7301630272c81e9ba305a00cfd04aef1a8edd4c8714a74',
-    host: 'ec2-54-87-179-4.compute-1.amazonaws.com',
-    port: 5432,
-    max: 10,
-    idleTimeoutMillis: 50000,
-};
-var pool = new pg.Pool(conf);
-module.exports = pool;
+const pgClient = new pg.Client({
+    connectionString: process.env.HEROKU_URI,
+    ssl: {
+        require: false,
+        rejectUnauthorized: false
+    }
+});
 
+pgClient.connect((err) => {
+    if (err) {
+        console.log(err);
+    } else {
+        console.log("Connected to PostgreSQL!");
+    }
+});
+
+module.exports = pgClient;
 
 // const syrcdb = mysql.createConnection({
 //     host: 'localhost',
@@ -46,6 +51,38 @@ module.exports = pool;
 //     }
 // });
 
+client.on('messageReactionAdd', async (reaction, user) => {
+    if (reaction.message) await reaction.message.fetch();
+    if (reaction) await reaction.fetch();
+    if (user.bot) return;
+    if (!reaction.message.guild) return;
+    if (reaction.message.id === '998976564261834752') {
+        if (reaction.emoji.name === 'tongtong') {
+            await reaction.message.guild.members.cache.get(user.id).roles.add('998677484381941862')
+        }
+        console.log(reaction.emoji.name);
+        if (reaction.emoji.name === '💀') {
+            await reaction.message.guild.members.cache.get(user.id).roles.add('998677509954601041')
+        }
+    }
+});
+
+client.on('messageReactionRemove', async (reaction, user) => {
+    if (reaction.message) await reaction.message.fetch();
+    if (reaction) await reaction.fetch();
+    if (user.bot) return;
+    if (!reaction.message.guild) return;
+    if (reaction.message.id === '998976564261834752') {
+        if (reaction.emoji.name === 'tongtong') {
+            await reaction.message.guild.members.cache.get(user.id).roles.remove('998677484381941862')
+        }
+        console.log(reaction.emoji.name);
+        if (reaction.emoji.name === '💀') {
+            await reaction.message.guild.members.cache.get(user.id).roles.remove('998677509954601041')
+        }
+    }
+});
+
 client.commands = new Discord.Collection();
 client.events = new Discord.Collection();
 client.slashCommands = new Discord.Collection();
@@ -59,4 +96,4 @@ process.on('unhandledRejection', error => {
 	console.error('Unhandled promise rejection:', error);
 });
 
-client.login(config.token);
+client.login(process.env.TOKEN);

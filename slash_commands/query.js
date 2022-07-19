@@ -2,7 +2,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { CommandInteraction } = require("discord.js");
 // const mysql = require(`mysql2`);
 const Discord = require("discord.js")
-var pool = require('../main.js')
+const pgClient = require("../main");
 
 // const syrcdb = mysql.createConnection({
 //     host: 'localhost',
@@ -50,34 +50,103 @@ module.exports = {
                 .setRequired(false)
         ),
     run: async (client, interaction, args) => {
-        console.log(pool)
         const target = interaction.guild.members.cache.get(interaction.user.id);
         if (target.permissions.has("ADMINISTRATOR")) {
-            console.log("HI");
             const func = interaction.options.getString("function");
-            pool.connect(async function (err, client) {
-                if (err) {
-                    console.log(err);
-                } else {
-                    if (func == "テーブルを表示") {
-                        await interaction.reply({ content: client.query(`SELECT * FROM pg_catalog.pg_tables WHERE schemaname != 'pg_catalog' AND schemaname != 'information_schema'`) });
-                    } else if (func == "テーブルを作成する") {
-                        await interaction.reply({ content: client.query(`no`) });
-                    } else if (func == "テーブルを削除") {
-                        await interaction.reply({ content: client.query(`DROP TABLE ${interaction.options.getString("field1")}`) });
-                    } else if (func == "表を表示") {
-                        await interaction.reply({ content: client.query(`SELECT * FROM ${interaction.options.getString("field1")}'`) });
-                    } else if (func == "値を挿入") {
-                        await interaction.reply({ content: client.query(`INSERT INTO ${interaction.options.getString("field1")} VALUES ('${interaction.options.getString("field2")}')'`) });
-                    } else if (func == "値を更新") {
-                        await interaction.reply({ content: client.query(`UPDATE ${interaction.options.getString("field1")} SET ${interaction.options.getString("field2")} = ('${interaction.options.getString("field3")}')`) });
-                    } else if (func == "値を削除") {
-                        await interaction.reply({ content: client.query(`DELETE FROM ${interaction.options.getString("field1")} WHERE ${interaction.options.getString("field2")} ='${interaction.options.getString("field3")}'`) });
-                    } else if (func == "カスタム") {
-                        await interaction.reply({ content: client.query(`${interaction.options.getString("field1")}`) });
+            if (func == "show_tables") {
+                pgClient.query(`SELECT * FROM pg_catalog.pg_tables WHERE schemaname != 'pg_catalog' AND schemaname != 'information_schema'`, async (err, res) => {
+                    if (!err) {
+                        if (res.rows.length == 0) {
+                            await interaction.reply({ content: "\`\`\`Empty response\`\`\`" });
+                        } else {
+                            await interaction.reply({ content: `\`\`\`${JSON.stringify(res.rows)}\`\`\`` });
+                        }
+                    } else {
+                        console.log(err.message);
+                        await interaction.reply({ content: `\`\`\`Error\`\`\`` });
                     }
-                }
-            });
+                })
+            } else if (func == "create_table") {
+                await interaction.reply({ content: "Use custom for that merci bowcup" });
+            } else if (func == "delete_table") {
+                pgClient.query(`DROP TABLE ${interaction.options.getString("field1")}`, async (err, res) => {
+                    if (!err) {
+                        if (res.rows.length == 0) {
+                            await interaction.reply({ content: "\`\`\`Empty response\`\`\`" });
+                        } else {
+                            await interaction.reply({ content: `\`\`\`${JSON.stringify(res.rows)}\`\`\`` });
+                        }
+                    } else {
+                        console.log(err.message);
+                        await interaction.reply({ content: `\`\`\`Error\`\`\`` });
+                    }
+                })
+            } else if (func == "show_table") {
+                pgClient.query(`SELECT * FROM ${interaction.options.getString("field1")}`, async (err, res) => {
+                    if (!err) {
+                        if (res.rows.length == 0) {
+                            await interaction.reply({ content: "\`\`\`Empty response\`\`\`" });
+                        } else {
+                            await interaction.reply({ content: `\`\`\`${JSON.stringify(res.rows)}\`\`\`` });
+                        }
+                    } else {
+                        console.log(err.message);
+                        await interaction.reply({ content: `\`\`\`Error\`\`\`` });
+                    }
+                })
+            } else if (func == "insert_value") {
+                pgClient.query(`INSERT INTO ${interaction.options.getString("field1")} VALUES ('${interaction.options.getString("field2")}')`, async (err, res) => {
+                    if (!err) {
+                        if (res.rows.length == 0) {
+                            await interaction.reply({ content: "\`\`\`Empty response\`\`\`" });
+                        } else {
+                            await interaction.reply({ content: `\`\`\`${JSON.stringify(res.rows)}\`\`\`` });
+                        }
+                    } else {
+                        console.log(err.message);
+                        await interaction.reply({ content: `\`\`\`Error\`\`\`` });
+                    }
+                })
+            } else if (func == "update_value") {
+                pgClient.query(`UPDATE ${interaction.options.getString("field1")} SET ${interaction.options.getString("field2")} = ('${interaction.options.getString("field3")}')`, async (err, res) => {
+                    if (!err) {
+                        if (res.rows.length == 0) {
+                            await interaction.reply({ content: "\`\`\`Empty response\`\`\`" });
+                        } else {
+                            await interaction.reply({ content: `\`\`\`${JSON.stringify(res.rows)}\`\`\`` });
+                        }
+                    } else {
+                        console.log(err.message);
+                        await interaction.reply({ content: `\`\`\`Error\`\`\`` });
+                    }
+                })
+            } else if (func == "delete_value") {
+                pgClient.query(`DELETE FROM ${interaction.options.getString("field1")} WHERE ${interaction.options.getString("field2")} ='${interaction.options.getString("field3")}'`, async (err, res) => {
+                    if (!err) {
+                        if (res.rows.length == 0) {
+                            await interaction.reply({ content: "\`\`\`Empty response\`\`\`" });
+                        } else {
+                            await interaction.reply({ content: `\`\`\`${JSON.stringify(res.rows)}\`\`\`` });
+                        }
+                    } else {
+                        console.log(err.message);
+                        await interaction.reply({ content: `\`\`\`Error\`\`\`` });
+                    }
+                })
+            } else if (func == "custom") {
+                pgClient.query(`${interaction.options.getString("field1")}`, async (err, res) => {
+                    if (!err) {
+                        if (res.rows.length == 0) {
+                            await interaction.reply({ content: "\`\`\`Empty response\`\`\`" });
+                        } else {
+                            await interaction.reply({ content: `\`\`\`${JSON.stringify(res.rows)}\`\`\`` });
+                        }
+                    } else {
+                        console.log(err.message);
+                        await interaction.reply({ content: `\`\`\`Error\`\`\`` });
+                    }
+                })
+            }
         } else {
             await interaction.reply({ content: "Not cool enough, cry about it", ephemeral: true });
         }

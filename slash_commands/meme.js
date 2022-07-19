@@ -20,6 +20,7 @@ module.exports = {
                 .setColor("#5F75DE")
                 .setTimestamp()
                 .setImage(`${post.url}`)
+                .setURL(`https://www.reddit.com/${post.permalink}`)
             await interaction.reply({ embeds: [newEmbed] });
         });
     }

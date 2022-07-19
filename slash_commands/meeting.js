@@ -48,7 +48,7 @@ module.exports = {
         //             .setColor("#5F75DE")
         //             .setDescription(`Taking place on ${datetime}`)
         //         client.channels.cache.get(`997527933415592016`).send({ embeds: [newEmbed] });
-        //         interaction.followUp(`Meeting created`);
+        //         interaction.reply(`Meeting created`);
         //     }
         // });
     }
