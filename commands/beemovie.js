@@ -16,7 +16,6 @@ module.exports = {
         let cnt = 0;
         console.log("SHEEESH");
         var interval = setInterval (function () {
-            // use the message's channel (TextChannel) to send a new message
             message.channel.send(lines[cnt]).catch(console.error);
             cnt += 1;
         }, 1 * 10000); 

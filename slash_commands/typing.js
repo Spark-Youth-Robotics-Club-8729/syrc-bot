@@ -1,9 +1,10 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { CommandInteraction } = require("discord.js");
+const { CommandInteraction, MessageActionRow, MessageSelectMenu } = require("discord.js");
 const stringSimilarity = require("string-similarity");
 const Jimp = require("jimp");
 const fs = require("fs");
 const Discord = require('discord.js');
+const pgClient = require("../main");
 
 function marginalize(text, margin) {
     let output = [];
@@ -32,6 +33,18 @@ function marginalize(text, margin) {
     }
 }
 
+function store_typing_data(typinglb) {
+    pgClient.query(`TRUNCATE TABLE typinglb`);
+    for (let i = 0; i < typinglb.length; i++) {
+        let score = typinglb[i];
+        let text = score["text"].replaceAll("'", "''");
+        console.log(text);
+        pgClient.query(`INSERT INTO typinglb(wpm, member_id, accuracy, text, time, gross_wpm, date) VALUES ('${score["wpm"]}', '${score["member_id"]}', '${score["accuracy"]}', '${text}', '${score["time"]}', '${score["gross_wpm"]}', '${score["date"]}')`);
+    }
+    console.log("STORED TYPING DATA");
+}
+
+
 async function addText(lines) {
     const image = await Jimp.read("assets/spooderman.jpg");
     const w = image.bitmap.width;
@@ -50,76 +63,197 @@ function sleep(ms) {
 }
 
 module.exports = {
-    // channel, title, description - colour, footer, image url
     ...new SlashCommandBuilder()
         .setName("typing")
-        .setDescription("typing practice to warm up those fingies"),
+        .setDescription("typing practice to warm up those fingies")
+        .addStringOption(option => 
+            option
+                .setName("leaderboard")
+                .setDescription("view the top scores of the server!")
+                .setRequired(false)
+                .addChoices(
+                    { name: 'view', value: 'view_lb' },
+                )
+        ),
     run: async (client, interaction, args) => {
-        let rawtext = "";
-        fs.readFile('./assets/texts.txt', 'utf8', (err, data) => {
-            if (err) {
-                console.error(err);
-            } else {
-                const texts = data.split('|');
-                rawtext = texts[Math.floor(Math.random()*texts.length)];
-                console.log("TEXT:\n" + rawtext);
-                const lines = marginalize(rawtext, 33);
-                addText(lines);
-            }
-        });
-        const embed = new Discord.MessageEmbed().setImage('attachment://output.jpg').setTimestamp(new Date()).setColor('#5F75DE');
-        const channel = interaction.channel;
-        await interaction.reply({ content: "Type the following text as fast as you can!" });
-        const msg = await channel.send(":white_circle::white_circle::white_circle:");
-        await sleep(1000);
-        await msg.edit(":red_circle::white_circle::white_circle:");
-        await sleep(1000);
-        await msg.edit(":red_circle::yellow_circle::white_circle:");
-        await sleep(1000);
-        await msg.edit(":red_circle::yellow_circle::green_circle:");
-        await channel.send({ embeds: [embed], files: ['./output.jpg'] });
-        let startTime = new Date();
-        await msg.delete();
-        const collector = new Discord.MessageCollector(channel, m => m.author.id === interaction.member.user.id, { time: 10000 });
-        collector.on('collect', async message => {
-            if (message.author.id === interaction.member.user.id) {
-                let endTime = new Date();
-                let timeAllotted = (endTime - startTime)/1000;
-                let sim = stringSimilarity.compareTwoStrings(rawtext, message.content);
-                let accuracy = Math.round(sim*100);
-                let words = rawtext.length / 5
-                let minutes = timeAllotted / 60;
-                let grosswpm = words / minutes;
-                let adjwpm = grosswpm * sim;
-                let colour = 'c381fd'; // purple
-                if (adjwpm < 50) { // red
-                    colour = '#f2626b';
-                } else if (adjwpm >= 50 && adjwpm < 70) { // orange
-                    colour = '#feba4f';
-                } else if (adjwpm >= 70 && adjwpm < 85) { // yellow
-                    colour = '#ffea7f';
-                } else if (adjwpm >= 85 && adjwpm < 100) { // lime
-                    colour = '#89e077';
-                } else if (adjwpm >= 100 && adjwpm < 115) { // cyan
-                    colour = '#89f3f1';
-                } else if (adjwpm >= 115 && adjwpm < 130) { // blue
-                    colour = '#03a4e9';
+        if (interaction.options.getString("leaderboard") == "view_lb") {
+            pgClient.query(`SELECT * FROM typinglb`, async (err, res) => {
+                if (!err) {
+                    var typinglb = res.rows;
+                    console.log("FETCHED TYPINGLB:");
+                    console.log(typinglb);
+                    if (typinglb.length == 0) {
+                        let newEmbed = {
+                            title: `SYRC's Typing Leaderboard`,
+                            description: `*it's a bit empty in here...*\n*~mind filling me up? 🥺*`,
+                            color: '#5F75DE',
+                            timestamp: new Date()
+                        }
+                        await interaction.reply({ embeds: [newEmbed] });
+                    } else {
+                        let options = [];
+                        for (let i = 0; i < typinglb.length; i++) {
+                            let user = client.users.cache.get(typinglb[i]['member_id']);
+                            options.push({
+                                label: typinglb[i]['wpm'].toString() + " wpm | " + user.username,
+                                value: (i+1).toString(),
+                                description: "View details"
+                            })
+                        }
+                        const row = new MessageActionRow()
+                            .addComponents(
+                                new MessageSelectMenu()
+                                    .setCustomId('placement')
+                                    .setPlaceholder('Choose score to view details...')
+                                    .addOptions(options)
+                            )
+                        let newEmbed = {
+                            title: `SYRC's Typing Leaderboard`,
+                            description: `Scores with the best speeds gets shown here!`,
+                            color: '#5F75DE',
+                            timestamp: new Date(),
+                            fields: []
+                        }
+                        for (let i = 0; i < typinglb.length; i++) {
+                            let user = client.users.cache.get(typinglb[i]['member_id']);
+                            let details = "**Member: **" + user.username + "\n**Date: **" + typinglb[i]['date'];
+                            newEmbed.fields.push({ name: "#" + (i+1).toString() + " - " + typinglb[i]['wpm'].toString() + " wpm", value: details, inline: false });
+                        }
+                        await interaction.reply({ embeds: [newEmbed], components: [row] });
+                    }
+                } else {
+                    throw error;
                 }
-                let newEmbed = {
-                    title: `You just typed ${adjwpm.toFixed(2)} WPM!`,
-                    description: `*\"${rawtext}\"*`,
-                    color: colour,
-                    timestamp: new Date(),
-                    fields: [
-                        { name: "Accuracy", value: accuracy.toFixed(2).toString() + "%" },
-                        { name: "Word count", value: rawtext.split(' ').length.toString() },
-                        { name: "Time taken", value: timeAllotted.toFixed(2).toString() + " seconds" },
-                        { name: "Gross wpm", value: grosswpm.toFixed(2).toString() },
-                    ]
+            })
+        } else {
+            let rawtext = "";
+            fs.readFile('./assets/texts.txt', 'utf8', (err, data) => {
+                if (err) {
+                    console.error(err);
+                } else {
+                    const texts = data.split('|');
+                    rawtext = texts[Math.floor(Math.random()*texts.length)];
+                    console.log("TEXT:\n" + rawtext);
+                    const lines = marginalize(rawtext, 33);
+                    addText(lines);
                 }
-                await channel.send({ embeds: [newEmbed] });
-                collector.stop();
-            }
-        })
+            });
+            const embed = new Discord.MessageEmbed().setImage('attachment://output.jpg').setTimestamp(new Date()).setColor('#5F75DE');
+            const channel = interaction.channel;
+            await interaction.reply({ content: "Type the following text as fast as you can!" });
+            const msg = await channel.send(":white_circle::white_circle::white_circle:");
+            await sleep(1000);
+            await msg.edit(":red_circle::white_circle::white_circle:");
+            await sleep(1000);
+            await msg.edit(":red_circle::yellow_circle::white_circle:");
+            await sleep(1000);
+            await msg.edit(":red_circle::yellow_circle::green_circle:");
+            await channel.send({ embeds: [embed], files: ['./output.jpg'] });
+            let startTime = new Date();
+            await msg.delete();
+            const collector = new Discord.MessageCollector(channel, m => m.author.id === interaction.member.user.id, { time: 10000 });
+            collector.on('collect', async message => {
+                if (message.author.id === interaction.member.user.id) {
+                    let endTime = new Date();
+                    let timeAllotted = (endTime - startTime)/1000;
+                    let sim = stringSimilarity.compareTwoStrings(rawtext, message.content);
+                    let accuracy = Math.round(sim*100);
+                    let words = rawtext.length / 5
+                    let minutes = timeAllotted / 60;
+                    let grosswpm = words / minutes;
+                    let adjwpm = grosswpm * sim;
+                    let colour = 'c381fd'; // purple
+                    if (adjwpm < 50) { // red
+                        colour = '#f2626b';
+                    } else if (adjwpm >= 50 && adjwpm < 70) { // orange
+                        colour = '#feba4f';
+                    } else if (adjwpm >= 70 && adjwpm < 85) { // yellow
+                        colour = '#ffea7f';
+                    } else if (adjwpm >= 85 && adjwpm < 100) { // lime
+                        colour = '#89e077';
+                    } else if (adjwpm >= 100 && adjwpm < 115) { // cyan
+                        colour = '#89f3f1';
+                    } else if (adjwpm >= 115 && adjwpm < 130) { // blue
+                        colour = '#03a4e9';
+                    }
+                    let newEmbed = {
+                        title: `You just typed ${adjwpm.toFixed(2)} WPM!`,
+                        description: `*\"${rawtext}\"*`,
+                        color: colour,
+                        timestamp: new Date(),
+                        fields: [
+                            { name: "Accuracy", value: accuracy.toFixed(2).toString() + "%" },
+                            { name: "Word count", value: rawtext.split(' ').length.toString() },
+                            { name: "Time taken", value: timeAllotted.toFixed(2).toString() + " seconds" },
+                            { name: "Gross wpm", value: grosswpm.toFixed(2).toString() },
+                        ]
+                    }
+                    await channel.send({ embeds: [newEmbed] });
+                    pgClient.query(`SELECT * FROM typinglb`, async (err, res) => {
+                        if (!err) {
+                            var typinglb = res.rows;
+                            if (typinglb == undefined || typinglb.length == 0) {
+                                typinglb = [{
+                                    "wpm": adjwpm.toFixed(2), 
+                                    "member_id": interaction.member.user.id.toString(), 
+                                    "accuracy": accuracy.toFixed(2).toString(),
+                                    "text": rawtext,
+                                    "time": timeAllotted.toFixed(2).toString(),
+                                    "gross_wpm": grosswpm.toFixed(2).toString(),
+                                    "date": new Date().toUTCString().substring(5)
+                                }];
+                                let newEmbed = {
+                                    title: `Your score took the #1 spot on the leaderboard! :tada:`,
+                                    description: `Wow, good job! Do /typing leaderboard to see your score!`,
+                                    color: '#5ecc71',
+                                    timestamp: new Date()
+                                }
+                                await channel.send({ embeds: [newEmbed] })
+                            } else {
+                                let position = -1;
+                                let userWPM = -1;
+                                for (let i = 0; i < typinglb.length; i++) {
+                                    if (typinglb[i]["wpm"] < adjwpm.toFixed(2)) {
+                                        position = i;
+                                    }
+                                    if (typinglb[i]["member_id"] == interaction.member.user.id.toString()) {
+                                        userWPM = typinglb[i]["wpm"];
+                                    }
+                                }
+                                if (position != -1 && userWPM < adjwpm.toFixed(2)) {
+                                    typinglb.splice(position, 0, {
+                                        "wpm": adjwpm.toFixed(2), 
+                                        "member_id": interaction.member.user.id.toString(), 
+                                        "accuracy": accuracy.toFixed(2).toString(),
+                                        "text": rawtext,
+                                        "time": timeAllotted.toFixed(2).toString(),
+                                        "gross_wpm": grosswpm.toFixed(2).toString(),
+                                        "date": new Date().toUTCString().substring(5)
+                                    });
+                                    for (let j = typinglb.length-1; j >= 0; j--) {
+                                        if (typinglb[j]["wpm"] == userWPM) {
+                                            typinglb.splice(j, 1);
+                                            break;
+                                        }
+                                    }
+                                    let newEmbed = {
+                                        title: `Your score took the #${position+1} spot on the leaderboard! :tada:`,
+                                        description: `Wow, good job! Do /typing leaderboard to see your score!`,
+                                        color: '#5ecc71',
+                                        timestamp: new Date()
+                                    }
+                                    await channel.send({ embeds: [newEmbed] })
+                                }
+                            }
+                            store_typing_data(typinglb);
+                            collector.stop();
+                        } else {
+                            throw err;
+                        }
+                    })
+                }
+            })
+            fs.unlinkSync('./output.jpg');
+        }
     }
 };

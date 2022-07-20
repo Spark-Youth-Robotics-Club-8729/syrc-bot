@@ -3,7 +3,7 @@ const { MessageEmbed } = require('discord.js');
 
 module.exports = {
     name: 'roles',
-    description: "all commands of the bot",
+    description: "reaction roles?????",
     execute(client, message, args, Discord) {
         console.log("hi")
         if (message.member.roles.cache.some(role => role.name === 'Lead')) {
