@@ -25,28 +25,29 @@ module.exports = async (Discord, client) => {
                 var date = new Date();
                 for (i in syrc.rows) {
                     console.log(syrc.rows[i].start_time - date.getTime() / 1000);
-                    if (syrc.rows[i].start_time - date.getTime() / 1000 < 605 && syrc.rows[i].start_time - date.getTime() / 1000 > 595) {
-                        let role = syrc.rows[i].subteam_id.toString();
+                    let role = syrc.rows[i].subteam_id.toString();
+                    let msg_link = syrc.rows[i].msg_link;
+                    if (syrc.rows[i].start_time - date.getTime() / 1000 < 0) {
+                        pgClient.query(`DELETE FROM meetings WHERE start_time = '${syrc.rows[i].start_time}'`);
+                    } else if (syrc.rows[i].start_time - date.getTime() / 1000 < 605 && syrc.rows[i].start_time - date.getTime() / 1000 > 595) {
                         const newEmbed = new Discord.MessageEmbed()
                             .setTitle(`Reminder!`)
                             .setColor("#5F75DE")
-                            .setDescription(`<@&${role}> meeting in 10 MINUTES`)
+                            .setDescription(`<@&${role}> meeting in 10 MINUTES\n**[Meeting Message](${msg_link})**`)
                         client.channels.cache.get(`997528503396335737`).send({ embeds: [newEmbed] });
-                        syrcdb.query(`DELETE FROM meetings WHERE start_time = ${syrc.rows[i].start_time}`);
+                        pgClient.query(`DELETE FROM meetings WHERE start_time = '${syrc.rows[i].start_time}'`);
                     } else if (syrc.rows[i].start_time - date.getTime() / 1000 > 3595 && syrc.rows[i].start_time - date.getTime() / 1000 < 3605) {
-                        let role = syrc.rows[i].subteam_id.toString();
                         const newEmbed = new Discord.MessageEmbed()
                             .setTitle(`Reminder!`)
                             .setColor("#5F75DE")
-                            .setDescription(`<@&${role}> meeting in 1 HOUR`)
+                            .setDescription(`<@&${role}> meeting in 1 HOUR\n**[Meeting Message](${msg_link})**`)
                         client.channels.cache.get(`997528503396335737`).send({ embeds: [newEmbed] });
                     } else if (syrc.rows[i].start_time - date.getTime() / 1000 > 86395 && syrc.rows[i].start_time - date.getTime() / 1000 < 86405) {
 
-                        let role = syrc.rows[i].subteam_id.toString();
                         const newEmbed = new Discord.MessageEmbed()
                             .setTitle(`Reminder!`)
                             .setColor("#5F75DE")
-                            .setDescription(`<@&${role}> meeting tommorow!`)
+                            .setDescription(`<@&${role}> meeting tommorow!\n**[Meeting Message](${msg_link})**`)
                         client.channels.cache.get(`997528503396335737`).send({ embeds: [newEmbed] });
                     }
                 }

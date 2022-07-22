@@ -10,6 +10,9 @@ module.exports = {
         .setName("boost")
         .setDescription("𝔹𝕆𝕆𝕆𝕆𝕆𝕆𝕆𝕆𝕆𝕆𝕆𝕆𝕆𝕆𝕊𝕋"),
     run: async (client, interaction, args) => {
+        if (!interaction.member.voice.channel) {
+            return interaction.reply("You need to be in a VC to use this command");
+        }
 		const queue = await client.player.createQueue(interaction.guild);
 		if (!queue) {
             let newEmbed = {

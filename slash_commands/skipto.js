@@ -16,6 +16,9 @@ module.exports = {
                 .setRequired(true)
         ),
     run: async (client, interaction, args) => {
+        if (!interaction.member.voice.channel) {
+            return interaction.reply("You need to be in a VC to use this command");
+        }
         const queue = client.player.getQueue(interaction.guildId)
 		if (!queue) {
             let newEmbed = {

@@ -10,6 +10,9 @@ module.exports = {
         .setName("queue")
         .setDescription("displays the song queue"),
     run: async (client, interaction, args) => {
+        if (!interaction.member.voice.channel) {
+            return interaction.reply("You need to be in a VC to use this command");
+        }
         const row = new MessageActionRow()
                             .addComponents(
                                 new MessageButton()
