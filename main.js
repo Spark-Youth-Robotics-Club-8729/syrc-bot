@@ -53,6 +53,8 @@ module.exports = pgClient;
 // });
 
 client.on('messageReactionAdd', async (reaction, user) => {
+
+    console.log("HI");
     if (reaction.message) await reaction.message.fetch();
     if (reaction) await reaction.fetch();
     if (user.bot) return;
@@ -66,9 +68,12 @@ client.on('messageReactionAdd', async (reaction, user) => {
             await reaction.message.guild.members.cache.get(user.id).roles.add('998677509954601041')
         }
     }
-});
+}
+)
 
 client.on('messageReactionRemove', async (reaction, user) => {
+
+    console.log("HI");
     if (reaction.message) await reaction.message.fetch();
     if (reaction) await reaction.fetch();
     if (user.bot) return;
@@ -82,7 +87,8 @@ client.on('messageReactionRemove', async (reaction, user) => {
             await reaction.message.guild.members.cache.get(user.id).roles.remove('998677509954601041')
         }
     }
-});
+}
+)
 
 client.commands = new Discord.Collection();
 client.events = new Discord.Collection();
