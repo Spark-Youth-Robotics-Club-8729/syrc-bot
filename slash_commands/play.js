@@ -44,10 +44,8 @@ module.exports = {
                 requestedBy: interaction.user,
                 searchEngine: QueryType.AUTO
             })
-
             if (result.tracks.length === 0)
                 return interaction.reply("No results")
-            
             const song = result.tracks[0]
             await queue.addTrack(song)
             embed

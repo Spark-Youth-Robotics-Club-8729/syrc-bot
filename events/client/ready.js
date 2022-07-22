@@ -1,5 +1,6 @@
 // const mysql = require(`mysql2`);
 const Discord = require("discord.js");
+const pgClient = require("../../main");
 require("dotenv").config();
 
 module.exports = async (Discord, client) => {
@@ -16,52 +17,40 @@ module.exports = async (Discord, client) => {
     });
     
     //Checking database, and sending reminder for meetings
-    // var interval = setInterval(function () {
+    var interval = setInterval(async function () {
+        await pgClient.query(`SELECT * FROM meetings`, (err, syrc) => {
+            if (err) {
+                throw err;
+            } else {
+                var date = new Date();
+                for (i in syrc.rows) {
+                    console.log(syrc.rows[i].start_time - date.getTime() / 1000);
+                    if (syrc.rows[i].start_time - date.getTime() / 1000 < 605 && syrc.rows[i].start_time - date.getTime() / 1000 > 595) {
+                        let role = syrc.rows[i].subteam_id.toString();
+                        const newEmbed = new Discord.MessageEmbed()
+                            .setTitle(`Reminder!`)
+                            .setColor("#5F75DE")
+                            .setDescription(`<@&${role}> meeting in 10 MINUTES`)
+                        client.channels.cache.get(`997528503396335737`).send({ embeds: [newEmbed] });
+                        syrcdb.query(`DELETE FROM meetings WHERE start_time = ${syrc.rows[i].start_time}`);
+                    } else if (syrc.rows[i].start_time - date.getTime() / 1000 > 3595 && syrc.rows[i].start_time - date.getTime() / 1000 < 3605) {
+                        let role = syrc.rows[i].subteam_id.toString();
+                        const newEmbed = new Discord.MessageEmbed()
+                            .setTitle(`Reminder!`)
+                            .setColor("#5F75DE")
+                            .setDescription(`<@&${role}> meeting in 1 HOUR`)
+                        client.channels.cache.get(`997528503396335737`).send({ embeds: [newEmbed] });
+                    } else if (syrc.rows[i].start_time - date.getTime() / 1000 > 86395 && syrc.rows[i].start_time - date.getTime() / 1000 < 86405) {
 
-    //     const syrcdb = mysql.createConnection({
-    //         host: 'localhost',
-    //         user: 'root',
-    //         password: '!',
-    //         database: `syrcbot`
-    //     })
-
-    //     syrcdb.connect(function (err) {
-    //         syrcdb.query(`SELECT * FROM syrcbot.meetings`, (err, syrc) => {
-    //             if (err) {
-    //                 console.log(err);
-    //             } else {
-    //                 var date = new Date();
-    //                 for (i in syrc) {
-    //                     console.log(syrc[i].StartTime - date.getTime() / 1000)
-    //                     if (syrc[i].StartTime - date.getTime() / 1000 < 605 && syrc[i].StartTime - date.getTime() / 1000 > 595) {
-    //                         let role = syrc[i].Subteam.toString();
-    //                         const newEmbed = new Discord.MessageEmbed()
-    //                             .setTitle(`Reminder!`)
-    //                             .setColor("#5F75DE")
-    //                             .setDescription(`<@&${role}> meeting in 10 MINUTES`)
-    //                         client.channels.cache.get(`997528503396335737`).send({ embeds: [newEmbed] });
-    //                         syrcdb.query(`DELETE FROM meetings WHERE StartTime = ${syrc[i].StartTime}`);
-    //                     } else if (syrc[i].StartTime - date.getTime() / 1000 > 3595 && syrc[i].StartTime - date.getTime() / 1000 < 3605) {
-
-    //                         let role = syrc[i].Subteam.toString();
-    //                         const newEmbed = new Discord.MessageEmbed()
-    //                             .setTitle(`Reminder!`)
-    //                             .setColor("#5F75DE")
-    //                             .setDescription(`<@&${role}> meeting in 1 HOUR`)
-    //                         client.channels.cache.get(`997528503396335737`).send({ embeds: [newEmbed] });
-    //                     } else if (syrc[i].StartTime - date.getTime() / 1000 > 86395 && syrc[i].StartTime - date.getTime() / 1000 < 86405) {
-
-    //                         let role = syrc[i].Subteam.toString();
-    //                         const newEmbed = new Discord.MessageEmbed()
-    //                             .setTitle(`Reminder!`)
-    //                             .setColor("#5F75DE")
-    //                             .setDescription(`<@&${role}> meeting tommorow!`)
-    //                         client.channels.cache.get(`997528503396335737`).send({ embeds: [newEmbed] });
-    //                     }
-    //                 }
-    //             }
-    //         })
-    //     });
-
-    // }, 10000);
+                        let role = syrc.rows[i].subteam_id.toString();
+                        const newEmbed = new Discord.MessageEmbed()
+                            .setTitle(`Reminder!`)
+                            .setColor("#5F75DE")
+                            .setDescription(`<@&${role}> meeting tommorow!`)
+                        client.channels.cache.get(`997528503396335737`).send({ embeds: [newEmbed] });
+                    }
+                }
+            }
+        })
+    }, 10000);
 }

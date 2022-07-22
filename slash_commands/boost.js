@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { CommandInteraction, MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
+const { CommandInteraction, MessageEmbed } = require("discord.js");
 const ytdl = require('ytdl-core');
 const ytSearch = require('yt-search');
 const { joinVoiceChannel, createAudioPlayer, createAudioResource } =  require("@discordjs/voice");
@@ -7,11 +7,11 @@ const { QueryType } = require("discord-player")
 
 module.exports = {
     ...new SlashCommandBuilder()
-        .setName("leave")
-        .setDescription("leaves the voice channel and clears the queue"),
+        .setName("boost")
+        .setDescription("𝔹𝕆𝕆𝕆𝕆𝕆𝕆𝕆𝕆𝕆𝕆𝕆𝕆𝕆𝕆𝕊𝕋"),
     run: async (client, interaction, args) => {
-        const queue = client.player.getQueue(interaction.guildId)
-        if (!queue) {
+		const queue = await client.player.createQueue(interaction.guild);
+		if (!queue) {
             let newEmbed = {
                 description: "There are no songs in the queue",
                 color: '#5F75DE',
@@ -19,11 +19,13 @@ module.exports = {
             }
             return await interaction.reply({ embeds: [newEmbed] });
         }
-		queue.destroy();
         let newEmbed = {
-            description: "See you next time~",
-            color: '#5F75DE',
+            description: `**BOOSTED TO ${queue.volume + 200}**`,
+            color: '#5F75DE'
         }
-        await interaction.reply({ embeds: [newEmbed] });
+        await queue.setVolume(queue.volume + 200);
+        await interaction.reply({
+            embeds: [newEmbed]
+        })
     }
 }

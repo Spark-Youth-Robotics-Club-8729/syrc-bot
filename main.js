@@ -37,6 +37,14 @@ pgClient.connect((err) => {
 
 module.exports = pgClient;
 
+function initdb() {
+    pgClient.query(`CREATE TABLE IF NOT EXISTS modrole (role_id varchar(32) primary key)`);
+    pgClient.query(`CREATE TABLE IF NOT EXISTS typinglb (wpm varchar(8) primary key, member_id varchar(32), accuracy varchar(8), text varchar(1024), time varchar(8), gross_wpm varchar(8), date varchar(32))`)
+    pgClient.query(`CREATE TABLE IF NOT EXISTS meetings (start_time varchar(32) primary key, subteam_id varchar(32), notes varchar(1024))`)
+}
+
+initdb();
+
 // const syrcdb = mysql.createConnection({
 //     host: 'localhost',
 //     user: 'root',

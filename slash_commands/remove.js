@@ -7,8 +7,14 @@ const { QueryType } = require("discord-player")
 
 module.exports = {
     ...new SlashCommandBuilder()
-        .setName("leave")
-        .setDescription("leaves the voice channel and clears the queue"),
+        .setName("remove")
+        .setDescription("removes a track from the queue")
+        .addNumberOption(option =>
+            option
+                .setName('tracknumber')
+                .setDescription('track number to remove')
+                .setRequired(true)
+        ),
     run: async (client, interaction, args) => {
         const queue = client.player.getQueue(interaction.guildId)
         if (!queue) {
@@ -19,10 +25,12 @@ module.exports = {
             }
             return await interaction.reply({ embeds: [newEmbed] });
         }
-		queue.destroy();
+        const trackNum = interaction.options.getNumber("tracknumber");
+		const track = queue.remove(trackNum - 1);
         let newEmbed = {
-            description: "See you next time~",
+            description: `**[${track.title}](${track.url})** has been removed from the queue`,
             color: '#5F75DE',
+            timestamp: new Date()
         }
         await interaction.reply({ embeds: [newEmbed] });
     }
