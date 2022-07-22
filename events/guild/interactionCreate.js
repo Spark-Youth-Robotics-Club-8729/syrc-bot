@@ -1,4 +1,6 @@
+const { CommandInteraction, MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
 const pgClient = require("../../main");
+const queueFile = require("../../slash_commands/queue");
 
 module.exports = async (Discord, client, interaction) => {
     if (interaction.isCommand()) {
@@ -42,6 +44,82 @@ module.exports = async (Discord, client, interaction) => {
                     throw err;
                 }
             });
+        }
+    } else if (interaction.isButton()) {
+        if (interaction.customId == "queue_previouspage") {
+            const row = new MessageActionRow()
+                            .addComponents(
+                                new MessageButton()
+                                    .setCustomId('queue_previouspage')
+                                    .setStyle('PRIMARY')
+                                    .setEmoji('<a:leftarrow:998601346355822642>'),
+                                new MessageButton()
+                                    .setCustomId('queue_nextpage')
+                                    .setStyle('PRIMARY')
+                                    .setEmoji('<a:rightarrow:998601359555297371>')
+                            )
+            const queue = client.player.getQueue(interaction.guildId)
+            const totalPages = Math.ceil(queue.tracks.length / 10) || 1;
+            let embed = interaction.message.embeds[0];
+            let page = parseInt(embed.footer.text.split(' ')[1])-1;
+            if (page - 1 >= 0) {
+                page -= 1;
+            }
+            const queueString = queue.tracks.slice(page * 10, page * 10 + 10).map((song, i) => {
+                return `**${page * 10 + i + 1}.** \`[${song.duration}]\` ${song.title} -- <@${song.requestedBy.id}>`
+            }).join("\n")
+            const currentSong = queue.current
+            await interaction.update({
+                embeds: [
+                    new MessageEmbed()
+                        .setDescription(`**Currently Playing**\n` + 
+                        (currentSong ? `\`[${currentSong.duration}]\` ${currentSong.title} -- <@${currentSong.requestedBy.id}>` : "None") +
+                        `\n\n**Queue**\n${queueString}`
+                        )
+                        .setFooter({
+                            text: `Page ${page + 1} of ${totalPages}`
+                        })
+                        .setThumbnail(currentSong.setThumbnail)
+                ],
+                components: [row]
+            })
+        } else if (interaction.customId == "queue_nextpage") {
+            const row = new MessageActionRow()
+                            .addComponents(
+                                new MessageButton()
+                                    .setCustomId('queue_previouspage')
+                                    .setStyle('PRIMARY')
+                                    .setEmoji('<a:leftarrow:998601346355822642>'),
+                                new MessageButton()
+                                    .setCustomId('queue_nextpage')
+                                    .setStyle('PRIMARY')
+                                    .setEmoji('<a:rightarrow:998601359555297371>')
+                            )
+            const queue = client.player.getQueue(interaction.guildId)
+            const totalPages = Math.ceil(queue.tracks.length / 10) || 1;
+            let embed = interaction.message.embeds[0];
+            let page = parseInt(embed.footer.text.split(' ')[1])-1;
+            if (page + 1 <= totalPages-1) {
+                page += 1;
+            }
+            const queueString = queue.tracks.slice(page * 10, page * 10 + 10).map((song, i) => {
+                return `**${page * 10 + i + 1}.** \`[${song.duration}]\` ${song.title} -- <@${song.requestedBy.id}>`
+            }).join("\n")
+            const currentSong = queue.current
+            await interaction.update({
+                embeds: [
+                    new MessageEmbed()
+                        .setDescription(`**Currently Playing**\n` + 
+                        (currentSong ? `\`[${currentSong.duration}]\` ${currentSong.title} -- <@${currentSong.requestedBy.id}>` : "None") +
+                        `\n\n**Queue**\n${queueString}`
+                        )
+                        .setFooter({
+                            text: `Page ${page + 1} of ${totalPages}`
+                        })
+                        .setThumbnail(currentSong.setThumbnail)
+                ],
+                components: [row]
+            })
         }
     }
 }

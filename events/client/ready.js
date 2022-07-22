@@ -14,7 +14,7 @@ module.exports = async (Discord, client) => {
             details: "sparky :D"
         }]
     });
-    // password: Xy8YRRSDOTMaxP9e
+    
     //Checking database, and sending reminder for meetings
     // var interval = setInterval(function () {
 
