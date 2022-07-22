@@ -1,6 +1,6 @@
 // const mysql = require(`mysql2`);
 const Discord = require("discord.js");
-const pgClient = require("../../main");
+const { pgClient } = require("../../main");
 require("dotenv").config();
 
 module.exports = async (Discord, client) => {
@@ -15,8 +15,6 @@ module.exports = async (Discord, client) => {
             details: "sparky :D"
         }]
     });
-    
-    //Checking database, and sending reminder for meetings
     var interval = setInterval(async function () {
         await pgClient.query(`SELECT * FROM meetings`, (err, syrc) => {
             if (err) {

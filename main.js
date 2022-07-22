@@ -8,6 +8,7 @@ require("dotenv").config();
 
 // to fix heroku porting issues
 var express = require('express');
+const G = require('glob');
 var app = express();
 
 app.set('port', (process.env.PORT || 5000));
@@ -35,7 +36,7 @@ pgClient.connect((err) => {
     }
 });
 
-module.exports = pgClient;
+module.exports = { pgClient };
 
 function initdb() {
     pgClient.query(`CREATE TABLE IF NOT EXISTS modrole (role_id varchar(32) primary key)`);

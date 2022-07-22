@@ -2,7 +2,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { CommandInteraction } = require("discord.js");
 // const mysql = require(`mysql2`);
 const Discord = require("discord.js");
-const pgClient = require("../main");
+const { pgClient } = require("../main");
 
 // const syrcdb = mysql.createConnection({
 //     host: 'localhost',
@@ -54,10 +54,6 @@ module.exports = {
                     .addField( "Notes", `*${notes}*` )
         let channel = client.channels.cache.get(`997527933415592016`);
         let msg = await channel.send({ embeds: [newEmbed] });
-        console.log(msg);
-        console.log(msg.id);
-        console.log(msg.guild);
-        console.log(msg.channel);
         let link = `https://discord.com/channels/${msg.guild.id}/${msg.channel.id}/${msg.id}`;
         await pgClient.query(`INSERT INTO meetings (start_time, subteam_id, notes, msg_link) VALUES ('${date.getTime() / 1000}','${subteams.id}','${notes}', '${link}')`, async (err, res) => {
             if (!err) {
