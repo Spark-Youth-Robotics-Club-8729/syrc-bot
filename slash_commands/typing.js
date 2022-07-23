@@ -4,7 +4,7 @@ const stringSimilarity = require("string-similarity");
 const Jimp = require("jimp");
 const fs = require("fs");
 const Discord = require('discord.js');
-const pgClient = require("../main");
+const { pgClient } = require("../main");
 
 function marginalize(text, margin) {
     let output = [];
@@ -210,17 +210,25 @@ module.exports = {
                                 }
                                 await channel.send({ embeds: [newEmbed] })
                             } else {
+                                console.log("1");
                                 let position = -1;
                                 let userWPM = -1;
                                 for (let i = 0; i < typinglb.length; i++) {
                                     if (typinglb[i]["wpm"] < adjwpm.toFixed(2)) {
                                         position = i;
-                                    }
-                                    if (typinglb[i]["member_id"] == interaction.member.user.id.toString()) {
-                                        userWPM = typinglb[i]["wpm"];
+                                        break;
                                     }
                                 }
+                                for (let i = 0; i < typinglb.length; i++) {
+                                    if (typinglb[i]["member_id"] == interaction.member.user.id.toString()) {
+                                        userWPM = typinglb[i]["wpm"];
+                                        break;
+                                    }
+                                }
+                                console.log(position);
+                                console.log(userWPM);
                                 if (position != -1 && userWPM < adjwpm.toFixed(2)) {
+                                    console.log("LEADERBOARD SCORE POGGERS");
                                     typinglb.splice(position, 0, {
                                         "wpm": adjwpm.toFixed(2), 
                                         "member_id": interaction.member.user.id.toString(), 

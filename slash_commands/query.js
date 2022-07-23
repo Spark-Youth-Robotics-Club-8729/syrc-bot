@@ -2,7 +2,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { CommandInteraction } = require("discord.js");
 // const mysql = require(`mysql2`);
 const Discord = require("discord.js")
-const pgClient = require("../main");
+const { pgClient } = require("../main");
 
 // const syrcdb = mysql.createConnection({
 //     host: 'localhost',

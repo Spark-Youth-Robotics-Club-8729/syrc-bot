@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const { Client, Intents } = require('discord.js');
-const client = new Discord.Client({ partials: ["MESSAGE", "CHANNEL", "REACTION"], intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS, "GUILDS", "GUILD_VOICE_STATES"] });
+const client = new Discord.Client({ partials: ["MESSAGE", "CHANNEL", "REACTION"], intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS,Intents.FLAGS.GUILD_MESSAGE_REACTIONS, "GUILDS", "GUILD_VOICE_STATES"] });
 // const mysql = require('mysql2')
 const pg = require('pg');
 const { Player } = require("discord-player")
@@ -46,29 +46,14 @@ function initdb() {
 
 initdb();
 
-// const syrcdb = mysql.createConnection({
-//     host: 'localhost',
-//     user: 'root',
-//     password: '!',
-//     database: `syrcbot`
-// })
-
-// syrcdb.connect(function (err) {
-//     if (err) {
-//         console.log(err);
-//     } else {
-//         console.log("Connected to MySQL database!");
-//     }
-// });
 
 client.on('messageReactionAdd', async (reaction, user) => {
-
     console.log("HI");
     if (reaction.message) await reaction.message.fetch();
     if (reaction) await reaction.fetch();
     if (user.bot) return;
     if (!reaction.message.guild) return;
-    if (reaction.message.id === '998976564261834752') {
+    if (reaction.message.id === '1000166345905799209') {
         if (reaction.emoji.name === 'tongtong') {
             await reaction.message.guild.members.cache.get(user.id).roles.add('998677484381941862')
         }
@@ -77,17 +62,15 @@ client.on('messageReactionAdd', async (reaction, user) => {
             await reaction.message.guild.members.cache.get(user.id).roles.add('998677509954601041')
         }
     }
-}
-)
+})
 
 client.on('messageReactionRemove', async (reaction, user) => {
-
     console.log("HI");
     if (reaction.message) await reaction.message.fetch();
     if (reaction) await reaction.fetch();
     if (user.bot) return;
     if (!reaction.message.guild) return;
-    if (reaction.message.id === '998976564261834752') {
+    if (reaction.message.id === '1000166345905799209') {
         if (reaction.emoji.name === 'tongtong') {
             await reaction.message.guild.members.cache.get(user.id).roles.remove('998677484381941862')
         }
@@ -96,8 +79,7 @@ client.on('messageReactionRemove', async (reaction, user) => {
             await reaction.message.guild.members.cache.get(user.id).roles.remove('998677509954601041')
         }
     }
-}
-)
+})
 
 client.commands = new Discord.Collection();
 client.events = new Discord.Collection();

@@ -9,9 +9,9 @@ module.exports = {
         .setDescription("makes a haha funny joke"),
     run: async (client, interaction, args) => {
         let getJoke = async () => {
-            let response = await axios.get('https://v2.jokeapi.dev/joke/Any?safe-mode');
+            let response = await axios.get('https://v2.jokeapi.dev/joke/Any');
             while (response.data.setup == undefined) {
-                response = await axios.get('https://v2.jokeapi.dev/joke/Any?safe-mode');
+                response = await axios.get('https://v2.jokeapi.dev/joke/Any');
             }
             let joke = response.data;
             return joke;

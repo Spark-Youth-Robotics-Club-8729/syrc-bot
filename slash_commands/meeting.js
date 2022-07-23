@@ -18,7 +18,7 @@ module.exports = {
         .addStringOption(option =>
             option
                 .setName("datetime")
-                .setDescription("Date and time meeting will take place (YYYY-MM-DD HH:MM:SS)")
+                .setDescription("Date and time meeting will take place (YYYY-MM-DD HH:MM:SS). Note it is in 24 hour time.")
                 .setRequired(true)
         )
         .addRoleOption(option =>
