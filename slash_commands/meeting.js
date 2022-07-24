@@ -52,6 +52,7 @@ module.exports = {
                     .setColor("#5F75DE")
                     .setDescription(`**Starting:** <t:${date.getTime() / 1000}:R>`)
                     .addField( "Notes", `*${notes}*` )
+                    .setThumbnail('https://i.postimg.cc/dQjY2YNS/Screen-Shot-2022-03-07-at-9-00-41-PM.png')
         let channel = client.channels.cache.get(`997527933415592016`);
         let msg = await channel.send({ embeds: [newEmbed] });
         let link = `https://discord.com/channels/${msg.guild.id}/${msg.channel.id}/${msg.id}`;

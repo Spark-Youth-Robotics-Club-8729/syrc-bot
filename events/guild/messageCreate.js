@@ -6,7 +6,7 @@ module.exports = async (Discord, client, message) => {
     }
     const prefix = '!';
     if (!message.content.startsWith(prefix) || message.author.bot) return;
-    if (message.channel.id != 984570241193496646 && message.channel.id != 988138295869468743 && message.channel.id != 996812714473181315&& message.content.startsWith("!clear") == false && message.content.startsWith("!roles") == false) return;
+    if (message.channel.id != 984570241193496646 && message.channel.id != 988138295869468743 && message.channel.id != 996812714473181315 && message.content.startsWith("!clear") == false && message.content.startsWith("!roles") == false) return;
     
     const args = message.content.slice(prefix.length).split(/ +/);
     const cmd = args.shift().toLowerCase();
