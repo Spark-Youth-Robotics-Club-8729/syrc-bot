@@ -34,16 +34,20 @@ module.exports = {
             return `**${page * 10 + i + 1}.** \`[${song.duration}]\` ${song.title} -- <@${song.requestedBy.id}>`
         }).join("\n")
         const currentSong = queue.current
+        const progressBar = queue.createProgressBar();
+        const secondsFormatted = ("0" + (((queue.totalTime + currentSong.durationMS) / 1000) % 60)).slice(-2);
+        const duration = `Queue duration - ${Math.floor(((queue.totalTime + currentSong.durationMS) / 1000) / 60).toString()}:${secondsFormatted.toString()}`;
         await interaction.reply({
             embeds: [
                 new MessageEmbed()
                     .setDescription(`**Currently Playing**\n` + 
-                    (currentSong ? `\`[${currentSong.duration}]\` ${currentSong.title} -- <@${currentSong.requestedBy.id}>` : "None") +
+                    (currentSong ? `\`[${currentSong.duration}]\` ${currentSong.title} | <@${currentSong.requestedBy.id}>` : "None") + `\n${progressBar}` +
                     `\n\n**Queue**\n${queueString}`
                     )
                     .setFooter({
-                        text: `Page ${page + 1} of ${totalPages}`
+                        text: `Page ${page + 1} of ${totalPages} | ${duration}`
                     })
+                    .setColor('#5F75DE')
                     .setThumbnail(currentSong.setThumbnail)
             ],
             components: [row]

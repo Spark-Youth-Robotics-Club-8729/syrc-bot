@@ -34,17 +34,19 @@ module.exports = {
             return await interaction.reply({ embeds: [newEmbed] });
         }
         const setting = interaction.options.getString("loopsetting");
-        let value = 0;
+        let value = 2;
         if (setting == 'TRACK') {
             value = 1;
-        } else if (setting == 'QUEUE') {
-            value = 2;
+        } else if (setting == 'OFF') {
+            value = 0;
         } else if (setting == 'AUTOPLAY') {
             value = 3;
+        } else if (setting == '') {
+            setting = 'QUEUE';
         }
         queue.setRepeatMode(value);
         let newEmbed = {
-            description: `Loop setting set to ${setting}`,
+            description: `Loop setting set to **${setting}**`,
             color: '#5F75DE',
         }
         await interaction.reply({ embeds: [newEmbed] });

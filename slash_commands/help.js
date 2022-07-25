@@ -32,13 +32,6 @@ module.exports = {
             },
             timestamp: new Date(),
             fields: commandFields,
-            image: {
-                url: 'https://i.postimg.cc/dQjY2YNS/Screen-Shot-2022-03-07-at-9-00-41-PM.png',
-            },
-            footer: {
-                text: 'ㅤ',
-                icon_url: 'https://i.postimg.cc/dQjY2YNS/Screen-Shot-2022-03-07-at-9-00-41-PM.png',
-            }
         }
         await interaction.reply({ embeds: [newEmbed] });
     }

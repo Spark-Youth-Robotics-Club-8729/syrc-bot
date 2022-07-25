@@ -23,10 +23,10 @@ module.exports = {
             return await interaction.reply({ embeds: [newEmbed] });
         }
         let newEmbed = {
-            description: `**BOOSTED TO ${queue.volume + 200}**`,
+            description: `**BOOSTED TO ${queue.volume + 300}**`,
             color: '#5F75DE'
         }
-        await queue.setVolume(queue.volume + 200);
+        await queue.setVolume(queue.volume + 300);
         await interaction.reply({
             embeds: [newEmbed]
         })

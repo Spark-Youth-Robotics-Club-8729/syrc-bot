@@ -3,6 +3,7 @@ const { CommandInteraction } = require("discord.js");
 // const mysql = require(`mysql2`);
 const Discord = require("discord.js");
 const { pgClient } = require("../main");
+const fs = require("fs");
 
 // const syrcdb = mysql.createConnection({
 //     host: 'localhost',
@@ -53,9 +54,20 @@ module.exports = {
                     .setDescription(`**Starting:** <t:${date.getTime() / 1000}:R>`)
                     .addField( "Notes", `*${notes}*` )
                     .setThumbnail('https://i.postimg.cc/dQjY2YNS/Screen-Shot-2022-03-07-at-9-00-41-PM.png')
-        let channel = client.channels.cache.get(`997527933415592016`);
+        let rawdata = fs.readFileSync('./config.json');
+        let config = JSON.parse(rawdata);
+        let channel = client.channels.cache.get(config.meetingchannel[0].channel_id);
         let msg = await channel.send({ embeds: [newEmbed] });
         let link = `https://discord.com/channels/${msg.guild.id}/${msg.channel.id}/${msg.id}`;
+        config.meetings.push({"start_time": (date.getTime() / 1000).toString(), "subteam_id": subteams.id, "notes": notes, "msg_link": link});
+        const configString = JSON.stringify(config);
+        fs.writeFile('./config.json', configString, err => {
+            if (err) {
+                console.log('Error fetching data', err);
+            } else {
+                console.log('Successfully fetched data!');
+            }
+        })
         await pgClient.query(`INSERT INTO meetings (start_time, subteam_id, notes, msg_link) VALUES ('${date.getTime() / 1000}','${subteams.id}','${notes}', '${link}')`, async (err, res) => {
             if (!err) {
                 await interaction.reply(`Meeting created`);

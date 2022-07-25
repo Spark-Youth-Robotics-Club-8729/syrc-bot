@@ -40,6 +40,11 @@ module.exports = { pgClient };
 
 function initdb() {
     pgClient.query(`CREATE TABLE IF NOT EXISTS modrole (role_id varchar(32) primary key)`);
+    pgClient.query(`CREATE TABLE IF NOT EXISTS meetingchannel (channel_id varchar(32) primary key)`);
+    pgClient.query(`CREATE TABLE IF NOT EXISTS botcomchannel (channel_id varchar(32) primary key)`);
+    pgClient.query(`CREATE TABLE IF NOT EXISTS musicchannel (channel_id varchar(32) primary key)`);
+    pgClient.query(`CREATE TABLE IF NOT EXISTS welcomechannel (channel_id varchar(32) primary key)`);
+    pgClient.query(`CREATE TABLE IF NOT EXISTS countingchannel (channel_id varchar(32) primary key)`);
     pgClient.query(`CREATE TABLE IF NOT EXISTS typinglb (wpm varchar(8) primary key, member_id varchar(32), accuracy varchar(8), text varchar(1024), time varchar(8), gross_wpm varchar(8), date varchar(32))`)
     pgClient.query(`CREATE TABLE IF NOT EXISTS meetings (start_time varchar(32) primary key, subteam_id varchar(64), notes varchar(1024), msg_link varchar(128))`)
 }

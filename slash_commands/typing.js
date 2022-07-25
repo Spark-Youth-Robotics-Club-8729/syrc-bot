@@ -34,21 +34,30 @@ function marginalize(text, margin) {
 }
 
 function store_typing_data(typinglb) {
+    let rawdata = fs.readFileSync('./config.json');
+    let config = JSON.parse(rawdata);
+    config.typinglb = [];
     pgClient.query(`TRUNCATE TABLE typinglb`);
     for (let i = 0; i < typinglb.length; i++) {
         let score = typinglb[i];
+        config.typinglb.push({"wpm": score["wpm"], "member_id": score["member_id"], "accuracy": score["accuracy"], "text": score["text"], "time": score["time"], "gross_wpm": score["gross_wpm"], "date": score["date"]});
         let text = score["text"].replaceAll("'", "''");
         console.log(text);
         pgClient.query(`INSERT INTO typinglb(wpm, member_id, accuracy, text, time, gross_wpm, date) VALUES ('${score["wpm"]}', '${score["member_id"]}', '${score["accuracy"]}', '${text}', '${score["time"]}', '${score["gross_wpm"]}', '${score["date"]}')`);
     }
-    console.log("STORED TYPING DATA");
+    const configString = JSON.stringify(config);
+    fs.writeFile('./config.json', configString, err => {
+        if (err) {
+            throw err;
+        } else {
+            console.log("STORED TYPING DATA");
+        }
+    })
 }
 
 
 async function addText(lines) {
     const image = await Jimp.read("assets/spooderman.jpg");
-    const w = image.bitmap.width;
-    const h = image.bitmap.height;
     const font = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
     for (let i = 0; i < lines.length; i++) {
         image.print(font, 50, 150 + (i*36), lines[i]);
@@ -85,9 +94,12 @@ module.exports = {
                     if (typinglb.length == 0) {
                         let newEmbed = {
                             title: `SYRC's Typing Leaderboard`,
-                            description: `*it's a bit empty in here...*\n*~mind filling me up? 🥺*`,
+                            description: `*it's a bit empty in here at the moment... 🥺*`,
                             color: '#5F75DE',
-                            timestamp: new Date()
+                            timestamp: new Date(),
+                            thumbnail: {
+                                url: 'https://i.postimg.cc/dQjY2YNS/Screen-Shot-2022-03-07-at-9-00-41-PM.png',
+                            },
                         }
                         await interaction.reply({ embeds: [newEmbed] });
                     } else {
@@ -104,7 +116,7 @@ module.exports = {
                             .addComponents(
                                 new MessageSelectMenu()
                                     .setCustomId('placement')
-                                    .setPlaceholder('Choose score to view details...')
+                                    .setPlaceholder('Choose a score to view details...')
                                     .addOptions(options)
                             )
                         let newEmbed = {
@@ -112,7 +124,10 @@ module.exports = {
                             description: `Scores with the best speeds gets shown here!`,
                             color: '#5F75DE',
                             timestamp: new Date(),
-                            fields: []
+                            fields: [],
+                            thumbnail: {
+                                url: 'https://i.postimg.cc/dQjY2YNS/Screen-Shot-2022-03-07-at-9-00-41-PM.png',
+                            },
                         }
                         for (let i = 0; i < typinglb.length; i++) {
                             let user = client.users.cache.get(typinglb[i]['member_id']);
@@ -210,11 +225,10 @@ module.exports = {
                                 }
                                 await channel.send({ embeds: [newEmbed] })
                             } else {
-                                console.log("1");
                                 let position = -1;
                                 let userWPM = -1;
                                 for (let i = 0; i < typinglb.length; i++) {
-                                    if (typinglb[i]["wpm"] < adjwpm.toFixed(2)) {
+                                    if (parseInt(typinglb[i]["wpm"]) < adjwpm.toFixed(2)) {
                                         position = i;
                                         break;
                                     }
@@ -225,9 +239,7 @@ module.exports = {
                                         break;
                                     }
                                 }
-                                console.log(position);
-                                console.log(userWPM);
-                                if (position != -1 && userWPM < adjwpm.toFixed(2)) {
+                                if (position != -1 && parseInt(userWPM) < adjwpm.toFixed(2)) {
                                     console.log("LEADERBOARD SCORE POGGERS");
                                     typinglb.splice(position, 0, {
                                         "wpm": adjwpm.toFixed(2), 

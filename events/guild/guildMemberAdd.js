@@ -1,8 +1,11 @@
+const fs = require("fs");
+
 module.exports = (Discord, client, member) => {
-    const channelId = '990272152584462426';
-    const targetChannelId = '985690065583898694';
-    const message = `Welcome <@${member.id}> to the server! Check out ${member.guild.channels.cache.get(targetChannelId).toString()} for general on the server. (This message will be changed when we migrate to the SYRC server)`;
-    const channel = member.guild.channels.cache.get(channelId);
+    let rawdata = fs.readFileSync('./config.json');
+    let config = JSON.parse(rawdata);
+    // const targetChannelId = '985690065583898694';
+    const message = `Welcome <@${member.id}> to first robotics team 8729: Sparkling H2O! Check out ${member.guild.channels.cache.get(1000805634821869601).toString()} to get roles. And ${member.guild.channels.cache.get(862089529698811934).toString()} for useful links throughout your journey. Awesome to have you here :)`;
+    const channel = member.guild.channels.cache.get(config.welcomechannel[0].channel_id);
 
     channel.send(message);
 }
