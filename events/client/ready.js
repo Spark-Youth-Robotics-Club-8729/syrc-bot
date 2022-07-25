@@ -23,8 +23,7 @@ async function fetch_data() {
 }
 
 module.exports = async (Discord, client) => {
-    // let guilds = ['851675663130689547', '974812609704501318'];
-    let guilds = ['974812609704501318'];
+    const guilds = client.guilds.cache.map(guild => guild.id);
     let members = 0;
     for (guild in guilds) {
         members += parseInt(client.guilds.cache.get(guilds[guild]).memberCount);
