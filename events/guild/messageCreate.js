@@ -1,5 +1,6 @@
 const { pgClient } = require("../../main");
 const fs = require("fs");
+const config = require('./../../config.json');
 
 module.exports = async (Discord, client, message) => {
     if (message.author.bot) {
