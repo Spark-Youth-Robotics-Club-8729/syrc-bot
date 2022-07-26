@@ -14,6 +14,7 @@ module.exports = async (Discord, client, message) => {
     }
 
     var arr = config.censorList;
+    message.channel.send(arr[0]);
     for (var i = 0; i < arr.length; i++) {
         if (message.content.toLowerCase().includes(arr[i])){
             console.log(arr[i]);
