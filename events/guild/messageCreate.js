@@ -3,10 +3,7 @@ const fs = require("fs");
 const config = require('./../../config.json');
 
 module.exports = async (Discord, client, message) => {
-    let rawdata = fs.readFileSync('./config.json');
-    let config = JSON.parse(rawdata);
-    let rawdata2 = fs.readFileSync('./cusswords.json');
-    let config2 = JSON.parse(rawdata2);
+    
     if (message.content.toLowerCase().startsWith("im ")) {
         await message.channel.send(`Hi ${message.content.substring(3)}, I'm dad!`);
     } else if (message.content.toLowerCase().startsWith("i'm ")) {
