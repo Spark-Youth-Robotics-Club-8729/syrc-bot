@@ -14,8 +14,13 @@ module.exports = {
                 .setDescription("Which user to be kicked")
                 .setRequired(true)
         ), run: async (client, interaction, args,) => {
-            const member = interaction.options.getUser("user");
-            if (interaction.member.roles.cache.some(role => role.name === 'Lead')) {
+            let rawdata = fs.readFileSync('./config.json');
+            let config = JSON.parse(rawdata);
+            let modroles = [];
+            for (i in config.modrole) {
+                modroles.push(config.modrole[i].role_id);
+            }
+            if (interaction.member.roles.cache.some(role => modroles.includes(role.id))) {
                 if (member) {
                     const memberTarget = interaction.guild.members.cache.get(member.id);
                     let reason = args.slice(1).join(" ");

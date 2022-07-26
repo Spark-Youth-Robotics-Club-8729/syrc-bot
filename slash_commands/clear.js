@@ -21,18 +21,26 @@ module.exports = {
                 .setMinValue(1)
                 .setRequired(true)
         ), run: async (client, interaction, args) => {
-            const num = interaction.options.getInteger("clear");
-            await interaction.channel.messages.fetch({ limit: args[0] }).then(async messages => {
-                interaction.channel.bulkDelete(messages);
-                if (args[0] > 1) {
-                    await interaction.reply(String(args[0]) + " messages cleared");
-                    await sleep(3000);
-                    await interaction.deleteReply();
-                } else {
-                    await interaction.reply("1 message cleared")
-                    await sleep(3000);
-                    await interaction.deleteReply();
-                }
-            });
+            let rawdata = fs.readFileSync('./config.json');
+            let config = JSON.parse(rawdata);
+            let modroles = [];
+            for (i in config.modrole) {
+                modroles.push(config.modrole[i].role_id);
+            }
+            if (interaction.member.roles.cache.some(role => modroles.includes(role.id))) {
+                const num = interaction.options.getInteger("clear");
+                await interaction.channel.messages.fetch({ limit: args[0] }).then(async messages => {
+                    interaction.channel.bulkDelete(messages);
+                    if (args[0] > 1) {
+                        await interaction.reply(String(args[0]) + " messages cleared");
+                        await sleep(3000);
+                        await interaction.deleteReply();
+                    } else {
+                        await interaction.reply("1 message cleared")
+                        await sleep(3000);
+                        await interaction.deleteReply();
+                    }
+                });
+            }
         }
 }

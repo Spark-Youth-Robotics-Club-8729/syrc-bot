@@ -1,15 +1,8 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { CommandInteraction } = require("discord.js");
-// const mysql = require(`mysql2`);
 const Discord = require("discord.js")
 const { pgClient } = require("../main");
-
-// const syrcdb = mysql.createConnection({
-//     host: 'localhost',
-//     user: 'root',
-//     password: '!',
-//     database: `syrcbot`
-// });
+const fs = require("fs");
 
 module.exports = {
     ...new SlashCommandBuilder()
@@ -147,6 +140,21 @@ module.exports = {
                     }
                 })
             }
+            var config = {};
+            let tables = await pgClient.query(`SELECT * FROM pg_catalog.pg_tables WHERE schemaname != 'pg_catalog' AND schemaname != 'information_schema'`);
+            for (i in tables.rows) {
+                let res = await pgClient.query(`SELECT * FROM ${tables.rows[i].tablename}`);
+                config[tables.rows[i].tablename] = res.rows;
+            }
+            console.log(config);
+            const configString = JSON.stringify(config);
+            fs.writeFile('./config.json', configString, err => {
+                if (err) {
+                    console.log('Error fetching data', err);
+                } else {
+                    console.log('Successfully fetched data!');
+                }
+            })
         } else {
             await interaction.reply({ content: "Not cool enough, cry about it", ephemeral: true });
         }
