@@ -57,22 +57,21 @@ module.exports = async (Discord, client) => {
                         const newEmbed = new Discord.MessageEmbed()
                             .setTitle(`Reminder!`)
                             .setColor("#5F75DE")
-                            .setDescription(`<@&${role}> meeting in 10 MINUTES\n**[Meeting Message](${msg_link})**`)
-                        client.channels.cache.get(config.meetingchannel[0].channel_id).send({ embeds: [newEmbed] });
+                            .setDescription(`<@&${role}> meeting in **10 MINUTES**\n**[Meeting Message](${msg_link})**`)
+                        client.channels.cache.get(config.meetingchannel[0].channel_id).send({ embeds: [newEmbed], content: `||<@&${role}>||` });
                         pgClient.query(`DELETE FROM meetings WHERE start_time = '${syrc.rows[i].start_time}'`);
                     } else if (syrc.rows[i].start_time - date.getTime() / 1000 > 3595 && syrc.rows[i].start_time - date.getTime() / 1000 < 3605) {
                         const newEmbed = new Discord.MessageEmbed()
                             .setTitle(`Reminder!`)
                             .setColor("#5F75DE")
-                            .setDescription(`<@&${role}> meeting in 1 HOUR\n**[Meeting Message](${msg_link})**`)
-                        client.channels.cache.get(config.meetingchannel[0].channel_id).send({ embeds: [newEmbed] });
+                            .setDescription(`<@&${role}> meeting in **1 HOUR**\n**[Meeting Message](${msg_link})**`)
+                        client.channels.cache.get(config.meetingchannel[0].channel_id).send({ embeds: [newEmbed], content: `||<@&${role}>||` });
                     } else if (syrc.rows[i].start_time - date.getTime() / 1000 > 86395 && syrc.rows[i].start_time - date.getTime() / 1000 < 86405) {
-
                         const newEmbed = new Discord.MessageEmbed()
                             .setTitle(`Reminder!`)
                             .setColor("#5F75DE")
-                            .setDescription(`<@&${role}> meeting tommorow!\n**[Meeting Message](${msg_link})**`)
-                        client.channels.cache.get(config.meetingchannel[0].channel_id).send({ embeds: [newEmbed] });
+                            .setDescription(`<@&${role}> meeting **TOMORROW**!\n**[Meeting Message](${msg_link})**`)
+                        client.channels.cache.get(config.meetingchannel[0].channel_id).send({ embeds: [newEmbed], content: `||<@&${role}>||` });
                     }
                 }
             }
