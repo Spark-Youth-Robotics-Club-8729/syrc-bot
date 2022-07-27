@@ -3,7 +3,6 @@ const { CommandInteraction } = require("discord.js");
 const Discord = require("discord.js")
 const { pgClient } = require("../main");
 const fs = require("fs");
-const configData = require('../config.json');
 
 module.exports = {
     ...new SlashCommandBuilder()
@@ -62,11 +61,7 @@ module.exports = {
                     try {
                         let temp = JSON.stringify(config.modrole);
                         config.modrole.push({"role_id": role.id});
-                        let res = await pgClient.query(`SELECT * FROM modrole`);
-                        console.log(res.rows);
-                        await pgClient.query(`INSERT INTO modrole (role_id) VALUES ('${role.id}')`);
-                        let res2 = await pgClient.query(`SELECT * FROM modrole`);
-                        console.log(res2.rows);
+                        pgClient.query(`INSERT INTO modrole (role_id) VALUES ('${role.id}')`)
                         await interaction.reply({ content: `Modrole changed from ${temp} to ${JSON.stringify(config.modrole)}` });
                     } catch {
                         await interaction.reply({ content: "A role argument is required" });
@@ -75,8 +70,6 @@ module.exports = {
                     try {
                         let temp = JSON.stringify(config.meetingchannel);
                         config.meetingchannel.push({"channel_id": channel.id});
-                        let res = await pgClient.query(`SELECT * FROM meetingchannel`);
-                        console.log(res.rows);
                         await pgClient.query(`INSERT INTO meetingchannel(channel_id) VALUES ('${channel.id}')`);
                         await interaction.reply({ content: `Meeting channel changed from ${temp} to ${JSON.stringify(config.meetingchannel)}` });
                     } catch {
@@ -86,8 +79,6 @@ module.exports = {
                     try {
                         let temp = JSON.stringify(config.botcomchannel);
                         config.botcomchannel.push({"channel_id": channel.id});
-                        let res = await pgClient.query(`SELECT * FROM botcomchannel`);
-                        console.log(res.rows);
                         await pgClient.query(`INSERT INTO botcomchannel(channel_id) VALUES ('${channel.id}')`);
                         await interaction.reply({ content: `Bot commands channel changed from ${temp} to ${JSON.stringify(config.botcomchannel)}` });
                     } catch {
@@ -97,9 +88,7 @@ module.exports = {
                     try {
                         let temp = JSON.stringify(config.musicchannel);
                         config.musicchannel.push({"channel_id": channel.id});
-                        let res = await pgClient.query(`SELECT * FROM musicchannel`);
-                        console.log(res.rows);
-                        await pgClient.query(`INSERT INTO botcomchannel(channel_id) VALUES ('${channel.id}')`);
+                        await pgClient.query(`INSERT INTO musicchannel(channel_id) VALUES ('${channel.id}')`);
                         await interaction.reply({ content: `Music channel changed from ${temp} to ${JSON.stringify(config.musicchannel)}` });
                     } catch {
                         await interaction.reply({ content: "A channel argument is required" });
@@ -108,8 +97,6 @@ module.exports = {
                     try {
                         let temp = JSON.stringify(config.welcomechannel);
                         config.welcomechannel.push({"channel_id": channel.id});
-                        let res = await pgClient.query(`SELECT * FROM welcomechannel`);
-                        console.log(res.rows);
                         await pgClient.query(`INSERT INTO welcomechannel(channel_id) VALUES ('${channel.id}')`);
                         await interaction.reply({ content: `Welcome channel changed from ${temp} to ${JSON.stringify(config.welcomechannel)}` });
                     } catch {
@@ -119,8 +106,6 @@ module.exports = {
                     try {
                         let temp = JSON.stringify(config.countingchannel);
                         config.countingchannel.push({"channel_id": channel.id});
-                        let res = await pgClient.query(`SELECT * FROM countingchannel`);
-                        console.log(res.rows);
                         await pgClient.query(`INSERT INTO countingchannel(channel_id) VALUES ('${channel.id}')`);
                         await interaction.reply({ content: `Counting channel changed from ${temp} to ${JSON.stringify(config.countingchannel)}` });
                     } catch {
@@ -144,7 +129,7 @@ module.exports = {
                         var i = config.modrole.length;
                         while (i--) {
                             if (config.modrole[i] == {"role_id": role.id}) {
-                                config.modrole.splice(array.indexOf({"role_id": role.id}), 1);
+                                config.modrole.splice(config.modrole.indexOf({"role_id": role.id}), 1);
                             }
                         }
                         pgClient.query(`DELETE FROM modrole WHERE role_id = '${role.id}'`);
@@ -153,12 +138,15 @@ module.exports = {
                         await interaction.reply({ content: "A role argument is required" });
                     }
                 } else if (setting == 'meetingchannel') {
+                    if (channel.type == 'voice') {
+                        return await interaction.reply({ content: "Voice channel not allowed for this setting" });
+                    }
                     try {
                         let temp = JSON.stringify(config.meetingchannel);
                         var i = config.meetingchannel.length;
                         while (i--) {
                             if (config.meetingchannel[i] == {"channel_id": channel.id}) {
-                                config.meetingchannel.splice(array.indexOf({"channel_id": channel.id}), 1);
+                                config.meetingchannel.splice(config.meetingchannel.indexOf({"channel_id": channel.id}), 1);
                             }
                         }
                         pgClient.query(`DELETE FROM meetingchannel WHERE channel_id = '${channel.id}'`);
@@ -167,12 +155,15 @@ module.exports = {
                         await interaction.reply({ content: "A channel argument is required" });
                     }
                 } else if (setting == 'botcomchannel') {
+                    if (channel.type == 'voice') {
+                        return await interaction.reply({ content: "Voice channel not allowed for this setting" });
+                    }
                     try {
                         let temp = JSON.stringify(config.botcomchannel);
                         var i = config.botcomchannel.length;
                         while (i--) {
                             if (config.botcomchannel[i] == {"channel_id": channel.id}) {
-                                config.botcomchannel.splice(array.indexOf({"channel_id": channel.id}), 1);
+                                config.botcomchannel.splice(config.botcomchannel.indexOf({"channel_id": channel.id}), 1);
                             }
                         }
                         pgClient.query(`DELETE FROM botcomchannel WHERE channel_id = '${channel.id}'`);
@@ -181,12 +172,15 @@ module.exports = {
                         await interaction.reply({ content: "A channel argument is required" });
                     }
                 } else if (setting == 'musicchannel') {
+                    if (channel.type != 'voice') {
+                        return await interaction.reply({ content: "Text channel not allowed for this setting" });
+                    }
                     try {
                         let temp = JSON.stringify(config.musicchannel);
                         var i = config.musicchannel.length;
                         while (i--) {
                             if (config.musicchannel[i] == {"channel_id": channel.id}) {
-                                config.musicchannel.splice(array.indexOf({"channel_id": channel.id}), 1);
+                                config.musicchannel.splice(config.musicchannel.indexOf({"channel_id": channel.id}), 1);
                             }
                         }
                         pgClient.query(`DELETE FROM musicchannel WHERE channel_id = '${channel.id}'`);
@@ -195,12 +189,15 @@ module.exports = {
                         await interaction.reply({ content: "A channel argument is required" });
                     }
                 } else if (setting == 'welcomechannel') {
+                    if (channel.type == 'voice') {
+                        return await interaction.reply({ content: "Voice channel not allowed for this setting" });
+                    }
                     try {
                         let temp = JSON.stringify(config.welcomechannel);
                         var i = config.welcomechannel.length;
                         while (i--) {
                             if (config.welcomechannel[i] == {"channel_id": channel.id}) {
-                                config.welcomechannel.splice(array.indexOf({"channel_id": channel.id}), 1);
+                                config.welcomechannel.splice(config.welcomechannel.indexOf({"channel_id": channel.id}), 1);
                             }
                         }
                         pgClient.query(`DELETE FROM welcomechannel WHERE channel_id = '${channel.id}'`);
@@ -209,12 +206,15 @@ module.exports = {
                         await interaction.reply({ content: "A channel argument is required" });
                     }
                 } else if (setting == 'countingchannel') {
+                    if (channel.type == 'voice') {
+                        return await interaction.reply({ content: "Voice channel not allowed for this setting" });
+                    }
                     try {
                         let temp = JSON.stringify(config.countingchannel);
                         var i = config.countingchannel.length;
                         while (i--) {
                             if (config.countingchannel[i] == {"channel_id": channel.id}) {
-                                config.countingchannel.splice(array.indexOf({"channel_id": channel.id}), 1);
+                                config.countingchannel.splice(config.countingchannel.indexOf({"channel_id": channel.id}), 1);
                             }
                         }
                         pgClient.query(`DELETE FROM countingchannel WHERE channel_id = '${channel.id}'`);

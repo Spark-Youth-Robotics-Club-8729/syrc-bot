@@ -2,6 +2,8 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { CommandInteraction } = require("discord.js");
 const Discord = require("discord.js");
 const fs = require("fs");
+const { pgClient } = require("../main");
+
 module.exports = {
     ...new SlashCommandBuilder()
         .setName("censor")
@@ -28,12 +30,13 @@ module.exports = {
             const option = interaction.options.getString("mode");
             const word = interaction.options.getString("word");
             if (option == "add") {
-                let rawdata = fs.readFileSync('./censorList.json');
-                let censorFile = JSON.parse(rawdata);
+                let rawList = fs.readFileSync('./censorList.json');
+                let censorList = JSON.parse(rawList);
                 interaction.reply("Word added: **" + word + "**");
-                censorFile.censorList.push(word);
-                let configString = JSON.stringify(censorFile);
-                fs.writeFile('./censorList.json', configString, err => {
+                censorList.push(word);
+                pgClient.query(`INSERT INTO censor VALUES ('${word}')`);
+                let censorString = JSON.stringify(censorList);
+                fs.writeFile('./censorList.json', censorString, err => {
                     if (err) {
                         console.log('Error storing data', err);
                     } else {
@@ -41,18 +44,16 @@ module.exports = {
                     }
                 })
             } else {
-                
-                let rawdata = fs.readFileSync('./censorList.json');
-                let censorFile = JSON.parse(rawdata);
-                var found = censorFile.censorList.indexOf(word);
-
-                while (found !== -1) {
-                    censorFile.censorList.splice(found, 1);
-                    found = censorFile.censorList.indexOf(word);
+                let rawList = fs.readFileSync('./censorList.json');
+                let censorList = JSON.parse(rawList);
+                pgClient.query(`DELETE FROM censor WHERE word = '${word}'`);
+                var found = censorList.indexOf(word);
+                while (found != -1) {
+                    censorList.splice(found, 1);
+                    found = censorList.indexOf(word);
                 }
-                let configString = JSON.stringify(censorFile);
-                
-                fs.writeFile('./censorList.json', configString, err => {
+                let censorString = JSON.stringify(censorList);
+                fs.writeFile('./censorList.json', censorString, err => {
                     if (err) {
                         console.log('Error storing data', err);
                     } else {
