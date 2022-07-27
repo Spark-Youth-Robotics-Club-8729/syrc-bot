@@ -15,6 +15,8 @@ module.exports = async (Discord, client, message) => {
         await message.channel.send(`Hi ${message.content.substring(5)}, I'm dad!`);
     }
     let filter = new Filter();
+    let removeWords = ['god', 'hell'];
+    filter.removeWords(...removeWords);
     let rawList = fs.readFileSync('./censorList.json');
     let censorList = JSON.parse(rawList);
     filter.addWords(...censorList);

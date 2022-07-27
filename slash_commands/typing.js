@@ -56,13 +56,13 @@ function store_typing_data(typinglb) {
 }
 
 
-async function addText(lines) {
+async function addText(lines, index) {
     const image = await Jimp.read("assets/spooderman.jpg");
     const font = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
     for (let i = 0; i < lines.length; i++) {
         image.print(font, 50, 150 + (i*36), lines[i]);
     }
-    image.write("output.jpg");
+    image.write(`output${index.toString()}.jpg`);
 };
 
 function sleep(ms) {
@@ -142,6 +142,13 @@ module.exports = {
             })
         } else {
             let rawtext = "";
+            var index = 0;
+            for (; i < 10; i++) {
+                if (!fs.existsSync(`./output${i.toString()}.jpg`)) {
+                    break;
+                }
+            }
+            console.log(index);
             fs.readFile('./assets/texts.txt', 'utf8', (err, data) => {
                 if (err) {
                     console.error(err);
@@ -150,10 +157,10 @@ module.exports = {
                     rawtext = texts[Math.floor(Math.random()*texts.length)];
                     console.log("TEXT:\n" + rawtext);
                     const lines = marginalize(rawtext, 33);
-                    addText(lines);
+                    addText(lines, index);
                 }
             });
-            const embed = new Discord.MessageEmbed().setImage('attachment://output.jpg').setTimestamp(new Date()).setColor('#5F75DE');
+            const embed = new Discord.MessageEmbed().setImage(`attachment://output${index.toString()}.jpg`).setTimestamp(new Date()).setColor('#5F75DE');
             const channel = interaction.channel;
             await interaction.reply({ content: "Type the following text as fast as you can!" });
             const msg = await channel.send(":white_circle::white_circle::white_circle:");
@@ -163,13 +170,7 @@ module.exports = {
             await msg.edit(":red_circle::yellow_circle::white_circle:");
             await sleep(1000);
             await msg.edit(":red_circle::yellow_circle::green_circle:");
-            var i = 0;
-            for (; i < 10; i++) {
-                if (!fs.existsSync(`./output${i}.jpg`)) {
-                    await channel.send({ embeds: [embed], files: [`./output${i}.jpg`] });
-                    break;
-                }
-            }
+            await channel.send({ embeds: [embed], files: [`./output${index.toString()}.jpg`] });
             let startTime = new Date();
             await msg.delete();
             const collector = new Discord.MessageCollector(channel, m => m.author.id === interaction.member.user.id, { time: 10000 });
@@ -292,7 +293,7 @@ module.exports = {
                                             timestamp: new Date()
                                         }
                                         await channel.send({ embeds: [newEmbed] })
-                                    } else if (position == -1) {
+                                    } else if (position == -1 && parseInt(userWPM) == -1) {
                                         console.log("LEADERBOARD SCORE POGGERS");
                                         typinglb.push({
                                             "wpm": adjwpm.toFixed(2), 
@@ -321,7 +322,7 @@ module.exports = {
                     })
                 }
             })
-            fs.unlinkSync(`./output${i}.jpg`);
+            fs.unlinkSync(`./output${index.toString()}.jpg`);
         }
     }
 };
