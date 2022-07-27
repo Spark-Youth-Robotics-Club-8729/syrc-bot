@@ -14,18 +14,18 @@ module.exports = async (Discord, client, message) => {
     let rawdata = fs.readFileSync('./censorList.json');
     let censorFile = JSON.parse(rawdata);
     for (var i = 0; i < censorFile.censorList.length; i++) {
-        if (message.content.toLowerCase().includes(censorFile.censorList[i])){
+        if (message.content.toLowerCase().includes(" " + censorFile.censorList[i] + " ") || message.content.toLowerCase()==censorFile.censorList[i]){
             console.log(censorFile.censorList[i]);
             member = message.author.id.toString();
-            // await message.delete();
+            await message.delete();
             if (censorFile.censorList[i]=="owo" || censorFile.censorList[i] == "uwu") {
                 message.channel.send({ content: `<@${member}> ur a stinky furry :)`, tts: true });
                 break
             } 
-            // else {
-            //     message.channel.send({ content: `No swearing <@${member}> :)`, tts: true });
-            //     break
-            // }
+            else {
+                message.channel.send({ content: `No swearing <@${member}> :)`, tts: true });
+                break
+            }
         }
     }
     const prefix = '!';

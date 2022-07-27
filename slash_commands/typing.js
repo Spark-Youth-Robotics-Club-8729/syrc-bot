@@ -226,11 +226,29 @@ module.exports = {
                                 await channel.send({ embeds: [newEmbed] })
                             } else {
                                 let position = -1;
-                                let userWPM = -1;
                                 for (let i = 0; i < typinglb.length; i++) {
                                     if (parseInt(typinglb[i]["wpm"]) < adjwpm.toFixed(2)) {
                                         position = i;
                                         break;
+                                    }
+                                }
+                                console.log("POSITION:")
+                                console.log(position);
+                                if (position != -1) {
+                                    let userWPM = -1;
+                                    for (let i = 0; i < typinglb.length; i++) {
+                                        if (typinglb[i]["member_id"] == interaction.member.user.id.toString()) {
+                                            userWPM = typinglb[i]["wpm"];
+                                            break;
+                                        } 
+                                    }
+                                    console.log("USERWPM:");
+                                    console.log()
+                                    if (parseInt(userWPM) <= adjwpm.toFixed(2)) {
+                                        // delete previous score
+                                        // insert new score
+                                    } else if (userWPM == -1) {
+                                        // insert new score
                                     }
                                 }
                                 for (let i = 0; i < typinglb.length; i++) {

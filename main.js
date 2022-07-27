@@ -95,4 +95,5 @@ process.on('unhandledRejection', error => {
 	console.error('Unhandled promise rejection:', error);
 });
 
-client.login(process.env.TOKEN);
+// client.login(process.env.TOKEN);
+client.login('OTk2ODQ0MTg5NTg3MzYxODgy.GAMH1B.xLyeU4dnBd22w5MS71BPa4k-eWUWsf7kRc00Mw');
