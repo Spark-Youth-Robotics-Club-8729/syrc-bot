@@ -10,10 +10,10 @@ module.exports = async (Discord, client, interaction) => {
     for (i in config.botcomchannel) {
         allowed_channels.push(config.botcomchannel[i].channel_id);
     }
-    const cmd = client.slashCommands.get(interaction.commandName);
-    if (allowed_channels.includes(interaction.channel.id) || cmd == 'clear'){
+    const target = interaction.guild.members.cache.get(interaction.user.id);
+    if (target.permissions.has("ADMINISTRATOR") || allowed_channels.length == 0 || interaction.commandName == 'clear' || allowed_channels.includes(interaction.channel.id)){
         if (interaction.isCommand()) {
-            // await interaction.deferReply({ ephemeral: false }).catch(() => { });
+            const cmd = client.slashCommands.get(interaction.commandName);
             if (!cmd)
                 return interaction.followUp({ content: "An error has occured " });
             const args = [];
