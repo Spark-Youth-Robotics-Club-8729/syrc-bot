@@ -30,25 +30,25 @@ module.exports = {
         if (channel && user) {
             await channel.send(msg);
 
-            try{
+            try {
                 await user.send(msg);
-                await interaction.reply({ content: "Echoes successful!" , ephemeral: true });
-            catch (err){
-                await interaction.reply({content: "I was unable to message the user, but the channel echo was successful", ephemeral: true});
-            }            
+                await interaction.reply({ content: "Echoes successful!", ephemeral: true });
+            } catch (err) {
+                await interaction.reply({ content: "I was unable to message the user, but the channel echo was successful", ephemeral: true });
+            }
         } else if (channel && !user) {
             await channel.send(msg);
-            await interaction.reply({ content: "Echo successful!" , ephemeral: true });
+            await interaction.reply({ content: "Echo successful!", ephemeral: true });
         } else if (user && !channel) {
-            try{
+            try {
                 await user.send(msg);
-                await interaction.reply({ content: "Echo successful!" , ephemeral: true });
-            catch (err){
-                await interaction.reply({content: "I was unable to message the user", ephemeral: true});
+                await interaction.reply({ content: "Echo successful!", ephemeral: true });
+            } catch (err) {
+                await interaction.reply({ content: "I was unable to message the user", ephemeral: true });
             }
         } else {
             await interaction.channel.send(msg);
-            await interaction.reply({ content: "Echo successful!" , ephemeral: true });
+            await interaction.reply({ content: "Echo successful!", ephemeral: true });
         }
     }
 };
