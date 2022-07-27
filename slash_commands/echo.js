@@ -29,14 +29,23 @@ module.exports = {
         const user = interaction.options.getUser("user");
         if (channel && user) {
             await channel.send(msg);
-            await user.send(msg);
-            await interaction.reply({ content: "Echoes successful!" , ephemeral: true });
+
+            try{
+                await user.send(msg);
+                await interaction.reply({ content: "Echoes successful!" , ephemeral: true });
+            catch (err){
+                await interaction.reply({content: "I was unable to message the user, but the channel echo was successful", ephemeral: true});
+            }            
         } else if (channel && !user) {
             await channel.send(msg);
             await interaction.reply({ content: "Echo successful!" , ephemeral: true });
         } else if (user && !channel) {
-            await user.send(msg);
-            await interaction.reply({ content: "Echo successful!" , ephemeral: true });
+            try{
+                await user.send(msg);
+                await interaction.reply({ content: "Echo successful!" , ephemeral: true });
+            catch (err){
+                await interaction.reply({content: "I was unable to message the user", ephemeral: true});
+            }
         } else {
             await interaction.channel.send(msg);
             await interaction.reply({ content: "Echo successful!" , ephemeral: true });
