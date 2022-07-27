@@ -10,6 +10,8 @@ module.exports = async (Discord, client, message) => {
         await message.channel.send(`Hi ${message.content.substring(3)}, I'm dad!`);
     } else if (message.content.toLowerCase().startsWith("i'm ")) {
         await message.channel.send(`Hi ${message.content.substring(4)}, I'm dad!`);
+    }else if( message.content.toLowerCase().startsWith("i am ")){
+        await message.channel.send(`Hi ${message.content.substring(5)}, I'm dad!`);
     }
     let rawdata = fs.readFileSync('./censorList.json');
     let censorFile = JSON.parse(rawdata);
