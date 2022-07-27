@@ -11,11 +11,11 @@ module.exports = async (Discord, client, interaction) => {
         allowed_channels.push(config.botcomchannel[i].channel_id);
     }
     const target = interaction.guild.members.cache.get(interaction.user.id);
+    const cmd = client.slashCommands.get(interaction.commandName);
     if (target.permissions.has("ADMINISTRATOR") || allowed_channels.length == 0 || interaction.commandName == 'clear' || allowed_channels.includes(interaction.channel.id)){
         if (interaction.isCommand()) {
-            const cmd = client.slashCommands.get(interaction.commandName);
             if (!cmd)
-                return interaction.followUp({ content: "An error has occured " });
+                return interaction.reply({ content: "An error has occured " });
             const args = [];
             for (let option of interaction.options.data) {
                 if (option.type === "SUB_COMMAND") {

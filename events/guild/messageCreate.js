@@ -1,6 +1,7 @@
 const { pgClient } = require("../../main");
 const fs = require("fs");
 const config = require('./../../config.json');
+var Filter = require('bad-words');
 
 module.exports = async (Discord, client, message) => {
     if (message.author.bot) {
@@ -13,21 +14,17 @@ module.exports = async (Discord, client, message) => {
     }else if( message.content.toLowerCase().startsWith("i am ")){
         await message.channel.send(`Hi ${message.content.substring(5)}, I'm dad!`);
     }
-    let rawdata = fs.readFileSync('./censorList.json');
-    let censorFile = JSON.parse(rawdata);
-    for (var i = 0; i < censorFile.censorList.length; i++) {
-        if (message.content.toLowerCase().includes(" " + censorFile.censorList[i] + " ") || message.content.toLowerCase()==censorFile.censorList[i]){
-            console.log(censorFile.censorList[i]);
-            member = message.author.id.toString();
-            await message.delete();
-            if (censorFile.censorList[i]=="owo" || censorFile.censorList[i] == "uwu") {
-                message.channel.send({ content: `<@${member}> ur a stinky furry :)`, tts: true });
-                break
-            } 
-            else {
-                message.channel.send({ content: `No swearing <@${member}> :)`, tts: true });
-                break
-            }
+    let filter = new Filter();
+    let rawList = fs.readFileSync('./censorList.json');
+    let censorList = JSON.parse(rawList);
+    filter.addWords(...censorList);
+    if (filter.isProfane(message.content.toLowerCase())){
+        member = message.author.id.toString();
+        await message.delete();
+        if (censorList[i]=="owo" || censorList[i] == "uwu") {
+            message.channel.send({ content: `<@${member}> ur a stinky furry :)`, tts: true });
+        } else {
+            message.channel.send({ content: `No swearing <@${member}> :)`, tts: true });
         }
     }
     const prefix = '!';
@@ -37,8 +34,8 @@ module.exports = async (Discord, client, message) => {
     if(parseInt(Math.random()*100)==2){
         message.channel.send("no one asked?");
     }
-    let rawdata1 = fs.readFileSync('./config.json');
-    let config = JSON.parse(rawdata1);
+    let rawdata = fs.readFileSync('./config.json');
+    let config = JSON.parse(rawdata);
     if (message.channel.id == config.countingchannel[0].channel_id) { // this needs to be fetched from config.json later
         pgClient.query(`SELECT * FROM counting`, async (err, res) => {
             if (message.content.startsWith(parseInt(res.rows[0].number)+1) && message.author.id != res.rows[0].user_id) { // might not work idk if the [0] should be there :clown:

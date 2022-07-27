@@ -163,7 +163,13 @@ module.exports = {
             await msg.edit(":red_circle::yellow_circle::white_circle:");
             await sleep(1000);
             await msg.edit(":red_circle::yellow_circle::green_circle:");
-            await channel.send({ embeds: [embed], files: ['./output.jpg'] });
+            var i = 0;
+            for (; i < 10; i++) {
+                if (!fs.existsSync(`./output${i}.jpg`)) {
+                    await channel.send({ embeds: [embed], files: [`./output${i}.jpg`] });
+                    break;
+                }
+            }
             let startTime = new Date();
             await msg.delete();
             const collector = new Discord.MessageCollector(channel, m => m.author.id === interaction.member.user.id, { time: 10000 });
@@ -315,7 +321,7 @@ module.exports = {
                     })
                 }
             })
-            fs.unlinkSync('./output.jpg');
+            fs.unlinkSync(`./output${i}.jpg`);
         }
     }
 };
