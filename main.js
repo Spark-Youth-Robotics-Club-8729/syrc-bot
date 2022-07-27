@@ -5,14 +5,9 @@ const fs = require("fs");
 const pg = require('pg');
 const { Player } = require("discord-player")
 require("dotenv").config();
-
-// to fix heroku porting issues
 var express = require('express');
 const G = require('glob');
 var app = express();
-
-console.log(process.env.PORT);
-console.log(process.env.TOKEN);
 
 app.set('port', (process.env.PORT || 5000));
 
@@ -24,7 +19,7 @@ app.get('/', function(request, response) {
 });
 
 const pgClient = new pg.Client({
-    connectionString: process.env.HEROKU_URI,
+    connectionString: process.env.DATABASE_URL,
     ssl: {
         require: false,
         rejectUnauthorized: false
@@ -93,10 +88,8 @@ client.player = new Player(client, {
     require(`./handlers/${handler}`)(client, Discord);
 })
 
-// better error handling
 process.on('unhandledRejection', error => {
 	console.error('Unhandled promise rejection:', error);
 });
 
 client.login(process.env.TOKEN);
-// client.login('OTk2ODQ0MTg5NTg3MzYxODgy.GAMH1B.xLyeU4dnBd22w5MS71BPa4k-eWUWsf7kRc00Mw');
