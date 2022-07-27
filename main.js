@@ -11,6 +11,9 @@ var express = require('express');
 const G = require('glob');
 var app = express();
 
+console.log(process.env.PORT);
+console.log(process.env.TOKEN);
+
 app.set('port', (process.env.PORT || 5000));
 
 app.get('/', function(request, response) {
