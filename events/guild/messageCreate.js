@@ -21,10 +21,11 @@ module.exports = async (Discord, client, message) => {
             if (censorFile.censorList[i]=="owo" || censorFile.censorList[i] == "uwu") {
                 message.channel.send({ content: `<@${member}> ur a stinky furry :)`, tts: true });
                 break
-            } else {
-                message.channel.send({ content: `No swearing <@${member}> :)`, tts: true });
-                break
-            }
+            } 
+            // else {
+            //     message.channel.send({ content: `No swearing <@${member}> :)`, tts: true });
+            //     break
+            // }
         }
     }
     const prefix = '!';
