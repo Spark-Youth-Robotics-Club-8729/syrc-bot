@@ -17,7 +17,7 @@ module.exports = async (Discord, client, message) => {
         if (message.content.toLowerCase().includes(censorFile.censorList[i])){
             console.log(censorFile.censorList[i]);
             member = message.author.id.toString();
-            await message.delete();
+            // await message.delete();
             if (censorFile.censorList[i]=="owo" || censorFile.censorList[i] == "uwu") {
                 message.channel.send({ content: `<@${member}> ur a stinky furry :)`, tts: true });
                 break
