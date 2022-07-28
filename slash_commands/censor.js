@@ -15,7 +15,7 @@ module.exports = {
                 .setRequired(true)
                 .addChoices(
                     { name: 'add', value: 'add' },
-                    { name: 'delete', value: 'delete' },
+                    { name: 'remove', value: 'remove' },
                 )
         )
         .addStringOption(option => option.setName("word").setDescription("Word to add to censor list").setRequired(true)),
@@ -29,39 +29,45 @@ module.exports = {
         if (interaction.member.roles.cache.some(role => modroles.includes(role.id))) {
             const option = interaction.options.getString("mode");
             const word = interaction.options.getString("word");
+            let rawData = fs.readFileSync('./config.json');
+            let config = JSON.parse(rawData);
             if (option == "add") {
-                let rawList = fs.readFileSync('./censorList.json');
-                let censorList = JSON.parse(rawList);
                 interaction.reply("Word added: **" + word + "**");
-                censorList.push(word);
-                pgClient.query(`INSERT INTO censor VALUES ('${word}')`);
-                let censorString = JSON.stringify(censorList);
-                fs.writeFile('./censorList.json', censorString, err => {
-                    if (err) {
-                        console.log('Error storing data', err);
-                    } else {
-                        console.log('Successfully stored data!');
-                    }
-                })
-            } else {
-                let rawList = fs.readFileSync('./censorList.json');
-                let censorList = JSON.parse(rawList);
-                pgClient.query(`DELETE FROM censor WHERE word = '${word}'`);
-                var found = censorList.indexOf(word);
+                config.censor.push(word);
+                var found = config.uncensor.indexOf(word);
                 while (found != -1) {
-                    censorList.splice(found, 1);
-                    found = censorList.indexOf(word);
+                    config.uncensor.splice(found, 1);
+                    found = config.uncensor.indexOf(word);
                 }
-                let censorString = JSON.stringify(censorList);
-                fs.writeFile('./censorList.json', censorString, err => {
+                pgClient.query(`INSERT INTO censor VALUES ('${word}')`);
+                pgClient.query(`DELETE FROM uncensor WHERE word = '${word}'`);
+                let configString = JSON.stringify(config);
+                fs.writeFile('./config.json', configString, err => {
                     if (err) {
                         console.log('Error storing data', err);
                     } else {
                         console.log('Successfully stored data!');
                     }
                 })
+            } else if (option == "remove") {
+                pgClient.query(`DELETE FROM censor WHERE word = '${word}'`);
+                pgClient.query(`INSERT INTO uncensor VALUES ('${word}')`)
+                var found = config.censor.indexOf(word);
+                while (found != -1) {
+                    config.censor.splice(found, 1);
+                    found = config.censor.indexOf(word);
+                }
+                config.uncensor.push(word);
                 interaction.reply("Word removed: **" + word + "**");
             }
+            let configString = JSON.stringify(config);
+            fs.writeFile('./config.json', configString, err => {
+                if (err) {
+                    console.log('Error storing data', err);
+                } else {
+                    console.log('Successfully stored data!');
+                }
+            })
         } else {
             interaction.reply("Insufficient permissions");
         }
