@@ -1,6 +1,5 @@
 const { pgClient } = require("../../main");
 const fs = require("fs");
-const config = require('./../../config.json');
 var Filter = require('bad-words');
 
 module.exports = async (Discord, client, message) => {
@@ -11,19 +10,18 @@ module.exports = async (Discord, client, message) => {
         await message.channel.send(`Hi ${message.content.substring(3)}, I'm dad!`);
     } else if (message.content.toLowerCase().startsWith("i'm ")) {
         await message.channel.send(`Hi ${message.content.substring(4)}, I'm dad!`);
-    }else if( message.content.toLowerCase().startsWith("i am ")){
+    } else if ( message.content.toLowerCase().startsWith("i am ")){
         await message.channel.send(`Hi ${message.content.substring(5)}, I'm dad!`);
     }
     let filter = new Filter();
-    let removeWords = ['god', 'hell'];
-    filter.removeWords(...removeWords);
-    let rawList = fs.readFileSync('./censorList.json');
-    let censorList = JSON.parse(rawList);
-    filter.addWords(...censorList);
+    let rawData = fs.readFileSync('./config.json');
+    let config = JSON.parse(rawData);
+    filter.addWords(...config.censor);
+    filter.removeWords(...config.uncensor); // god hell damn
     if (filter.isProfane(message.content.toLowerCase())){
         let member = message.author.id.toString();
         await message.delete();
-        if (censorList[i] == "owo" || censorList[i] == "uwu") {
+        if (message.content.includes("owo") || message.content.includes("owo")) {
             message.channel.send({ content: `<@${member}> ur a stinky furry :)`, tts: true });
         } else {
             message.channel.send({ content: `No swearing <@${member}> :)`, tts: true });
@@ -36,8 +34,6 @@ module.exports = async (Discord, client, message) => {
     if(parseInt(Math.random()*100)==2){
         message.channel.send("no one asked?");
     }
-    let rawdata = fs.readFileSync('./config.json');
-    let config = JSON.parse(rawdata);
     if (message.channel.id == config.countingchannel[0].channel_id) { // this needs to be fetched from config.json later
         pgClient.query(`SELECT * FROM counting`, async (err, res) => {
             if (message.content.startsWith(parseInt(res.rows[0].number)+1) && message.author.id != res.rows[0].user_id) { // might not work idk if the [0] should be there :clown:
