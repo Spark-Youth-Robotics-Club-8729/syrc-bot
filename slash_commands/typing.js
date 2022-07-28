@@ -185,7 +185,7 @@ module.exports = {
                     let words = rawtext.length / 5
                     let minutes = timeAllotted / 60;
                     let grosswpm = words / minutes;
-                    let adjwpm = grosswpm * sim;
+                    let adjwpm = (grosswpm * sim) * coef;
                     let colour = 'c381fd'; // purple
                     if (adjwpm < 50) { // red
                         colour = '#f2626b';
