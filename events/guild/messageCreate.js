@@ -21,8 +21,8 @@ module.exports = async (Discord, client, message) => {
     if (filter.isProfane(message.content.toLowerCase())){
         let member = message.author.id.toString();
         await message.delete();
-        if (message.content.includes("owo") || message.content.includes("owo")) {
-            message.channel.send({ content: `<@${member}> ur a stinky furry :)`, tts: true });
+        if (message.content.toLowerCase().includes("owo") || message.content.toLowerCase().includes("owo")) {
+            message.channel.send({ content: `<@${member}> chill fam chill fam`, tts: true });
         } else {
             message.channel.send({ content: `No swearing <@${member}> :)`, tts: true });
         }
