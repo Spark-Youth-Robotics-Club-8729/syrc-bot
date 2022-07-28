@@ -31,7 +31,7 @@ module.exports = {
         const totalPages = Math.ceil(queue.tracks.length / 10) || 1
         var page = 0;
         const queueString = queue.tracks.slice(page * 10, page * 10 + 10).map((song, i) => {
-            return `**${page * 10 + i + 1}.** \`[${song.duration}]\` [${song.title}](${song.url}) -- <@${song.requestedBy.id}>`
+            return `**${page * 10 + i + 1}.** \`[${song.duration}]\` [${song.title}](${song.url}) || <@${song.requestedBy.id}>`
         }).join("\n")
         const currentSong = queue.current
         const progressBar = queue.createProgressBar();
@@ -41,7 +41,7 @@ module.exports = {
             embeds: [
                 new MessageEmbed()
                     .setDescription(`**Currently Playing**\n` + 
-                    (currentSong ? `\`[${currentSong.duration}]\` **[${currentSong.title}](${currentSong.url})** | <@${currentSong.requestedBy.id}>` : "None") + `\n${progressBar}` +
+                    (currentSong ? `\`[${currentSong.duration}]\` **[${currentSong.title}](${currentSong.url})** || <@${currentSong.requestedBy.id}>` : "None") + `\n${progressBar}` +
                     `\n\n**Queue**\n${queueString}`
                     )
                     .setFooter({

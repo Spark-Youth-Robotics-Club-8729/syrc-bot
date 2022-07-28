@@ -35,15 +35,24 @@ module.exports = {
 
 		if (interaction.options.getString("song").startsWith("https://")) {
             let url = interaction.options.getString("song")
-            const result = await client.player.search(url, {
+            const resultsong = await client.player.search(url, {
                 requestedBy: interaction.user,
                 searchEngine: QueryType.YOUTUBE_VIDEO
             })
-            if (result.tracks.length === 0)
-                return interaction.reply("No results bruddah")
-            
-            const song = result.tracks[0]
-            await queue.addTrack(song)
+            const resultplaylist = await client.player.search(url, {
+                requestedBy: interaction.user,
+                searchEngine: QueryType.YOUTUBE_PLAYLIST
+            })
+            let song = null;
+            if (resultsong.tracks.length == 0 && resultplaylist.tracks.length == 0) {
+                return interaction.reply("No results brotha")
+            } else if (resultplaylist.tracks.length == 0) {
+                song = resultsong.tracks[0];
+                await queue.addTrack(song)
+            } else if (resultsong.tracks.length == 0) {
+                song = resultplaylist.tracks[0];
+                await queue.addTracks(resultplaylist.tracks);
+            }
             embed
                 .setDescription(`**[${song.title}](${song.url})** has been added to the Queue`)
                 .setAuthor({ name: song.author })

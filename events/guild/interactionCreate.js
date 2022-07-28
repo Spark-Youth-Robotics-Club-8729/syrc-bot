@@ -74,14 +74,14 @@ module.exports = async (Discord, client, interaction) => {
                     page -= 1;
                 }
                 const queueString = queue.tracks.slice(page * 10, page * 10 + 10).map((song, i) => {
-                    return `**${page * 10 + i + 1}.** \`[${song.duration}]\` ${song.title} -- <@${song.requestedBy.id}>`
+                    return `**${page * 10 + i + 1}.** \`[${song.duration}]\` [${song.title}](${song.url}) || <@${song.requestedBy.id}>`
                 }).join("\n")
                 const currentSong = queue.current
                 await interaction.update({
                     embeds: [
                         new MessageEmbed()
                             .setDescription(`**Currently Playing**\n` + 
-                            (currentSong ? `\`[${currentSong.duration}]\` ${currentSong.title} -- <@${currentSong.requestedBy.id}>` : "None") +
+                            (currentSong ? `\`[${currentSong.duration}]\` [${currentSong.title}](${currentSong.url}) || <@${currentSong.requestedBy.id}>` : "None") +
                             `\n\n**Queue**\n${queueString}`
                             )
                             .setFooter({
@@ -111,14 +111,14 @@ module.exports = async (Discord, client, interaction) => {
                     page += 1;
                 }
                 const queueString = queue.tracks.slice(page * 10, page * 10 + 10).map((song, i) => {
-                    return `**${page * 10 + i + 1}.** \`[${song.duration}]\` ${song.title} -- <@${song.requestedBy.id}>`
+                    return `**${page * 10 + i + 1}.** \`[${song.duration}]\` [${song.title}](${song.url}) || <@${song.requestedBy.id}>`
                 }).join("\n")
                 const currentSong = queue.current
                 await interaction.update({
                     embeds: [
                         new MessageEmbed()
                             .setDescription(`**Currently Playing**\n` + 
-                            (currentSong ? `\`[${currentSong.duration}]\` ${currentSong.title} -- <@${currentSong.requestedBy.id}>` : "None") +
+                            (currentSong ? `\`[${currentSong.duration}]\` [${currentSong.title}](${currentSong.url}) || <@${currentSong.requestedBy.id}>` : "None") +
                             `\n\n**Queue**\n${queueString}`
                             )
                             .setFooter({
