@@ -7,7 +7,7 @@ const fs = require("fs");
 module.exports = {
     ...new SlashCommandBuilder()
         .setName("config")
-        .setDescription("Configure the bot's settings")
+        .setDescription("configure the bot's settings")
         .addStringOption(option =>
             option
                 .setName("action")

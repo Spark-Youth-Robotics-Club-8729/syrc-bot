@@ -21,9 +21,9 @@ module.exports = async (Discord, client, message) => {
     let censorList = JSON.parse(rawList);
     filter.addWords(...censorList);
     if (filter.isProfane(message.content.toLowerCase())){
-        member = message.author.id.toString();
+        let member = message.author.id.toString();
         await message.delete();
-        if (censorList[i]=="owo" || censorList[i] == "uwu") {
+        if (censorList[i] == "owo" || censorList[i] == "uwu") {
             message.channel.send({ content: `<@${member}> ur a stinky furry :)`, tts: true });
         } else {
             message.channel.send({ content: `No swearing <@${member}> :)`, tts: true });
