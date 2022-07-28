@@ -16,8 +16,16 @@ module.exports = async (Discord, client, message) => {
     let filter = new Filter();
     let rawData = fs.readFileSync('./config.json');
     let config = JSON.parse(rawData);
-    filter.addWords(...config.censor);
-    filter.removeWords(...config.uncensor); // god hell damn
+    let censor = [];
+    let uncensor = [];
+    for (i in config.censor) {
+        censor.push(config.censor[i].word);
+    }
+    for (i in config.uncensor) {
+        uncensor.push(config.uncensor[i].word);
+    }
+    filter.addWords(...censor);
+    filter.removeWords(...uncensor); // god hell damn
     if (filter.isProfane(message.content.toLowerCase())){
         let member = message.author.id.toString();
         await message.delete();
