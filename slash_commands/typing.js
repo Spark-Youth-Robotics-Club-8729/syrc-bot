@@ -180,6 +180,7 @@ module.exports = {
                     let timeAllotted = (endTime - startTime)/1000;
                     let sim = stringSimilarity.compareTwoStrings(rawtext, message.content);
                     let coef = (message.content.length < rawtext.length) ? (message.content.length / rawtext.length) : (rawtext.length / message.content.length);
+                    console.log(coef);
                     let accuracy = Math.round(sim*100) * coef;
                     let words = rawtext.length / 5
                     let minutes = timeAllotted / 60;
