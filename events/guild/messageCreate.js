@@ -24,7 +24,7 @@ module.exports = async (Discord, client, message) => {
         let member = message.author.id.toString();
         await message.delete();
         if (message.content.toLowerCase() == "owo" || message.content.toLowerCase() == "uwu") {
-            message.channel.send({ content: `<@${member}> ur a stinky furry :)`, tts: true });
+            message.channel.send({ content: `<@${member}> chill fam chill fam`, tts: true });
         } else {
             message.channel.send({ content: `No swearing <@${member}> :)`, tts: true });
         }
