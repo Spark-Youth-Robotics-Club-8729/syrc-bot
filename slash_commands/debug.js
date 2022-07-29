@@ -31,7 +31,7 @@ module.exports = {
         let config = await fetch_data();
         console.log("RETURNED CONFIG");
         console.log(config);
-        config.remove('typinglb');
+        delete config['typinglb'];
         await interaction.reply({ content: `\`\`\`json\n${JSON.stringify(config, null, 2)}\`\`\``, ephemeral: true });
     }
 };
