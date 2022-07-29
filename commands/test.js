@@ -6,6 +6,10 @@ module.exports = {
     name: 'test',
     description: "unmute a member",
     async execute(client, message, args, Discord) {
-        message.channel.send("hi");
+        let msgSplit = message.content.split(' ');
+        console.log(msgSplit[1]);
+        console.log(msgSplit[2]);
+        role=message.guild.roles.cache.find(role => role.id === msgSplit[2])
+        console.log(role.name);
     }
 }
