@@ -180,11 +180,12 @@ module.exports = {
                     let timeAllotted = (endTime - startTime)/1000;
                     let sim = stringSimilarity.compareTwoStrings(rawtext, message.content);
                     let coef = (message.content.length < rawtext.length) ? (message.content.length / rawtext.length) : (rawtext.length / message.content.length);
-                    let accuracy = Math.round(sim*100) * coef;
+                    console.log(coef);
+                    let accuracy = Math.round(sim*coef*100);
                     let words = rawtext.length / 5
                     let minutes = timeAllotted / 60;
                     let grosswpm = words / minutes;
-                    let adjwpm = grosswpm * sim;
+                    let adjwpm = grosswpm * sim * coef;
                     let colour = 'c381fd'; // purple
                     if (adjwpm < 50) { // red
                         colour = '#f2626b';
@@ -233,11 +234,11 @@ module.exports = {
                             let position = 0;
                             for (; position < typinglb.length && position < 10; position++) {
                                 if (!(typinglb[position].member_id in freq)) {
-                                    freq[typinglb[position].member_id] = typinglb[position].wpm;
+                                    freq[typinglb[position].member_id] = position;
                                 } else {
                                     if (parseFloat(typinglb[position].wpm) < adjwpm.toFixed(2)) {
                                         let newEmbed = {
-                                            title: `Your score took the #${position} spot on the leaderboard! :tada:`,
+                                            title: `Your score took the #${freq[typinglb[position].member_id]+1} spot on the leaderboard! :tada:`,
                                             description: `Wow, good job! Do /typing leaderboard to see your score!`,
                                             color: '#5ecc71',
                                             timestamp: new Date()
