@@ -73,7 +73,7 @@ module.exports = {
                 let menuMsg = await interactionChannel.send({ embeds: [newEmbed] });
                 var roles = [];
                 var rolefields = [];
-                let descriptionMsg = "Send an emoji and a role to be added to the menu in the format <emoji> <role> (\"-\" to finish)";
+                let descriptionMsg = "Send an emoji and a role to be added to the menu in the format <emoji> <roleid> (\"-\" to finish)";
                 collector.on('collect', async message => {
                     if (message.author.id === interaction.member.user.id) {
                         if (message.content == '-') {
@@ -81,7 +81,7 @@ module.exports = {
                             collector.stop();
                         } else {
                             let msgSplit = message.content.split(' ');
-                            let role = interaction.guild.roles.cache.get(msgSplit[1].substring(3, msgSplit[1].length - 1));
+                            let role = message.guild.roles.cache.find(role => role.id === msgSplit[1]);
                             roles.push({ "emoji": msgSplit[0], "role": role });
                             rolefields.push({ name: msgSplit[0], value: "<@&" + role.id + ">", inline: true });
                             let newEmbed = {

@@ -58,59 +58,83 @@ module.exports = {
                 await interaction.reply({ content: JSON.stringify(config[setting]) });
             } else if (action == 'add') {
                 if (setting == 'modrole') {
+                    let temp = JSON.stringify(config.modrole);
                     try {
-                        let temp = JSON.stringify(config.modrole);
                         config.modrole.push({"role_id": role.id});
-                        pgClient.query(`INSERT INTO modrole (role_id) VALUES ('${role.id}')`)
-                        await interaction.reply({ content: `Modrole changed from ${temp} to ${JSON.stringify(config.modrole)}` });
                     } catch {
-                        await interaction.reply({ content: "A role argument is required" });
+                        return await interaction.reply({ content: "A role argument is required" });
                     }
+                    try {
+                        await pgClient.query(`INSERT INTO modrole (role_id) VALUES ('${role.id}')`);
+                    } catch {
+                        return await interaction.reply({ content: "Cannot insert into database (something on your end prob xd)" });
+                    }
+                    await interaction.reply({ content: `Modrole changed from ${temp} to ${JSON.stringify(config.modrole)}` });
                 } else if (setting == 'meetingchannel') {
+                    let temp = JSON.stringify(config.meetingchannel);
                     try {
-                        let temp = JSON.stringify(config.meetingchannel);
                         config.meetingchannel.push({"channel_id": channel.id});
-                        await pgClient.query(`INSERT INTO meetingchannel(channel_id) VALUES ('${channel.id}')`);
-                        await interaction.reply({ content: `Meeting channel changed from ${temp} to ${JSON.stringify(config.meetingchannel)}` });
                     } catch {
-                        await interaction.reply({ content: "A channel argument is required" });
+                        return await interaction.reply({ content: "A channel argument is required" });
                     }
+                    try {
+                        await pgClient.query(`INSERT INTO meetingchannel (channel_id) VALUES ('${channel.id}')`);
+                    } catch {
+                        return await interaction.reply({ content: "Cannot insert into database (something on your end prob xd)" });
+                    }
+                    await interaction.reply({ content: `Meeting channel changed from ${temp} to ${JSON.stringify(config.meetingchannel)}` });
                 } else if (setting == 'botcomchannel') {
+                    let temp = JSON.stringify(config.botcomchannel);
                     try {
-                        let temp = JSON.stringify(config.botcomchannel);
                         config.botcomchannel.push({"channel_id": channel.id});
-                        await pgClient.query(`INSERT INTO botcomchannel(channel_id) VALUES ('${channel.id}')`);
-                        await interaction.reply({ content: `Bot commands channel changed from ${temp} to ${JSON.stringify(config.botcomchannel)}` });
                     } catch {
-                        await interaction.reply({ content: "A channel argument is required" });
+                        return await interaction.reply({ content: "A channel argument is required" });
                     }
+                    try {
+                        await pgClient.query(`INSERT INTO botcomchannel (channel_id) VALUES ('${channel.id}')`);
+                    } catch {
+                        return await interaction.reply({ content: "Cannot insert into database (something on your end prob xd)" });
+                    }
+                    await interaction.reply({ content: `Bot commands channel changed from ${temp} to ${JSON.stringify(config.botcomchannel)}` });
                 } else if (setting == 'musicchannel') {
+                    let temp = JSON.stringify(config.musicchannel);
                     try {
-                        let temp = JSON.stringify(config.musicchannel);
                         config.musicchannel.push({"channel_id": channel.id});
-                        await pgClient.query(`INSERT INTO musicchannel(channel_id) VALUES ('${channel.id}')`);
-                        await interaction.reply({ content: `Music channel changed from ${temp} to ${JSON.stringify(config.musicchannel)}` });
                     } catch {
-                        await interaction.reply({ content: "A channel argument is required" });
+                        return await interaction.reply({ content: "A channel argument is required" });
                     }
+                    try {
+                        await pgClient.query(`INSERT INTO musicchannel (channel_id) VALUES ('${channel.id}')`);
+                    } catch {
+                        return await interaction.reply({ content: "Cannot insert into database (something on your end prob xd)" });
+                    }
+                    await interaction.reply({ content: `Music channel changed from ${temp} to ${JSON.stringify(config.musicchannel)}` });
                 } else if (setting == 'welcomechannel') {
+                    let temp = JSON.stringify(config.welcomechannel);
                     try {
-                        let temp = JSON.stringify(config.welcomechannel);
                         config.welcomechannel.push({"channel_id": channel.id});
-                        await pgClient.query(`INSERT INTO welcomechannel(channel_id) VALUES ('${channel.id}')`);
-                        await interaction.reply({ content: `Welcome channel changed from ${temp} to ${JSON.stringify(config.welcomechannel)}` });
                     } catch {
-                        await interaction.reply({ content: "A channel argument is required" });
+                        return await interaction.reply({ content: "A channel argument is required" });
                     }
-                } else if (setting == 'countingchannel') {
                     try {
-                        let temp = JSON.stringify(config.countingchannel);
-                        config.countingchannel.push({"channel_id": channel.id});
-                        await pgClient.query(`INSERT INTO countingchannel(channel_id) VALUES ('${channel.id}')`);
-                        await interaction.reply({ content: `Counting channel changed from ${temp} to ${JSON.stringify(config.countingchannel)}` });
+                        await pgClient.query(`INSERT INTO welcomechannel (channel_id) VALUES ('${channel.id}')`);
                     } catch {
-                        await interaction.reply({ content: "A channel argument is required" });
+                        return await interaction.reply({ content: "Cannot insert into database (something on your end prob xd)" });
                     }
+                    await interaction.reply({ content: `Welcome channel changed from ${temp} to ${JSON.stringify(config.welcomechannel)}` });
+                } else if (setting == 'countingchannel') {
+                    let temp = JSON.stringify(config.countingchannel);
+                    try {
+                        config.countingchannel.push({"channel_id": channel.id});
+                    } catch {
+                        return await interaction.reply({ content: "A channel argument is required" });
+                    }
+                    try {
+                        await pgClient.query(`INSERT INTO countingchannel (channel_id) VALUES ('${channel.id}')`);
+                    } catch {
+                        return await interaction.reply({ content: "Cannot insert into database (something on your end prob xd)" });
+                    }
+                    await interaction.reply({ content: `Counting channel changed from ${temp} to ${JSON.stringify(config.countingchannel)}` });
                 }
                 console.log("CONFIG");
                 console.log(config);
