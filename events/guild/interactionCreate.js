@@ -10,7 +10,7 @@ module.exports = async (Discord, client, interaction) => {
     for (i in config.botcomchannel) {
         allowed_channels.push(config.botcomchannel[i].channel_id);
     }
-    const target = interaction.guild.members.cache.get(interaction.user.id);
+    const target = interaction.guild.members.fetch(interaction.user.id);
     const cmd = client.slashCommands.get(interaction.commandName);
     if (target.permissions.has("ADMINISTRATOR") || allowed_channels.length == 0 || interaction.commandName == 'clear' || allowed_channels.includes(interaction.channel.id)){
         if (interaction.isCommand()) {
@@ -33,7 +33,7 @@ module.exports = async (Discord, client, interaction) => {
                     if (!err) {
                         var typinglb = res.rows;
                         let score = typinglb[parseInt(interaction.values)-1];
-                        let user = client.users.cache.get(score['member_id']);
+                        let member = await interaction.guild.members.fetch(score['member_id']);
                         let newEmbed = {
                             title: "#" + interaction.values.toString() + " - " + score["wpm"] + " wpm",
                             description: `*\"${score["text"]}\"*`,
@@ -41,7 +41,7 @@ module.exports = async (Discord, client, interaction) => {
                             timestamp: new Date(),
                             fields: [
                                 { name: "Accuracy", value: score["accuracy"] + "%" },
-                                { name: "Member", value: user.username },
+                                { name: "Member", value: member.user.username },
                                 { name: "Time taken", value: score["time"] + " seconds" },
                                 { name: "Gross wpm", value: score["gross_wpm"] + " wpm" },
                                 { name: "Date", value: score["date"] }
