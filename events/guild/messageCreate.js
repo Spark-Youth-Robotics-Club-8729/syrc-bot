@@ -25,9 +25,7 @@ module.exports = async (Discord, client, message) => {
         uncensor.push(config.uncensor[i].word);
     }
     filter.addWords(...censor);
-    console.log("HI");
     filter.removeWords(...uncensor);
-    console.log(message.content.toLowerCase());
     if (filter.isProfane(message.content.toLowerCase())){
         let member = message.author.id.toString();
         await message.delete();
