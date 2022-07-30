@@ -63,7 +63,7 @@ module.exports = {
             let config = JSON.parse(rawdata);
 
             if (mode == "add") {
-                const collector = new Discord.MessageCollector(channel, m => m.author.id === interaction.member.user.id, { time: 10000 });
+                const collector = new Discord.MessageCollector(channel, m => m.author.id == interaction.member.user.id, { time: 10000 });
                 let newEmbed = {
                     title: "Reaction Role Creator",
                     description: `**Send an emoji and a role to be added to the menu in the format <emoji> <role> (\"-\" to finish)**\n*empty*`,
@@ -74,7 +74,9 @@ module.exports = {
                 var roles = [];
                 var rolefields = [];
                 let descriptionMsg = "Send an emoji and a role to be added to the menu in the format <emoji> <roleid> (\"-\" to finish)";
+                console.log("HI1");
                 collector.on('collect', async message => {
+                    console.log("HI2");
                     console.log(typeof(message.author.id));
                     console.log(typeof(interaction.member.user.id));
                     if (message.author.id == interaction.member.user.id) {
@@ -98,6 +100,7 @@ module.exports = {
                     }
                 })
                 collector.on('end', async (collected, reason) => {
+                    console.log("HI3");
                     if (roles.length == 0) {
                         return await interaction.channel.send({ content: "Please enter at least 1 reaction role", ephemeral: true });
                     }
@@ -172,7 +175,7 @@ module.exports = {
                 await interaction.reply({ embeds: [newEmbed] });
             }
         } else {
-            interaction.followUp("Insufficient Permissions");
+            await interaction.reply("Insufficient Permissions");
         }
     }
 };
