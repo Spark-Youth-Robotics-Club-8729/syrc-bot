@@ -75,7 +75,9 @@ module.exports = {
                 var rolefields = [];
                 let descriptionMsg = "Send an emoji and a role to be added to the menu in the format <emoji> <roleid> (\"-\" to finish)";
                 collector.on('collect', async message => {
-                    if (message.author.id === interaction.member.user.id) {
+                    console.log(typeof(message.author.id));
+                    console.log(typeof(interaction.member.user.id));
+                    if (message.author.id == interaction.member.user.id) {
                         if (message.content == '-') {
                             await message.react("✅");
                             collector.stop();
