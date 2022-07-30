@@ -33,11 +33,11 @@ module.exports = {
             let config = JSON.parse(rawData);
             if (option == "add") {
                 interaction.reply("Word added: **" + word + "**");
-                config.censor.push(word);
-                var found = config.uncensor.indexOf(word);
+                config.censor.push({"word": word});
+                var found = config.uncensor.indexOf({"word": word});
                 while (found != -1) {
                     config.uncensor.splice(found, 1);
-                    found = config.uncensor.indexOf(word);
+                    found = config.uncensor.indexOf({"word": word});
                 }
                 pgClient.query(`INSERT INTO censor VALUES ('${word}')`);
                 pgClient.query(`DELETE FROM uncensor WHERE word = '${word}'`);
@@ -52,12 +52,12 @@ module.exports = {
             } else if (option == "remove") {
                 pgClient.query(`DELETE FROM censor WHERE word = '${word}'`);
                 pgClient.query(`INSERT INTO uncensor VALUES ('${word}')`)
-                var found = config.censor.indexOf(word);
+                var found = config.censor.indexOf({"word": word});
                 while (found != -1) {
                     config.censor.splice(found, 1);
-                    found = config.censor.indexOf(word);
+                    found = config.censor.indexOf({"word": word});
                 }
-                config.uncensor.push(word);
+                config.uncensor.push({"word": word});
                 interaction.reply("Word removed: **" + word + "**");
             }
             let configString = JSON.stringify(config);
