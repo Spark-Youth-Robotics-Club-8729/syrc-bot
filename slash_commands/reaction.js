@@ -81,7 +81,8 @@ module.exports = {
                             collector.stop();
                         } else {
                             let msgSplit = message.content.split(' ');
-                            let role = message.guild.roles.cache.find(role => role.id === msgSplit[1]);
+                            console.log(msgSplit);
+                            let role = await message.guild.roles.fetch(role => role.id == msgSplit[1]);
                             roles.push({ "emoji": msgSplit[0], "role": role });
                             rolefields.push({ name: msgSplit[0], value: "<@&" + role.id + ">", inline: true });
                             let newEmbed = {
