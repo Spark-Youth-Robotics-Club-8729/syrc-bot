@@ -11,7 +11,7 @@ module.exports = {
         .setDescription("𝔹𝕆𝕆𝕆𝕆𝕆𝕆𝕆𝕆𝕆𝕆𝕆𝕆𝕆𝕆𝕊𝕋"),
     run: async (client, interaction, args) => {
         if (!interaction.member.voice.channel) {
-            return interaction.reply("You need to be in a VC to use this command");
+            return interaction.reply({ content: "You need to be in a VC to use this command", ephemeral: true });
         }
 		const queue = await client.player.createQueue(interaction.guild);
 		if (!queue) {
@@ -24,7 +24,7 @@ module.exports = {
         }
         let newEmbed = {
             description: `**BOOSTED TO *${queue.volume + 300}***`,
-            color: '#5F75DE'
+            color: '#F7241D'
         }
         await queue.setVolume(queue.volume + 300);
         await interaction.reply({
