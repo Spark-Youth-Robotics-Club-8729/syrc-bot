@@ -148,7 +148,6 @@ module.exports = {
                     break;
                 }
             }
-            console.log(index);
             fs.readFile('./assets/texts.txt', 'utf8', (err, data) => {
                 if (err) {
                     console.error(err);
@@ -180,7 +179,6 @@ module.exports = {
                     let timeAllotted = (endTime - startTime)/1000;
                     let sim = stringSimilarity.compareTwoStrings(rawtext, message.content);
                     let coef = (message.content.length < rawtext.length) ? (message.content.length / rawtext.length) : (rawtext.length / message.content.length);
-                    console.log(coef);
                     let accuracy = Math.round(sim*coef*100);
                     let words = rawtext.length / 5
                     let minutes = timeAllotted / 60;
@@ -216,8 +214,6 @@ module.exports = {
                     pgClient.query(`SELECT * FROM typinglb`, async (err, res) => {
                         if (!err) {
                             var typinglb = res.rows;
-                            console.log("BEFORE:");
-                            console.log(typinglb);
                             typinglb.push({
                                 "wpm": adjwpm.toFixed(2), 
                                 "member_id": interaction.member.user.id.toString(), 
@@ -251,7 +247,6 @@ module.exports = {
                                 }
                             }
                             typinglb.splice(10, typinglb.length - 10);
-                            console.log("AFTER:");
                             console.log(typinglb);
                             store_typing_data(typinglb);
                             collector.stop();
