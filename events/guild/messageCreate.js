@@ -19,7 +19,6 @@ module.exports = async (Discord, client, message) => {
     let censor = [];
     let uncensor = [];
     for (i in config.censor) {
-        console.log(config.censor[i].word);
         censor.push(config.censor[i].word);
     }
     for (i in config.uncensor) {
