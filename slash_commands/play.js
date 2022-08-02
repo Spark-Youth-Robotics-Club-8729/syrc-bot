@@ -5,6 +5,13 @@ const ytSearch = require('yt-search');
 const { joinVoiceChannel, createAudioPlayer, createAudioResource } =  require("@discordjs/voice");
 const { QueryType } = require("discord-player")
 const fs = require("fs");
+const { getAudioDurationInSeconds } = require('get-audio-duration');
+
+function sleep(ms) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    });
+}
 
 module.exports = {
     ...new SlashCommandBuilder()
@@ -18,7 +25,7 @@ module.exports = {
         ),
     run: async (client, interaction, args) => {
         if (!interaction.member.voice.channel) {
-            return interaction.reply("You need to be in a VC to use this command");
+            return interaction.reply({ content: "You need to be in a VC to use this command", ephemeral: true });
         }
         let rawdata = fs.readFileSync('./config.json');
         let config = JSON.parse(rawdata);
@@ -30,9 +37,24 @@ module.exports = {
             return interaction.reply("Playing music in this voice channel is prohibited");
         }
 		const queue = await client.player.createQueue(interaction.guild);
-		if (!queue.connection) await queue.connect(interaction.member.voice.channel)
+        await interaction.deferReply();
+		if (!queue.connection) {
+            const audioPlayer = createAudioPlayer();
+            const connection = joinVoiceChannel({
+                channelId: interaction.member.voice.channel.id,
+                guildId: interaction.guild.id,
+                adapterCreator: interaction.guild.voiceAdapterCreator,
+            });
+            connection.subscribe(audioPlayer);
+            const resource = createAudioResource('./assets/welcome.mp3');
+            audioPlayer.play(resource);
+            await getAudioDurationInSeconds('./assets/welcome.mp3').then(async (duration) => {
+                await sleep(duration*1000);
+            })
+            connection.destroy();
+            await queue.connect(interaction.member.voice.channel);
+        }
 		let embed = new MessageEmbed()
-
 		if (interaction.options.getString("song").startsWith("https://")) {
             let url = interaction.options.getString("song")
             const resultsong = await client.player.search(url, {
@@ -45,7 +67,7 @@ module.exports = {
             })
             let song = null;
             if (resultsong.tracks.length == 0 && resultplaylist.tracks.length == 0) {
-                return interaction.reply("No results brotha")
+                return interaction.editReply("No results brotha")
             } else if (resultplaylist.tracks.length == 0) {
                 song = resultsong.tracks[0];
                 await queue.addTrack(song)
@@ -66,7 +88,7 @@ module.exports = {
                 searchEngine: QueryType.AUTO
             })
             if (result.tracks.length === 0)
-                return interaction.reply("No results bruddah")
+                return interaction.editReply("No results brotha")
             const song = result.tracks[0]
             await queue.addTrack(song)
             embed
@@ -78,7 +100,7 @@ module.exports = {
 		}
         await queue.setVolume(69);
         if (!queue.playing) await queue.play()
-        await interaction.reply({
+        await interaction.editReply({
             embeds: [embed]
         })
     }

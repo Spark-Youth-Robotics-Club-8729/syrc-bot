@@ -6,7 +6,6 @@ const pg = require('pg');
 const { Player } = require("discord-player")
 require("dotenv").config();
 var express = require('express');
-const G = require('glob');
 var app = express();
 
 app.set('port', (process.env.PORT || 5000));
