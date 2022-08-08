@@ -77,6 +77,8 @@ module.exports = async (Discord, client, interaction) => {
                     return `**${page * 10 + i + 1}.** \`[${song.duration}]\` [${song.title}](${song.url}) | <@${song.requestedBy.id}>`
                 }).join("\n")
                 const currentSong = queue.current
+                const secondsFormatted = ("0" + (((queue.totalTime + currentSong.durationMS) / 1000) % 60)).slice(-2);
+                const duration = `Queue duration - ${Math.floor(((queue.totalTime + currentSong.durationMS) / 1000) / 60).toString()}:${secondsFormatted.toString()}`;
                 await interaction.update({
                     embeds: [
                         new MessageEmbed()
@@ -85,7 +87,7 @@ module.exports = async (Discord, client, interaction) => {
                             `\n\n**Queue**\n${queueString}`
                             )
                             .setFooter({
-                                text: `Page ${page + 1} of ${totalPages}`
+                                text: `Page ${page + 1} of ${totalPages} | ${duration}`
                             })
                             .setThumbnail(currentSong.setThumbnail)
                     ],
@@ -114,6 +116,8 @@ module.exports = async (Discord, client, interaction) => {
                     return `**${page * 10 + i + 1}.** \`[${song.duration}]\` [${song.title}](${song.url}) | <@${song.requestedBy.id}>`
                 }).join("\n")
                 const currentSong = queue.current
+                const secondsFormatted = ("0" + (((queue.totalTime + currentSong.durationMS) / 1000) % 60)).slice(-2);
+                const duration = `Queue duration - ${Math.floor(((queue.totalTime + currentSong.durationMS) / 1000) / 60).toString()}:${secondsFormatted.toString()}`;
                 await interaction.update({
                     embeds: [
                         new MessageEmbed()
@@ -122,7 +126,7 @@ module.exports = async (Discord, client, interaction) => {
                             `\n\n**Queue**\n${queueString}`
                             )
                             .setFooter({
-                                text: `Page ${page + 1} of ${totalPages}`
+                                text: `Page ${page + 1} of ${totalPages} | ${duration}`
                             })
                             .setThumbnail(currentSong.setThumbnail)
                     ],
