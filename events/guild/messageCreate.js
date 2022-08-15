@@ -6,9 +6,7 @@ module.exports = async (Discord, client, message) => {
     if (message.author.bot) {
         return;
     }   
-    if(message.author.id=="471713617633607680"){
-        await message.delete();
-    }
+
     if (message.content.toLowerCase().startsWith("im ")) {
         if(parseInt(Math.random()*10)==2){
             await message.channel.send(`Hi ${message.content.substring(3)}, I'm dad!`);
