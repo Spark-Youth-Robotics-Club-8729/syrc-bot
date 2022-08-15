@@ -6,12 +6,19 @@ module.exports = async (Discord, client, message) => {
     if (message.author.bot) {
         return;
     }   
+
     if (message.content.toLowerCase().startsWith("im ")) {
-        await message.channel.send(`Hi ${message.content.substring(3)}, I'm dad!`);
+        if(parseInt(Math.random()*10)==2){
+            await message.channel.send(`Hi ${message.content.substring(3)}, I'm dad!`);
+        }
     } else if (message.content.toLowerCase().startsWith("i'm ")) {
-        await message.channel.send(`Hi ${message.content.substring(4)}, I'm dad!`);
+        if(parseInt(Math.random()*10)==2){
+            await message.channel.send(`Hi ${message.content.substring(4)}, I'm dad!`);
+        }
     } else if ( message.content.toLowerCase().startsWith("i am ")){
-        await message.channel.send(`Hi ${message.content.substring(5)}, I'm dad!`);
+        if(parseInt(Math.random()*10)==2){
+            await message.channel.send(`Hi ${message.content.substring(5)}, I'm dad!`);
+        }
     }
     let filter = new Filter();
     let rawData = fs.readFileSync('./config.json');
@@ -40,7 +47,9 @@ module.exports = async (Discord, client, message) => {
         message.channel.send("Who are you, Tony?");
     }
     if(parseInt(Math.random()*100)==2){
-        message.channel.send("no one asked?");
+        if(message.channel.id==853288359505821716 || message.channel.id==904848756090998834){
+            message.channel.send("no one asked?");
+        }
     }
     if (message.channel.id == config.countingchannel[0].channel_id) { // this needs to be fetched from config.json later
         pgClient.query(`SELECT * FROM counting`, async (err, res) => {

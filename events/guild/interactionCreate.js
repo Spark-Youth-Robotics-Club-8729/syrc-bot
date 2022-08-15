@@ -74,18 +74,20 @@ module.exports = async (Discord, client, interaction) => {
                     page -= 1;
                 }
                 const queueString = queue.tracks.slice(page * 10, page * 10 + 10).map((song, i) => {
-                    return `**${page * 10 + i + 1}.** \`[${song.duration}]\` [${song.title}](${song.url}) || <@${song.requestedBy.id}>`
+                    return `**${page * 10 + i + 1}.** \`[${song.duration}]\` [${song.title}](${song.url}) | <@${song.requestedBy.id}>`
                 }).join("\n")
                 const currentSong = queue.current
+                const secondsFormatted = ("0" + (((queue.totalTime + currentSong.durationMS) / 1000) % 60)).slice(-2);
+                const duration = `Queue duration - ${Math.floor(((queue.totalTime + currentSong.durationMS) / 1000) / 60).toString()}:${secondsFormatted.toString()}`;
                 await interaction.update({
                     embeds: [
                         new MessageEmbed()
                             .setDescription(`**Currently Playing**\n` + 
-                            (currentSong ? `\`[${currentSong.duration}]\` [${currentSong.title}](${currentSong.url}) || <@${currentSong.requestedBy.id}>` : "None") +
+                            (currentSong ? `\`[${currentSong.duration}]\` [${currentSong.title}](${currentSong.url}) | <@${currentSong.requestedBy.id}>` : "None") +
                             `\n\n**Queue**\n${queueString}`
                             )
                             .setFooter({
-                                text: `Page ${page + 1} of ${totalPages}`
+                                text: `Page ${page + 1} of ${totalPages} | ${duration}`
                             })
                             .setThumbnail(currentSong.setThumbnail)
                     ],
@@ -111,18 +113,20 @@ module.exports = async (Discord, client, interaction) => {
                     page += 1;
                 }
                 const queueString = queue.tracks.slice(page * 10, page * 10 + 10).map((song, i) => {
-                    return `**${page * 10 + i + 1}.** \`[${song.duration}]\` [${song.title}](${song.url}) || <@${song.requestedBy.id}>`
+                    return `**${page * 10 + i + 1}.** \`[${song.duration}]\` [${song.title}](${song.url}) | <@${song.requestedBy.id}>`
                 }).join("\n")
                 const currentSong = queue.current
+                const secondsFormatted = ("0" + (((queue.totalTime + currentSong.durationMS) / 1000) % 60)).slice(-2);
+                const duration = `Queue duration - ${Math.floor(((queue.totalTime + currentSong.durationMS) / 1000) / 60).toString()}:${secondsFormatted.toString()}`;
                 await interaction.update({
                     embeds: [
                         new MessageEmbed()
                             .setDescription(`**Currently Playing**\n` + 
-                            (currentSong ? `\`[${currentSong.duration}]\` [${currentSong.title}](${currentSong.url}) || <@${currentSong.requestedBy.id}>` : "None") +
+                            (currentSong ? `\`[${currentSong.duration}]\` [${currentSong.title}](${currentSong.url}) | <@${currentSong.requestedBy.id}>` : "None") +
                             `\n\n**Queue**\n${queueString}`
                             )
                             .setFooter({
-                                text: `Page ${page + 1} of ${totalPages}`
+                                text: `Page ${page + 1} of ${totalPages} | ${duration}`
                             })
                             .setThumbnail(currentSong.setThumbnail)
                     ],

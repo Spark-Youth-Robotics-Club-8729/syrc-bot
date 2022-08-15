@@ -57,7 +57,7 @@ module.exports = {
                 return await interaction.reply("Time traveling isn't allowed sorry");
             }
             const newEmbed = new Discord.MessageEmbed()
-                        .setTitle(`${subteams.name} meeting`)
+                        .setTitle(`${subteams.name.toUpperCase()} meeting`)
                         .setColor("#5F75DE")
                         .setDescription(`**Starting:** <t:${date.getTime() / 1000}:R>`)
                         .addField( "Notes", `*${notes}*` )
