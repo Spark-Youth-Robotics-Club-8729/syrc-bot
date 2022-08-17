@@ -33,7 +33,7 @@ module.exports = async (Discord, client, message) => {
     }
     filter.addWords(...censor);
     filter.removeWords(...uncensor);
-    if (filter.isProfane(message.content.toLowerCase())){
+    if (filter.isProfane(message.content.toLowerCase()) && message.channel.id!="925454253319921695"){
         let member = message.author.id.toString();
         await message.delete();
         if (message.content.toLowerCase().includes("owo") || message.content.toLowerCase().includes("owo")) {
