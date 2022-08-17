@@ -3,7 +3,7 @@ const fs = require("fs");
 var Filter = require('bad-words');
 
 module.exports = async (Discord, client, message) => {
-    if (message.author.bot) {
+    if (message.author.bot && message.channel.id!="974471842704277524") {
         return;
     }   
 
