@@ -38,27 +38,28 @@ module.exports = {
         }
 	const queue = await client.player.createQueue(interaction.guild);
         await interaction.deferReply();
-	if (!queue.connection) {
-            const audioPlayer = createAudioPlayer();
-            const connection = joinVoiceChannel({
-                channelId: interaction.member.voice.channel.id,
-                guildId: interaction.guild.id,
-                adapterCreator: interaction.guild.voiceAdapterCreator,
-            });
-            connection.subscribe(audioPlayer);
-            const resource = createAudioResource('./assets/welcome.mp3');
-            audioPlayer.play(resource);
-            await getAudioDurationInSeconds('./assets/welcome.mp3').then(async (duration) => {
-                await sleep(duration*1200);
-            })
-            connection.destroy();
-	    try {
-		await queue.connect(interaction.member.voice.channel)
-	    } catch (error) {
-	        queue.destroy()
-	        console.log(error)
-	    }
-        }
+// 	if (!queue.connection) {
+//             const audioPlayer = createAudioPlayer();
+//             const connection = joinVoiceChannel({
+//                 channelId: interaction.member.voice.channel.id,
+//                 guildId: interaction.guild.id,
+//                 adapterCreator: interaction.guild.voiceAdapterCreator,
+//             });
+//             connection.subscribe(audioPlayer);
+//             const resource = createAudioResource('./assets/welcome.mp3');
+//             audioPlayer.play(resource);
+//             await getAudioDurationInSeconds('./assets/welcome.mp3').then(async (duration) => {
+//                 await sleep(duration*1200);
+//             })
+//             connection.destroy();
+// 	    try {
+// 		await queue.connect(interaction.member.voice.channel)
+// 	    } catch (error) {
+// 	        queue.destroy()
+// 	        console.log(error)
+// 	    }
+//         }
+    await queue.connect(interaction.member.voice.channel)
 	let embed = new MessageEmbed()
 	if (interaction.options.getString("song").startsWith("https://")) {
             let url = interaction.options.getString("song")
