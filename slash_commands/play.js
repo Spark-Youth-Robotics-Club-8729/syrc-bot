@@ -49,10 +49,15 @@ module.exports = {
             const resource = createAudioResource('./assets/welcome.mp3');
             audioPlayer.play(resource);
             await getAudioDurationInSeconds('./assets/welcome.mp3').then(async (duration) => {
-                await sleep(duration*1000);
+                await sleep(duration*1200);
             })
             connection.destroy();
-            await queue.connect(interaction.member.voice.channel);
+	    try {
+		await queue.connect(interaction.member.voice.channel)
+	    } catch (error) {
+	        queue.destroy()
+	        console.log(error)
+	    }
         }
 	let embed = new MessageEmbed()
 	if (interaction.options.getString("song").startsWith("https://")) {
