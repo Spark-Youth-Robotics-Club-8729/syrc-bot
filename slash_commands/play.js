@@ -36,26 +36,32 @@ module.exports = {
         if (!allowed_channels.includes(interaction.member.voice.channel.id)) {
             return interaction.reply("Playing music in this voice channel is prohibited");
         }
-		const queue = await client.player.createQueue(interaction.guild);
+	const queue = await client.player.createQueue(interaction.guild);
         await interaction.deferReply();
-		if (!queue.connection) {
-            const audioPlayer = createAudioPlayer();
-            const connection = joinVoiceChannel({
-                channelId: interaction.member.voice.channel.id,
-                guildId: interaction.guild.id,
-                adapterCreator: interaction.guild.voiceAdapterCreator,
-            });
-            connection.subscribe(audioPlayer);
-            const resource = createAudioResource('./assets/welcome.mp3');
-            audioPlayer.play(resource);
-            await getAudioDurationInSeconds('./assets/welcome.mp3').then(async (duration) => {
-                await sleep(duration*1000);
-            })
-            connection.destroy();
-            await queue.connect(interaction.member.voice.channel);
-        }
-		let embed = new MessageEmbed()
-		if (interaction.options.getString("song").startsWith("https://")) {
+// 	if (!queue.connection) {
+//             const audioPlayer = createAudioPlayer();
+//             const connection = joinVoiceChannel({
+//                 channelId: interaction.member.voice.channel.id,
+//                 guildId: interaction.guild.id,
+//                 adapterCreator: interaction.guild.voiceAdapterCreator,
+//             });
+//             connection.subscribe(audioPlayer);
+//             const resource = createAudioResource('./assets/welcome.mp3');
+//             audioPlayer.play(resource);
+//             await getAudioDurationInSeconds('./assets/welcome.mp3').then(async (duration) => {
+//                 await sleep(duration*1200);
+//             })
+//             connection.destroy();
+// 	    try {
+// 		await queue.connect(interaction.member.voice.channel)
+// 	    } catch (error) {
+// 	        queue.destroy()
+// 	        console.log(error)
+// 	    }
+//         }
+    await queue.connect(interaction.member.voice.channel)
+	let embed = new MessageEmbed()
+	if (interaction.options.getString("song").startsWith("https://")) {
             let url = interaction.options.getString("song")
             const resultsong = await client.player.search(url, {
                 requestedBy: interaction.user,
@@ -81,14 +87,15 @@ module.exports = {
                 .setThumbnail(song.thumbnail)
                 .setColor('#5F75DE')
                 .setFooter({ text: `Duration: ${song.duration}`})
-		} else {
+	} else {
             let url = interaction.options.getString("song")
             const result = await client.player.search(url, {
                 requestedBy: interaction.user,
                 searchEngine: QueryType.AUTO
             })
-            if (result.tracks.length === 0)
+            if (result.tracks.length === 0) {
                 return interaction.editReply("No results brotha")
+	    }
             const song = result.tracks[0]
             await queue.addTrack(song)
             embed
@@ -97,7 +104,7 @@ module.exports = {
                 .setThumbnail(song.thumbnail)
                 .setColor('#5F75DE')
                 .setFooter({ text: `Duration: ${song.duration}`})
-		}
+	}
         await queue.setVolume(69);
         if (!queue.playing) await queue.play()
         await interaction.editReply({
