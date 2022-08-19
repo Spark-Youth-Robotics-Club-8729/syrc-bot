@@ -7,7 +7,10 @@ module.exports = async (Discord, client, message) => {
     if (message.author.bot && message.channel.id!="974471842704277524") {
         return;
     }   
-
+    if(botMsg=true){
+        botMsg=false;
+        return;
+    }
     let filter = new Filter();
     let rawData = fs.readFileSync('./config.json');
     let config = JSON.parse(rawData);
@@ -37,7 +40,6 @@ module.exports = async (Discord, client, message) => {
 
     if (message.channel.id == config.countingchannel[0].channel_id) { // this needs to be fetched from config.json later
         pgClient.query(`SELECT * FROM counting`, async (err, res) => {
-            if(botMsg==false){
                 if (message.content.startsWith(parseInt(res.rows[0].number)+1) && message.author.id != res.rows[0].user_id) { // might not work idk if the [0] should be there :clown:
                     if(parseInt(Math.random()*3)==2){
                         pgClient.query(`UPDATE counting SET number = ('${parseInt(res.rows[0].number)+2}'), user_id = ('${client.user.id}')`);
@@ -49,9 +51,6 @@ module.exports = async (Discord, client, message) => {
                 } else {
                     await message.delete();
                 }
-            }else{
-                botMsg=false
-            }
         })
     }
     if (!message.content.startsWith(prefix) || message.author.bot) return;
