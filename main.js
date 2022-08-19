@@ -42,6 +42,7 @@ function initdb() {
     pgClient.query(`CREATE TABLE IF NOT EXISTS musicchannel (channel_id varchar(32) primary key)`);
     pgClient.query(`CREATE TABLE IF NOT EXISTS welcomechannel (channel_id varchar(32) primary key)`);
     pgClient.query(`CREATE TABLE IF NOT EXISTS countingchannel (channel_id varchar(32) primary key)`);
+    pgClient.query(`CREATE TABLE IF NOT EXISTS logchannel (channel_id varchar(32) primary key)`);
     pgClient.query(`CREATE TABLE IF NOT EXISTS censor (word varchar(32) primary key)`);
     pgClient.query(`CREATE TABLE IF NOT EXISTS uncensor (word varchar(32) primary key)`);
     pgClient.query(`CREATE TABLE IF NOT EXISTS counting (number varchar(16) primary key, user_id varchar(32))`);

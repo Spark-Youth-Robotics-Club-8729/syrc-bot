@@ -16,5 +16,7 @@ module.exports = (Discord, client, message) => {
         .setColor("#ff0000")
         .setTimestamp()
         .setFooter(client.user.tag, client.user.displayAvatarURL());
-    client.channels.cache.get("1008762470724288623").send({ embeds: [newEmbed] });
+    let rawData = fs.readFileSync('./config.json');
+    let config = JSON.parse(rawData);
+    client.channels.cache.get(config.logchannel[0].channel_id).send({ embeds: [newEmbed] });
 }

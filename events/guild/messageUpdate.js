@@ -10,16 +10,16 @@ module.exports = async (Discord, client, oldMessage, newMessage) => {
         .setTitle(`Message edited`)
         .addFields(
             {
-                name: 'Message author: ', value: `${oldMessage.author}`
+                name: 'Message author: ', value: `${oldMessage.author}`, inline: true
             },
             {
-                name: 'Edited in: ', value: `${oldMessage.channel}`
+                name: 'Edited in: ', value: `${oldMessage.channel}`, inline: true
             },
             {
-                name: 'Before: ', value: `${oldMessage}`
+                name: 'Before: ', value: `${oldMessage}`, inline: true
             },
             {
-                name: 'After: ', value: `${newMessage}`
+                name: 'After: ', value: `${newMessage}`, inline: true
             },
         )
         .setColor("#ff0000")
