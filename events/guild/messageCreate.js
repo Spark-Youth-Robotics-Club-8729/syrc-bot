@@ -37,21 +37,12 @@ module.exports = async (Discord, client, message) => {
 
     if (message.channel.id == config.countingchannel[0].channel_id) { // this needs to be fetched from config.json later
         pgClient.query(`SELECT * FROM counting`, async (err, res) => {
-            if(botMsg==false){
                 if (message.content.startsWith(parseInt(res.rows[0].number)+1) && message.author.id != res.rows[0].user_id) { // might not work idk if the [0] should be there :clown:
-                    if(parseInt(Math.random()*3)==2){
-                        pgClient.query(`UPDATE counting SET number = ('${parseInt(res.rows[0].number)+2}'), user_id = ('${client.user.id}')`);
-                        await message.channel.send(`${parseInt(res.rows[0].number)+2}`);
-                        botMsg=true
-                    } else{
-                        pgClient.query(`UPDATE counting SET number = ('${parseInt(res.rows[0].number)+1}'), user_id = ('${message.author.id}')`);
-                    }
+                    pgClient.query(`UPDATE counting SET number = ('${parseInt(res.rows[0].number)+1}'), user_id = ('${message.author.id}')`);
                 } else {
                     await message.delete();
                 }
-            }else{
-                botMsg=true
-            }
+
         })
     }
     if (!message.content.startsWith(prefix) || message.author.bot) return;
