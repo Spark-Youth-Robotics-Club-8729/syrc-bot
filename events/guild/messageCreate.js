@@ -21,7 +21,7 @@ module.exports = async (Discord, client, message) => {
     }
     filter.addWords(...censor);
     filter.removeWords(...uncensor);
-    if (filter.isProfane(message.content.toLowerCase()) && message.channel.id!="925454253319921695"){
+    if (filter.isProfane(message.content.toLowerCase()) && message.channel.id != "925454253319921695") {
         let member = message.author.id.toString();
         await message.delete();
         if (message.content.toLowerCase().includes("owo") || message.content.toLowerCase().includes("owo")) {
@@ -34,7 +34,6 @@ module.exports = async (Discord, client, message) => {
     if(message.content.toLowerCase().includes('gp')){
         message.channel.send("Who are you, Tony?");
     }
-
     if (message.channel.id == config.countingchannel[0].channel_id) { // this needs to be fetched from config.json later
         pgClient.query(`SELECT * FROM counting`, async (err, res) => {
             if(botMsg==false){

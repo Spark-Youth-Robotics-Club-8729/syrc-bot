@@ -1,5 +1,6 @@
+const fs = require("fs");
+
 module.exports = async (Discord, client, oldMessage, newMessage) => {
-    console.log("hi")
     if (oldMessage.author.bot) {
         return;
     }
@@ -10,20 +11,25 @@ module.exports = async (Discord, client, oldMessage, newMessage) => {
         .setTitle(`Message edited`)
         .addFields(
             {
-                name: 'Message author: ', value: `${oldMessage.author}`, inline: true
+                name: 'Before: ', value: `\`\`\`${oldMessage}\`\`\``, inline: true
+            },
+            {
+                name: 'After: ', value: `\`\`\`${newMessage}\`\`\``, inline: true
+            },
+            {
+                name: '\u200b', value: '\u200b', inline: true
             },
             {
                 name: 'Edited in: ', value: `${oldMessage.channel}`, inline: true
             },
             {
-                name: 'Before: ', value: `${oldMessage}`, inline: true
-            },
-            {
-                name: 'After: ', value: `${newMessage}`, inline: true
+                name: 'Message author: ', value: `${oldMessage.author}`, inline: true
             },
         )
         .setColor("#ff0000")
         .setTimestamp()
-        .setFooter(client.user.tag, client.user.displayAvatarURL());
-    client.channels.cache.get("1008762470724288623").send({ embeds: [newEmbed] });
+        .setFooter({ text: oldMessage.author.username, iconURL: oldMessage.author.displayAvatarURL() });
+    let rawData = fs.readFileSync('./config.json');
+    let config = JSON.parse(rawData);
+    client.channels.cache.get(config.logchannel[0].channel_id).send({ embeds: [newEmbed] });
 }

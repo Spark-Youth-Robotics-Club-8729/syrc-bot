@@ -38,29 +38,34 @@ module.exports = {
         }
         const queue = await client.player.createQueue(interaction.guild);
         await interaction.deferReply();
-// 	if (!queue.connection) {
-//             const audioPlayer = createAudioPlayer();
-//             const connection = joinVoiceChannel({
-//                 channelId: interaction.member.voice.channel.id,
-//                 guildId: interaction.guild.id,
-//                 adapterCreator: interaction.guild.voiceAdapterCreator,
-//             });
-//             connection.subscribe(audioPlayer);
-//             const resource = createAudioResource('./assets/welcome.mp3');
-//             audioPlayer.play(resource);
-//             await getAudioDurationInSeconds('./assets/welcome.mp3').then(async (duration) => {
-//                 await sleep(duration*1200);
-//             })
-//             connection.destroy();
-//         }
+	    // if (!queue.connection) {
+        //     const audioPlayer = createAudioPlayer();
+        //     const connection = joinVoiceChannel({
+        //         channelId: interaction.member.voice.channel.id,
+        //         guildId: interaction.guild.id,
+        //         adapterCreator: interaction.guild.voiceAdapterCreator,
+        //     });
+        //     connection.subscribe(audioPlayer);
+        //     const resource = createAudioResource('./assets/welcome.mp3');
+        //     audioPlayer.play(resource);
+        //     await getAudioDurationInSeconds('./assets/welcome.mp3').then(async (duration) => {
+        //         await sleep(duration*1200);
+        //     })
+        //     connection.destroy();
+        // }
+        console.log('hi~');
         if (!queue.connection) {
             try {
-                await queue.connect(interaction.member.voice.channel)
+                await queue.connect(interaction.member.voice.channel);
             } catch (error) {
-                queue.destroy()
-                console.log(error)
+                queue.destroy();
+                console.error(erre);
+                return;
+            } finally {
+                console.log("TEST");
             }
         }
+        console.log("hi!");
         let embed = new MessageEmbed()
         if (interaction.options.getString("song").startsWith("https://")) {
                 let url = interaction.options.getString("song")
