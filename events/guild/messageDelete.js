@@ -24,7 +24,7 @@ module.exports = (Discord, client, message) => {
         pgClient.query(`SELECT * FROM counting`, async (err, res) => {
 
             if (message.content.startsWith(parseInt(res.rows[0].number))) { // might not work idk if the [0] should be there :clown:
-                message.chanel.send(`${res.rows[0].number + 1}`);
+                message.chanel.send(`${res.rows[0].number}`);
                 pgClient.query(`UPDATE counting SET user_id = ('${message.author.id}')`);
             } else {
                 await message.delete();
