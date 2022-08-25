@@ -53,16 +53,13 @@ module.exports = {
         //     })
         //     connection.destroy();
         // }
-        console.log('hi~');
         if (!queue.connection) {
             try {
                 await queue.connect(interaction.member.voice.channel);
             } catch (error) {
                 queue.destroy();
-                console.error(erre);
+                console.error(error);
                 return;
-            } finally {
-                console.log("TEST");
             }
         }
         console.log("hi!");
@@ -94,27 +91,40 @@ module.exports = {
                     .setColor('#5F75DE')
                     .setFooter({ text: `Duration: ${song.duration}`})
         } else {
-                let url = interaction.options.getString("song")
-                const result = await client.player.search(url, {
-                    requestedBy: interaction.user,
-                    searchEngine: QueryType.AUTO
-                })
-                if (result.tracks.length === 0) {
-                    return interaction.editReply("No results brotha")
+            let url = interaction.options.getString("song")
+            const result = await client.player.search(url, {
+                requestedBy: interaction.user,
+                searchEngine: QueryType.AUTO
+            })
+            if (result.tracks.length === 0) {
+                return interaction.editReply("No results brotha")
             }
-                const song = result.tracks[0]
-                await queue.addTrack(song)
-                embed
-                    .setDescription(`**[${song.title}](${song.url})** has been added to the Queue`)
-                    .setAuthor({ name: song.author })
-                    .setThumbnail(song.thumbnail)
-                    .setColor('#5F75DE')
-                    .setFooter({ text: `Duration: ${song.duration}`})
+            const song = result.tracks[0]
+            await queue.addTrack(song)
+            embed
+                .setDescription(`**[${song.title}](${song.url})** has been added to the Queue`)
+                .setAuthor({ name: song.author })
+                .setThumbnail(song.thumbnail)
+                .setColor('#5F75DE')
+                .setFooter({ text: `Duration: ${song.duration}`})
         }
         await queue.setVolume(69);
-        if (!queue.playing) await queue.play()
+        console.log("im here now!")
+        if (!queue.playing) {
+            try {
+                console.log("1");
+                await queue.play();
+                console.log("2");
+            } catch (error) {
+                console.log("3");
+                console.error(error);
+                return;
+            }
+        }
+        console.log("hi!!!");
         await interaction.editReply({
             embeds: [embed]
         })
+        console.log("END!");
     }
 }

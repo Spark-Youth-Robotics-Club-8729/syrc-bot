@@ -1,12 +1,15 @@
 const Discord = require('discord.js');
-const { Client, Intents } = require('discord.js');
-const client = new Discord.Client({ partials: ["MESSAGE", "CHANNEL", "REACTION"], intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS,Intents.FLAGS.GUILD_MESSAGE_REACTIONS, "GUILDS", "GUILD_VOICE_STATES"] });
 const fs = require("fs");
 const pg = require('pg');
 const { Player } = require("discord-player")
 require("dotenv").config();
 var express = require('express');
 var app = express();
+
+const client = new Discord.Client({ 
+    partials: ["MESSAGE", "CHANNEL", "REACTION"], 
+    intents: [Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES, Discord.Intents.FLAGS.GUILD_MEMBERS, Discord.Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Discord.Intents.FLAGS.GUILD_VOICE_STATES, "GUILDS", "GUILD_VOICE_STATES"] 
+});
 
 app.set('port', (process.env.PORT || 5000));
 
@@ -79,12 +82,9 @@ client.on('messageReactionAdd', async (reaction, user) => {
 client.commands = new Discord.Collection();
 client.events = new Discord.Collection();
 client.slashCommands = new Discord.Collection();
-client.player = new Player(client, {
-    ytdlOptions: {
-        quality: "highestaudio",
-        highWaterMark: 1 << 25
-    }
-});
+
+const player = new Player(client);
+client.player = player;
 
 ['command_handler', 'event_handler'].forEach(handler => {
     require(`./handlers/${handler}`)(client, Discord);
