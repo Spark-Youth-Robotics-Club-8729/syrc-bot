@@ -3,7 +3,7 @@ const { CommandInteraction, MessageEmbed, MessageActionRow, MessageButton } = re
 const ytdl = require('ytdl-core');
 const ytSearch = require('yt-search');
 const { joinVoiceChannel, createAudioPlayer, createAudioResource } =  require("@discordjs/voice");
-const { QueryType } = require("discord-player")
+// const { QueryType } = require("discord-player")
 
 module.exports = {
     ...new SlashCommandBuilder()

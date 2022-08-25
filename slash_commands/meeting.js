@@ -62,8 +62,6 @@ module.exports = {
                         .setDescription(`**Starting:** <t:${date.getTime() / 1000}:R>`)
                         .addField( "Notes", `*${notes}*` )
                         .setThumbnail('https://i.postimg.cc/dQjY2YNS/Screen-Shot-2022-03-07-at-9-00-41-PM.png')
-            let rawdata = fs.readFileSync('./config.json');
-            let config = JSON.parse(rawdata);
             let channel = client.channels.cache.get(config.meetingchannel[0].channel_id);
             let msg = await channel.send({ embeds: [newEmbed] });
             let link = `https://discord.com/channels/${msg.guild.id}/${msg.channel.id}/${msg.id}`;

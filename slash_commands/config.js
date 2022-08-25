@@ -31,6 +31,7 @@ module.exports = {
                     { name: 'music-channel', value: 'musicchannel' },
                     { name: 'welcome-channel', value: 'welcomechannel' },
                     { name: 'counting-channel', value: 'countingchannel' },
+                    { name: 'log-channel', value: 'logchannel' },
                 )
         )
         .addRoleOption(option =>
@@ -71,6 +72,9 @@ module.exports = {
                     }
                     await interaction.reply({ content: `Modrole changed from ${temp} to ${JSON.stringify(config.modrole)}` });
                 } else if (setting == 'meetingchannel') {
+                    if (channel.type == 'voice') {
+                        return await interaction.reply({ content: "Voice channel not allowed for this setting" });
+                    }
                     let temp = JSON.stringify(config.meetingchannel);
                     try {
                         config.meetingchannel.push({"channel_id": channel.id});
@@ -84,6 +88,9 @@ module.exports = {
                     }
                     await interaction.reply({ content: `Meeting channel changed from ${temp} to ${JSON.stringify(config.meetingchannel)}` });
                 } else if (setting == 'botcomchannel') {
+                    if (channel.type == 'voice') {
+                        return await interaction.reply({ content: "Voice channel not allowed for this setting" });
+                    }
                     let temp = JSON.stringify(config.botcomchannel);
                     try {
                         config.botcomchannel.push({"channel_id": channel.id});
@@ -97,6 +104,9 @@ module.exports = {
                     }
                     await interaction.reply({ content: `Bot commands channel changed from ${temp} to ${JSON.stringify(config.botcomchannel)}` });
                 } else if (setting == 'musicchannel') {
+                    if (channel.type != 'voice') {
+                        return await interaction.reply({ content: "Text channel not allowed for this setting" });
+                    }
                     let temp = JSON.stringify(config.musicchannel);
                     try {
                         config.musicchannel.push({"channel_id": channel.id});
@@ -110,6 +120,9 @@ module.exports = {
                     }
                     await interaction.reply({ content: `Music channel changed from ${temp} to ${JSON.stringify(config.musicchannel)}` });
                 } else if (setting == 'welcomechannel') {
+                    if (channel.type == 'voice') {
+                        return await interaction.reply({ content: "Voice channel not allowed for this setting" });
+                    }
                     let temp = JSON.stringify(config.welcomechannel);
                     try {
                         config.welcomechannel.push({"channel_id": channel.id});
@@ -123,6 +136,9 @@ module.exports = {
                     }
                     await interaction.reply({ content: `Welcome channel changed from ${temp} to ${JSON.stringify(config.welcomechannel)}` });
                 } else if (setting == 'countingchannel') {
+                    if (channel.type == 'voice') {
+                        return await interaction.reply({ content: "Voice channel not allowed for this setting" });
+                    }
                     let temp = JSON.stringify(config.countingchannel);
                     try {
                         config.countingchannel.push({"channel_id": channel.id});
@@ -135,6 +151,22 @@ module.exports = {
                         return await interaction.reply({ content: "Cannot insert into database (something on your end prob xd)" });
                     }
                     await interaction.reply({ content: `Counting channel changed from ${temp} to ${JSON.stringify(config.countingchannel)}` });
+                } else if (setting == 'logchannel') {
+                    if (channel.type == 'voice') {
+                        return await interaction.reply({ content: "Voice channel not allowed for this setting" });
+                    }
+                    let temp = JSON.stringify(config.logchannel);
+                    try {
+                        config.logchannel.push({"channel_id": channel.id});
+                    } catch {
+                        return await interaction.reply({ content: "A channel argument is required" });
+                    }
+                    try {
+                        await pgClient.query(`INSERT INTO logchannel (channel_id) VALUES ('${channel.id}')`);
+                    } catch {
+                        return await interaction.reply({ content: "Cannot insert into database (something on your end prob xd)" });
+                    }
+                    await interaction.reply({ content: `Log channel changed from ${temp} to ${JSON.stringify(config.logchannel)}` });
                 }
                 console.log("CONFIG");
                 console.log(config);
@@ -243,6 +275,23 @@ module.exports = {
                         }
                         pgClient.query(`DELETE FROM countingchannel WHERE channel_id = '${channel.id}'`);
                         await interaction.reply({ content: `Counting channel changed from ${temp} to ${JSON.stringify(config.countingchannel)}` });
+                    } catch {
+                        await interaction.reply({ content: "A channel argument is required" });
+                    }
+                } else if (setting == 'logchannel') {
+                    if (channel.type == 'voice') {
+                        return await interaction.reply({ content: "Voice channel not allowed for this setting" });
+                    }
+                    try {
+                        let temp = JSON.stringify(config.logchannel);
+                        var i = config.logchannel.length;
+                        while (i--) {
+                            if (config.logchannel[i] == {"channel_id": channel.id}) {
+                                config.logchannel.splice(config.logchannel.indexOf({"channel_id": channel.id}), 1);
+                            }
+                        }
+                        pgClient.query(`DELETE FROM logchannel WHERE channel_id = '${channel.id}'`);
+                        await interaction.reply({ content: `Log channel changed from ${temp} to ${JSON.stringify(config.logchannel)}` });
                     } catch {
                         await interaction.reply({ content: "A channel argument is required" });
                     }
