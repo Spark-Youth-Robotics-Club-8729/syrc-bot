@@ -1,4 +1,5 @@
 const fs = require("fs");
+const { pgClient } = require("../../main");
 
 module.exports = (Discord, client, message) => {
     if (message.author.bot) {
