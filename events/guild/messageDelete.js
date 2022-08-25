@@ -20,7 +20,7 @@ module.exports = (Discord, client, message) => {
         )
         .setColor("#ff0000")
         .setTimestamp()
-        .setFooter(message.author.username, message.author.displayAvatarURL());
+        .setAuthor({ name: message.author.username, iconURL: message.author.displayAvatarURL() });
     let rawData = fs.readFileSync('./config.json');
     let config = JSON.parse(rawData);
     client.channels.cache.get(config.logchannel[0].channel_id).send({ embeds: [newEmbed] });
