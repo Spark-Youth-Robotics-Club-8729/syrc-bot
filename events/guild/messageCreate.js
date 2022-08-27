@@ -52,7 +52,7 @@ module.exports = async (Discord, client, message) => {
         }
     }
     const prefix = '!';
-    if(message.content.toLowerCase().includes(' gp ') || message.content.toLowerCase().includes(' gp' || message.content.toLowerCase().includes('gp '){
+    if(message.content.toLowerCase().includes(' gp ') || message.content.toLowerCase().includes(' gp') || message.content.toLowerCase().includes('gp '){
         message.channel.send("Who are you, Tony?");
     }
     if (message.channel.id == config.countingchannel[0].channel_id) { // this needs to be fetched from config.json later
