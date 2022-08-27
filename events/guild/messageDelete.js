@@ -16,7 +16,7 @@ module.exports = (Discord, client, message) => {
     }
     filter.addWords(...censor);
     filter.removeWords(...uncensor);
-    if (message.author.bot || filter.isProfane(message.content.toLowerCase()) {
+    if (message.author.bot || filter.isProfane(message.content.toLowerCase())) {
         return;
     }
     const newEmbed = new Discord.MessageEmbed()
