@@ -26,7 +26,7 @@ module.exports = async (Discord, client, oldMessage, newMessage) => {
                 name: 'Message author: ', value: `${oldMessage.author}`, inline: true
             },
             {
-                name: `**[Link to message](${newMessage.url})**`, value: '\u200b', inline: true
+                name: `Message: `, value: `**[Link](${newMessage.url})**`, inline: true
             },
         )
         .setColor("#ff0000")
