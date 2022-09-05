@@ -74,7 +74,7 @@ module.exports = {
                 var rolefields = [];
                 let descriptionMsg = "Send an emoji and a role to be added to the menu in the format <emoji> <roleid> (\"-\" to finish)";
                 console.log("hi1");
-                const collector = new Discord.MessageCollector(channel, m => m.author.id == interaction.member.user.id, { time: 100000 });
+                const collector = new Discord.MessageCollector(interaction.channel, m => m.author.id == interaction.member.user.id, { time: 100000 });
                 collector.on('collect', async message => {
                     console.log("hi2");
                     if (message.author.id == interaction.member.user.id) {
