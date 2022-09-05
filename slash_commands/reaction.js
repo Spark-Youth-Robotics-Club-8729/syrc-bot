@@ -74,10 +74,12 @@ module.exports = {
                 var roles = [];
                 var rolefields = [];
                 let descriptionMsg = "Send an emoji and a role to be added to the menu in the format <emoji> <roleid> (\"-\" to finish)";
+                console.log("hi1");
                 collector.on('collect', async message => {
-                    console.log("hi1");
+                    console.log("hi2");
                     if (message.author.id == interaction.member.user.id) {
                         if (message.content == '-') {
+                            console.log("hi6");
                             await message.react("✅");
                             collector.stop();
                         } else {
@@ -96,7 +98,9 @@ module.exports = {
                         }
                     }
                 })
+                console.log("hi3");
                 collector.on('end', async (collected, reason) => {
+                    console.log("hi4");
                     if (roles.length == 0) {
                         return await interaction.channel.send({ content: "Please enter at least 1 reaction role", ephemeral: true });
                     }
@@ -123,6 +127,7 @@ module.exports = {
                     })
                     console.log(config.reaction);
                 })
+                console.log("hi5");
             } else if (mode == "delete") {
                 let exists = false;
                 let channelID = '';
