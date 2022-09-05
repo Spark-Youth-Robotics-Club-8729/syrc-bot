@@ -7,7 +7,7 @@ module.exports = async (Discord, client, message) => {
     if (message.author.bot && message.channel.id!="974471842704277524") {
         return;
     }   
-    if(botMsg=true){
+    if(botMsg==true){
         botMsg=false;
         return;
     }
@@ -26,6 +26,24 @@ module.exports = async (Discord, client, message) => {
     filter.removeWords(...uncensor);
     if (filter.isProfane(message.content.toLowerCase()) && message.channel.id != "925454253319921695") {
         let member = message.author.id.toString();
+        const newEmbed = new Discord.MessageEmbed()
+            .setTitle(`Message censored`)
+            .addFields(
+                {
+                    name: 'Message content:', value: `||${message.content}||`, inline: true
+                },
+                {
+                    name: 'Censored in: ', value: `${message.channel}`, inline: true
+                },
+                {
+                    name: 'Message author: ', value: `${message.author}`, inline: true
+                },
+            )
+            .setColor("#ff0000")
+            .setTimestamp()
+            .setAuthor({ name: message.author.username, iconURL: message.author.displayAvatarURL() })
+            .setFooter('shame')
+        client.channels.cache.get(config.logchannel[0].channel_id).send({ embeds: [newEmbed] });
         await message.delete();
         if (message.content.toLowerCase().includes("owo") || message.content.toLowerCase().includes("owo")) {
             message.channel.send({ content: `<@${member}> chill fam chill fam`, tts: true });
@@ -34,13 +52,13 @@ module.exports = async (Discord, client, message) => {
         }
     }
     const prefix = '!';
-    if(message.content.toLowerCase().includes('gp')){
+    if(message.content.toLowerCase().includes(' gp ') || message.content.toLowerCase().includes(' gp') || message.content.toLowerCase().includes('gp ')){
         message.channel.send("Who are you, Tony?");
     }
     if (message.channel.id == config.countingchannel[0].channel_id) { // this needs to be fetched from config.json later
         pgClient.query(`SELECT * FROM counting`, async (err, res) => {
                 if (message.content.startsWith(parseInt(res.rows[0].number)+1) && message.author.id != res.rows[0].user_id) { // might not work idk if the [0] should be there :clown:
-                    if(parseInt(Math.random()*3)==2){
+                    if(parseInt(Math.random()*20)==2){
                         pgClient.query(`UPDATE counting SET number = ('${parseInt(res.rows[0].number)+2}'), user_id = ('${client.user.id}')`);
                         botMsg=true
                         await message.channel.send(`${parseInt(res.rows[0].number)+2}`);

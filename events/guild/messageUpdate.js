@@ -25,10 +25,13 @@ module.exports = async (Discord, client, oldMessage, newMessage) => {
             {
                 name: 'Message author: ', value: `${oldMessage.author}`, inline: true
             },
+            {
+                name: `Message: `, value: `**[Link](${newMessage.url})**`, inline: true
+            },
         )
         .setColor("#ff0000")
         .setTimestamp()
-        .setFooter({ text: oldMessage.author.username, iconURL: oldMessage.author.displayAvatarURL() });
+        .setAuthor({ name: oldMessage.author.username, iconURL: oldMessage.author.displayAvatarURL() });
     let rawData = fs.readFileSync('./config.json');
     let config = JSON.parse(rawData);
     client.channels.cache.get(config.logchannel[0].channel_id).send({ embeds: [newEmbed] });
