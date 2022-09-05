@@ -63,7 +63,6 @@ module.exports = {
             let config = JSON.parse(rawdata);
 
             if (mode == "add") {
-                const collector = new Discord.MessageCollector(channel, m => m.author.id === interaction.member.user.id, { time: 10000 });
                 let newEmbed = {
                     title: "Reaction Role Creator",
                     description: `**Send an emoji and a role to be added to the menu in the format <emoji> <role> (\"-\" to finish)**\n*empty*`,
@@ -75,6 +74,7 @@ module.exports = {
                 var rolefields = [];
                 let descriptionMsg = "Send an emoji and a role to be added to the menu in the format <emoji> <roleid> (\"-\" to finish)";
                 console.log("hi1");
+                const collector = new Discord.MessageCollector(channel, m => m.author.id == interaction.member.user.id, { time: 100000 });
                 collector.on('collect', async message => {
                     console.log("hi2");
                     if (message.author.id == interaction.member.user.id) {
