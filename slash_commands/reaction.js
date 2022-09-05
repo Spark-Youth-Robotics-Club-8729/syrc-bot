@@ -75,13 +75,13 @@ module.exports = {
                 var rolefields = [];
                 let descriptionMsg = "Send an emoji and a role to be added to the menu in the format <emoji> <roleid> (\"-\" to finish)";
                 collector.on('collect', async message => {
-                    if (message.author.id === interaction.member.user.id) {
+                    if (message.author.id == interaction.member.user.id) {
                         if (message.content == '-') {
                             await message.react("✅");
                             collector.stop();
                         } else {
                             let msgSplit = message.content.split(' ');
-                            let role = message.guild.roles.cache.find(role => role.id === msgSplit[1]);
+                            let role = await message.guild.roles.cache.find(r => r.id == msgSplit[1]);
                             roles.push({ "emoji": msgSplit[0], "role": role });
                             rolefields.push({ name: msgSplit[0], value: "<@&" + role.id + ">", inline: true });
                             let newEmbed = {
@@ -144,6 +144,7 @@ module.exports = {
                             console.log('Successfully fetched data!');
                         }
                     })
+                    return interaction.reply({ content: 'Reaction role successfully deleted' });
                 } else {
                     return interaction.reply({ content: 'Please enter a valid reaction role message ID and try again' });
                 }
