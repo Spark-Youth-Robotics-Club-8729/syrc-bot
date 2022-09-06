@@ -67,14 +67,25 @@ client.on('messageReactionAdd', async (reaction, user) => {
         if (reaction.message.id == config.reaction[i].message_id && reaction.emoji.name == config.reaction[i].emoji_id) {
             const member = reaction.message.guild.members.cache.get(user.id);
             const role = reaction.message.guild.roles.cache.get(config.reaction[i].role_id);
-            if (member.roles.cache.some(role => role.id == config.reaction[i].role_id)) {
-                await member.roles.remove(config.reaction[i].role_id);
-                await user.send({ content: `**${reaction.message.guild.name}:** Removed the role [*` + role.name + "*]" });
-            } else {
-                await member.roles.add(config.reaction[i].role_id);
-                await user.send({ content: `**${reaction.message.guild.name}:** Added the role [*` + role.name + "*]" });
-            }
-            await reaction.message.reactions.resolve(config.reaction[i].emoji_id).users.remove(user);
+            await member.roles.add(config.reaction[i].role_id);
+            await user.send({ content: `**${reaction.message.guild.name}:** Added the role [*` + role.name + "*]" });
+        }
+    }
+})
+
+client.on('messageReactionRemove', async (reaction, user) => {
+    if (reaction.message) await reaction.message.fetch();
+    if (reaction) await reaction.fetch();
+    if (user.bot) return;
+    if (!reaction.message.guild) return;
+    let rawdata = fs.readFileSync('./config.json');
+    var config = JSON.parse(rawdata);
+    for (i in config.reaction) {
+        if (reaction.message.id == config.reaction[i].message_id && reaction.emoji.name == config.reaction[i].emoji_id) {
+            const member = reaction.message.guild.members.cache.get(user.id);
+            const role = reaction.message.guild.roles.cache.get(config.reaction[i].role_id);
+            await member.roles.remove(config.reaction[i].role_id);
+            await user.send({ content: `**${reaction.message.guild.name}:** Removed the role [*` + role.name + "*]" });
         }
     }
 })
