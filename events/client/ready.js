@@ -41,6 +41,8 @@ module.exports = async (Discord, client) => {
     console.log('Bot is online!');
     let rawdata = fs.readFileSync('./config.json');
     let config = JSON.parse(rawdata);
+    // im lazy imma just hardcode the reminder channel stfu darun no one asked >:(
+    let reminderChannel = '1001656037243367514'
     var interval = setInterval(async function () {
         await pgClient.query(`SELECT * FROM meetings`, (err, syrc) => {
             if (err) {
@@ -48,31 +50,35 @@ module.exports = async (Discord, client) => {
             } else {
                 var date = new Date();
                 for (i in syrc.rows) {
-                    console.log((syrc.rows[i].start_time - date.getTime() / 1000));
-                    console.log((syrc.rows[i].start_time - date.getTime() / 1000)/60);
+                    console.log(((syrc.rows[i].start_time - date.getTime() / 1000)/60) + ' minutes left');
                     let role = syrc.rows[i].subteam_id.toString();
                     let msg_link = syrc.rows[i].msg_link;
                     if (syrc.rows[i].start_time - date.getTime() / 1000 < 0) {
+                        const newEmbed = new Discord.MessageEmbed()
+                            .setTitle(`Reminder!`)
+                            .setColor("#5F75DE")
+                            .setDescription(`<@&${role}> **MEETING NOW!**\n**[Meeting Message](${msg_link})**`)
+                        client.channels.cache.get(reminderChannel).send({ embeds: [newEmbed], content: `||<@&${role}>||` });
                         pgClient.query(`DELETE FROM meetings WHERE start_time = '${syrc.rows[i].start_time}'`);
                     } else if (syrc.rows[i].start_time - date.getTime() / 1000 < 605 && syrc.rows[i].start_time - date.getTime() / 1000 > 595) {
                         const newEmbed = new Discord.MessageEmbed()
                             .setTitle(`Reminder!`)
                             .setColor("#5F75DE")
                             .setDescription(`<@&${role}> meeting in **10 MINUTES**\n**[Meeting Message](${msg_link})**`)
-                        client.channels.cache.get(config.meetingchannel[0].channel_id).send({ embeds: [newEmbed], content: `||<@&${role}>||` });
+                        client.channels.cache.get(reminderChannel).send({ embeds: [newEmbed], content: `||<@&${role}>||` });
                         pgClient.query(`DELETE FROM meetings WHERE start_time = '${syrc.rows[i].start_time}'`);
                     } else if (syrc.rows[i].start_time - date.getTime() / 1000 > 3595 && syrc.rows[i].start_time - date.getTime() / 1000 < 3605) {
                         const newEmbed = new Discord.MessageEmbed()
                             .setTitle(`Reminder!`)
                             .setColor("#5F75DE")
                             .setDescription(`<@&${role}> meeting in **1 HOUR**\n**[Meeting Message](${msg_link})**`)
-                        client.channels.cache.get(config.meetingchannel[0].channel_id).send({ embeds: [newEmbed], content: `||<@&${role}>||` });
+                        client.channels.cache.get(reminderChannel).send({ embeds: [newEmbed], content: `||<@&${role}>||` });
                     } else if (syrc.rows[i].start_time - date.getTime() / 1000 > 86395 && syrc.rows[i].start_time - date.getTime() / 1000 < 86405) {
                         const newEmbed = new Discord.MessageEmbed()
                             .setTitle(`Reminder!`)
                             .setColor("#5F75DE")
                             .setDescription(`<@&${role}> meeting **TOMORROW**!\n**[Meeting Message](${msg_link})**`)
-                        client.channels.cache.get(config.meetingchannel[0].channel_id).send({ embeds: [newEmbed], content: `||<@&${role}>||` });
+                        client.channels.cache.get(reminderChannel).send({ embeds: [newEmbed], content: `||<@&${role}>||` });
                     }
                 }
             }
