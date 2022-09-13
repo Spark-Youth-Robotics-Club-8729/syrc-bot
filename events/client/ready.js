@@ -53,6 +53,10 @@ module.exports = async (Discord, client) => {
                     console.log(((syrc.rows[i].start_time - date.getTime() / 1000)/60) + ' minutes left');
                     let role = syrc.rows[i].subteam_id.toString();
                     let msg_link = syrc.rows[i].msg_link;
+                    let msgSplit = msg_link.split('/');
+                    let msgChannel = msgSplit[5];
+                    let msgID = msgSplit[6];
+                    console.log(msgChannel);
                     if (syrc.rows[i].start_time - date.getTime() / 1000 < 0) {
                         const newEmbed = new Discord.MessageEmbed()
                             .setTitle(`Reminder!`)
