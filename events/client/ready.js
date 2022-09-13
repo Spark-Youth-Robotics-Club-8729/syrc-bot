@@ -50,7 +50,7 @@ module.exports = async (Discord, client) => {
             } else {
                 var date = new Date();
                 for (i in syrc.rows) {
-                    console.log(((syrc.rows[i].start_time - date.getTime() / 1000)/60) + ' minutes left');
+                    console.log(`${((syrc.rows[i].start_time - date.getTime() / 1000)/60)} minutes left`);
                     let role = syrc.rows[i].subteam_id.toString();
                     let msg_link = syrc.rows[i].msg_link;
                     let msgSplit = msg_link.split('/');
