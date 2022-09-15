@@ -44,7 +44,7 @@ module.exports = async (Discord, client) => {
     // im lazy imma just hardcode the reminder channel stfu darun no one asked >:(
     let reminderChannel = '1001656037243367514'
     var interval = setInterval(async function () {
-        await pgClient.query(`SELECT * FROM meetings`, (err, syrc) => {
+        await pgClient.query(`SELECT * FROM meetings`, async (err, syrc) => {
             if (err) {
                 throw err;
             } else {
