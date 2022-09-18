@@ -105,6 +105,7 @@ module.exports = {
                     } else {
                         let options = [];
                         for (let i = 0; i < typinglb.length; i++) {
+                            console.log('hi im here')
                             try {
                                 let user = await interaction.guild.members.fetch(typinglb[i]['member_id']);
                                 options.push({
@@ -114,7 +115,7 @@ module.exports = {
                                 })
                             } catch (DiscordAPIError) {
                                 options.push({
-                                    label: typinglb[i]['wpm'].toString() + " wpm | " + typinglb[i]['member_id'],
+                                    label: typinglb[i]['wpm'].toString() + " wpm | *" + typinglb[i]['member_id'] + "*",
                                     value: (i+1).toString(),
                                     description: "View details"
                                 })
@@ -138,9 +139,14 @@ module.exports = {
                             },
                         }
                         for (let i = 0; i < typinglb.length; i++) {
-                            let user = await interaction.guild.members.fetch(typinglb[i]['member_id']);
-                            let details = "**Member: **" + user.user.username + "\n**Date: **" + typinglb[i]['date'];
-                            newEmbed.fields.push({ name: "#" + (i+1).toString() + " - " + typinglb[i]['wpm'].toString() + " wpm", value: details, inline: false });
+                            try {
+                                let user = await interaction.guild.members.fetch(typinglb[i]['member_id']);
+                                let details = "**Member: **" + user.user.username + "\n**Date: **" + typinglb[i]['date'];
+                                newEmbed.fields.push({ name: "#" + (i+1).toString() + " - " + typinglb[i]['wpm'].toString() + " wpm", value: details, inline: false });
+                            } catch (DiscordAPIError) {
+                                let details = "**Member:** *" + typinglb[i]['member_id'] + "*\n**Date: **" + typinglb[i]['date'];
+                                newEmbed.fields.push({ name: "#" + (i+1).toString() + " - " + typinglb[i]['wpm'].toString() + " wpm", value: details, inline: false });
+                            }
                         }
                         await interaction.reply({ embeds: [newEmbed], components: [row] });
                     }
