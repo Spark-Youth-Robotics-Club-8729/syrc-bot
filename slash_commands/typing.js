@@ -115,7 +115,7 @@ module.exports = {
                                 })
                             } catch (DiscordAPIError) {
                                 options.push({
-                                    label: typinglb[i]['wpm'].toString() + " wpm | *" + typinglb[i]['member_id'] + "*",
+                                    label: typinglb[i]['wpm'].toString() + " wpm | " + typinglb[i]['member_id'],
                                     value: (i+1).toString(),
                                     description: "View details"
                                 })
