@@ -105,12 +105,20 @@ module.exports = {
                     } else {
                         let options = [];
                         for (let i = 0; i < typinglb.length; i++) {
-                            let user = await interaction.guild.members.fetch(typinglb[i]['member_id']);
-                            options.push({
-                                label: typinglb[i]['wpm'].toString() + " wpm | " + user.user.username,
-                                value: (i+1).toString(),
-                                description: "View details"
-                            })
+                            try {
+                                let user = await interaction.guild.members.fetch(typinglb[i]['member_id']);
+                                options.push({
+                                    label: typinglb[i]['wpm'].toString() + " wpm | " + user.user.username,
+                                    value: (i+1).toString(),
+                                    description: "View details"
+                                })
+                            } catch (DiscordAPIError) {
+                                options.push({
+                                    label: typinglb[i]['wpm'].toString() + " wpm | " + typinglb[i]['member_id'],
+                                    value: (i+1).toString(),
+                                    description: "View details"
+                                })
+                            }
                         }
                         const row = new MessageActionRow()
                             .addComponents(
