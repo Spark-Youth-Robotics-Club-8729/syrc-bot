@@ -242,7 +242,7 @@ module.exports = {
                             });
                             let freq = {};
                             let position = 0;
-                            for (; position < typinglb.length && position < 10; position++) {
+                            for (; position < typinglb.length && position < 11; position++) {
                                 if (!(typinglb[position].member_id in freq)) {
                                     freq[typinglb[position].member_id] = position;
                                 } else {
@@ -260,7 +260,7 @@ module.exports = {
                                     break;
                                 }
                             }
-                            typinglb.splice(10, typinglb.length - 10);
+                            typinglb.splice(11, typinglb.length - 11);
                             console.log(typinglb);
                             store_typing_data(typinglb);
                             collector.stop();
