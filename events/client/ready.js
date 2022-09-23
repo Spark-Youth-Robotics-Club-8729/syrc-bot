@@ -51,6 +51,7 @@ module.exports = async (Discord, client) => {
                 var date = new Date();
                 for (i in syrc.rows) {
                     console.log(`${((syrc.rows[i].start_time - date.getTime() / 1000)/60)} minutes left`);
+                    console.log(syrc.rows[i].start_time - date.getTime() / 1000);
                     let role = syrc.rows[i].subteam_id.toString();
                     let msg_link = syrc.rows[i].msg_link;
                     if (syrc.rows[i].start_time - date.getTime() / 1000 < -600) {
@@ -60,7 +61,8 @@ module.exports = async (Discord, client) => {
                         let msg = await msgChannel.messages.fetch(msgSplit[6]);
                         console.log(msg)
                         await msg.delete();
-                    } else if (syrc.rows[i].start_time - date.getTime() / 1000 < 5 && syrc.rows[i].start_time - date.getTime() / 1000 > -595) {
+                        pgClient.query(`DELETE FROM meetings WHERE start_time = '${syrc.rows[i].start_time}'`);
+                    } else if (syrc.rows[i].start_time - date.getTime() / 1000 < 5 && syrc.rows[i].start_time - date.getTime() / 1000 > -5) {
                         const newEmbed = new Discord.MessageEmbed()
                             .setTitle(`Reminder!`)
                             .setColor("#5F75DE")
@@ -72,7 +74,6 @@ module.exports = async (Discord, client) => {
                             .setColor("#5F75DE")
                             .setDescription(`<@&${role}> meeting in **10 MINUTES**\n**[Meeting Message](${msg_link})**`)
                         client.channels.cache.get(reminderChannel).send({ embeds: [newEmbed], content: `||<@&${role}>||` });
-                        pgClient.query(`DELETE FROM meetings WHERE start_time = '${syrc.rows[i].start_time}'`);
                     } else if (syrc.rows[i].start_time - date.getTime() / 1000 > 3595 && syrc.rows[i].start_time - date.getTime() / 1000 < 3605) {
                         const newEmbed = new Discord.MessageEmbed()
                             .setTitle(`Reminder!`)
