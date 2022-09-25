@@ -49,6 +49,7 @@ module.exports = {
             if (notes === null) {
                 notes = "N/A";
             }
+            console.log(notes);
             var date = new Date(datetime);
             var curDate = new Date();
             if (Number.isNaN(date.getTime()/1000)) {
