@@ -6,7 +6,7 @@ var botMsg = false;
 module.exports = async (Discord, client, message) => {
     if (message.author.bot && message.channel.id!="974471842704277524") {
         return;
-    }   
+    }
     if(botMsg==true){
         botMsg=false;
         return;
@@ -83,4 +83,9 @@ module.exports = async (Discord, client, message) => {
     const command = client.commands.get(cmd);
 
     if (command) command.execute(client, message, args, Discord);
+    
+    if (message.author.bot) {
+        let botcomChannel = '933859349753897041';
+        client.channels.cache.get(botcomChannel).sendTyping();
+    }
 }
