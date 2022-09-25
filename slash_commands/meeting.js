@@ -42,7 +42,7 @@ module.exports = {
             modroles.push(config.modrole[i].role_id);
         }
         if (interaction.member.roles.cache.some(role => modroles.includes(role.id))) {
-
+            console.log("hi");
             const datetime = interaction.options.getString("datetime");
             const subteams = interaction.options.getRole("subteam");
             var notes = interaction.options.getString("notes");
@@ -75,8 +75,8 @@ module.exports = {
                     console.log('Successfully fetched data!');
                 }
             })
-            let notes = notes.replaceAll("'", "''");
-            await pgClient.query(`INSERT INTO meetings (start_time, subteam_id, notes, msg_link) VALUES ('${date.getTime() / 1000}','${subteams.id}','${notes}', '${link}')`, async (err, res) => {
+            let formattedNotes = notes.replaceAll("'", "''");
+            await pgClient.query(`INSERT INTO meetings (start_time, subteam_id, notes, msg_link) VALUES ('${date.getTime() / 1000}','${subteams.id}','${formattedNotes}', '${link}')`, async (err, res) => {
                 if (!err) {
                     await interaction.reply(`Meeting created`);
                 } else {
