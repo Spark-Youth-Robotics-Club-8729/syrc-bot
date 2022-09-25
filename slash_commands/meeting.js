@@ -79,6 +79,7 @@ module.exports = {
                     await interaction.reply(`Meeting created`);
                 } else {
                     await interaction.reply(`Ewah`);
+                    console.log(err);
                     throw err;
                 }
             })
