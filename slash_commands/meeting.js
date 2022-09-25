@@ -75,6 +75,7 @@ module.exports = {
                     console.log('Successfully fetched data!');
                 }
             })
+            let notes = notes.replaceAll("'", "''");
             await pgClient.query(`INSERT INTO meetings (start_time, subteam_id, notes, msg_link) VALUES ('${date.getTime() / 1000}','${subteams.id}','${notes}', '${link}')`, async (err, res) => {
                 if (!err) {
                     await interaction.reply(`Meeting created`);
