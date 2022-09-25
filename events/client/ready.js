@@ -92,5 +92,5 @@ module.exports = async (Discord, client) => {
                 }
             }
         })
-    }, 10000);
+    }, 9500);
 }
