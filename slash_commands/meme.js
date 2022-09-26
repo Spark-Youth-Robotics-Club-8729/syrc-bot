@@ -9,7 +9,7 @@ module.exports = {
         .setDescription("mimema: unit of cultural information spread by imitation"),
     run: async (client, interaction, args) => {
         reddit({
-            subreddit: 'frcmemes',
+            subreddit: 'BreadStapledToTrees',
             sort: 'all',
             allowNSFW: false,
             allowModPost: true,
