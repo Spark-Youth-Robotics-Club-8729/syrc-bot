@@ -1,7 +1,7 @@
 const fs = require("fs");
 
 module.exports = (Discord, client, member) => {
-    
+    console.log("HI");
     let rawdata = fs.readFileSync('./config.json');
     let config = JSON.parse(rawdata);
     const rolechannel = member.guild.channels.cache.get('1000805634821869601');
