@@ -12,7 +12,7 @@ function sleep(ms) {
 
 module.exports = {
     ...new SlashCommandBuilder()
-        .setName("clear")
+        .setName("purge")
         .setDescription("clears a number of messages")
         .addIntegerOption(option =>
             option
