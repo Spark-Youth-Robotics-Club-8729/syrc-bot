@@ -27,6 +27,12 @@ module.exports = {
                 .setName("subteam")
                 .setDescription("Which subteam should be pinged. Write their rolenames. If more than 1, seperate with spaces")
                 .setRequired(true)
+        ) 
+        .addStringOption(option =>
+            option
+                .setName("location")
+                .setDescription("Where this meeting will take place")
+                .setRequired(true)
         )
         .addStringOption(option =>
             option
@@ -46,6 +52,7 @@ module.exports = {
             const datetime = interaction.options.getString("datetime");
             const subteams = interaction.options.getRole("subteam");
             var notes = interaction.options.getString("notes");
+            const location = interaction.options.getString("location");
             if (notes === null) {
                 notes = "N/A";
             }
@@ -62,11 +69,12 @@ module.exports = {
                         .setColor("#5F75DE")
                         .setDescription(`**Starting:** <t:${date.getTime() / 1000}:R>`)
                         .addField( "Notes", `*${notes}*` )
+                        .addField( "Location", `*${location}*` )
                         .setThumbnail('https://i.postimg.cc/dQjY2YNS/Screen-Shot-2022-03-07-at-9-00-41-PM.png')
             let channel = client.channels.cache.get(config.meetingchannel[0].channel_id);
             let msg = await channel.send({ embeds: [newEmbed] });
             let link = `https://discord.com/channels/${msg.guild.id}/${msg.channel.id}/${msg.id}`;
-            config.meetings.push({"start_time": (date.getTime() / 1000).toString(), "subteam_id": subteams.id, "notes": notes, "msg_link": link});
+            config.meetings.push({"start_time": (date.getTime() / 1000).toString(), "subteam_id": subteams.id, "notes": notes, "msg_link": link, "location": location});
             const configString = JSON.stringify(config);
             fs.writeFile('./config.json', configString, err => {
                 if (err) {
@@ -76,7 +84,7 @@ module.exports = {
                 }
             })
             let formattedNotes = notes.replaceAll("'", "''");
-            await pgClient.query(`INSERT INTO meetings (start_time, subteam_id, notes, msg_link) VALUES ('${date.getTime() / 1000}','${subteams.id}','${formattedNotes}', '${link}')`, async (err, res) => {
+            await pgClient.query(`INSERT INTO meetings (start_time, subteam_id, notes, msg_link, location) VALUES ('${date.getTime() / 1000}','${subteams.id}','${formattedNotes}', '${link}', '${location}')`, async (err, res) => {
                 if (!err) {
                     await interaction.reply(`Meeting created`);
                 } else {
