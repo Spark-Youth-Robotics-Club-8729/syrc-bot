@@ -37,7 +37,7 @@ module.exports = (Discord, client, message) => {
         .setAuthor({ name: message.author.username, iconURL: message.author.displayAvatarURL() });
     if (message.channel.id == config.countingchannel[0].channel_id) { // this needs to be fetched from config.json later
         pgClient.query(`SELECT * FROM counting`, async (err, res) => {
-            if (message.content.startsWith(parseInt(res.rows[0].number)) && message.author.id != res.rows[0].user_id) { // might not work idk if the [0] should be there :clown:
+            if (message.content.startsWith(parseInt(res.rows[0].number))) { // might not work idk if the [0] should be there :clown:
                 pgClient.query(`UPDATE counting SET number = ('${parseInt(res.rows[0].number)+1}'), user_id = ('${message.author.id}')`);
             }
         })
