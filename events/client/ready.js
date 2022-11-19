@@ -64,12 +64,6 @@ module.exports = async (Discord, client) => {
                         console.log(msg)
                         await msg.delete();
                         pgClient.query(`DELETE FROM meetings WHERE start_time = '${syrc.rows[i].start_time}'`);
-                    } else if (syrc.rows[i].start_time - date.getTime() / 1000 < 5 && syrc.rows[i].start_time - date.getTime() / 1000 > -5) {
-                        const newEmbed = new Discord.MessageEmbed()
-                            .setTitle(`Reminder!`)
-                            .setColor("#5F75DE")
-                            .setDescription(`<@&${role}> **MEETING NOW!**\n**[Meeting Message](${msg_link})**`)
-                        client.channels.cache.get(reminderChannel).send({ embeds: [newEmbed], content: `||<@&${role}>||` });
                     } else if (syrc.rows[i].start_time - date.getTime() / 1000 < 605 && syrc.rows[i].start_time - date.getTime() / 1000 > 595) {
                         const newEmbed = new Discord.MessageEmbed()
                             .setTitle(`Reminder!`)
