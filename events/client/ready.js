@@ -31,9 +31,9 @@ module.exports = async (Discord, client) => {
     client.user.setPresence({
         status: "online",
         activities: [{
-            name: `/help | Stalking ${members} humans`,
+            name: `Stalking ${members} hewmens`,
             type: "STREAMING",
-            url: "https://www.youtube.com/watch?v=8SIiGo3TVKE",
+            url: "https://www.youtube.com/watch?v=WIRK_pGdIdA",
             details: `This one sparks joy :]`
         }]
     });
