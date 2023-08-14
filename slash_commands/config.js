@@ -47,8 +47,14 @@ module.exports = {
                 .setRequired(false)
         ),
     run: async (client, interaction, args) => {
+        let rawdata = fs.readFileSync('./config.json');
+        let config = JSON.parse(rawdata);
+        let modroles = [];
+        for (i in config.modrole) {
+            modroles.push(config.modrole[i].role_id);
+        }
         const target = interaction.guild.members.cache.get(interaction.user.id);
-        if (target.permissions.has("ADMINISTRATOR")) {
+        if (target.permissions.has("ADMINISTRATOR") || interaction.member.roles.cache.some(role => modroles.includes(role.id))) {
             const action = interaction.options.getString("action");
             const setting = interaction.options.getString("setting");
             const role = interaction.options.getRole("role");
