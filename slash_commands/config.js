@@ -64,6 +64,7 @@ module.exports = {
             if (action == 'view') {
                 await interaction.reply({ content: JSON.stringify(config[setting]) });
             } else if (action == 'add') {
+                print(channel.type)
                 if (setting == 'modrole') {
                     let temp = JSON.stringify(config.modrole);
                     try {
@@ -110,7 +111,7 @@ module.exports = {
                     }
                     await interaction.reply({ content: `Bot commands channel changed from ${temp} to ${JSON.stringify(config.botcomchannel)}` });
                 } else if (setting == 'musicchannel') {
-                    if (channel.type != 'voice') {
+                    if (channel.type != 'GuildVoice') {
                         return await interaction.reply({ content: "Text channel not allowed for this setting" });
                     }
                     let temp = JSON.stringify(config.musicchannel);
