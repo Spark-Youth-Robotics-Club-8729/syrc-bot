@@ -42,3 +42,6 @@ fly deploy
 ```
 
 This will deploy the app. If everything goes well, you should have the app running on Fly.io.
+
+## Psql Database
+To run the app, you will need a running postgresql database instance. If you are looking for a free instance, [neon](https://neon.tech/) is not bad. Fly.io also has it's own psql database instance that you can setup and connect to.
