@@ -43,9 +43,12 @@ module.exports = async (Discord, client) => {
     let config = JSON.parse(rawdata);
     // im lazy imma just hardcode the reminder channel stfu darun no one asked >:(
     let reminderChannel = '1001656037243367514';
-    let botcomChannel = '933859349753897041';
     var interval = setInterval(async function () {
-        client.channels.cache.get(botcomChannel).sendTyping();
+        try {
+            client.channels.cache.get(config.botcomchannel[0].channel_id).sendTyping();
+        } catch (TypeError) {
+            console.log("Bot commands channel not set... continuing");
+        }
         await pgClient.query(`SELECT * FROM meetings`, async (err, syrc) => {
             if (err) {
                 throw err;
