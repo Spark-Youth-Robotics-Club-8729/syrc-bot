@@ -9,5 +9,7 @@
         "ecmaVersion": "latest"
     },
     "rules": {
+        "no-var": "error",
+        "eqeqeq": "error"
     }
 }
