@@ -156,13 +156,12 @@ module.exports = {
             })
         } else {
             let rawtext = "";
-            let index = 0;
-            for (; index < 10; index++) {
-                if (!fs.existsSync(`./output${index.toString()}.jpg`)) {
+            for (let i = 0; i < 10; i++) {
+                if (!fs.existsSync(`./output${i.toString()}.jpg`)) {
                     break;
                 }
             }
-            var index = 0;
+            let index = 0;
             fs.readFile('./assets/texts.txt', 'utf8', (err, data) => {
                 if (err) {
                     console.error(err);
