@@ -162,6 +162,7 @@ module.exports = {
                     break;
                 }
             }
+            var index = 0;
             fs.readFile('./assets/texts.txt', 'utf8', (err, data) => {
                 if (err) {
                     console.error(err);
