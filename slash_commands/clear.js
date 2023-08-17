@@ -1,7 +1,4 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { CommandInteraction } = require("discord.js");
-const mysql = require(`mysql2`);
-const Discord = require("discord.js");
 const fs = require("fs");
 
 function sleep(ms) {
@@ -25,11 +22,11 @@ module.exports = {
             let rawdata = fs.readFileSync('./config.json');
             let config = JSON.parse(rawdata);
             let modroles = [];
-            for (i in config.modrole) {
+            for (let i in config.modrole) {
                 modroles.push(config.modrole[i].role_id);
             }
             if (interaction.member.roles.cache.some(role => modroles.includes(role.id))) {
-                const num = interaction.options.getInteger("clear");
+                // const num = interaction.options.getInteger("clear");
                 await interaction.channel.messages.fetch({ limit: args[0] }).then(async messages => {
                     interaction.channel.bulkDelete(messages);
                     if (args[0] > 1) {

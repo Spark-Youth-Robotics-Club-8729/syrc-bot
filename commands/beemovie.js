@@ -1,10 +1,9 @@
-const Discord = require("discord.js")
 const fs = require("fs");
 
 module.exports = {
     name: 'beemovie',
     description: "agagaga",
-    execute(client, message, args, Discord) {
+    execute(client, message, _args, _Discord) {
         let lines = [];
         fs.readFile('./assets/beemovie.txt', 'utf8', (err, data) => {
             if (err) {
@@ -15,7 +14,7 @@ module.exports = {
         });
         let cnt = 0;
         console.log("SHEEESH");
-        var interval = setInterval (function () {
+        setInterval (function () {
             message.channel.send(lines[cnt]).catch(console.error);
             cnt += 1;
         }, 1 * 10000); 

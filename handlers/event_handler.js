@@ -1,7 +1,6 @@
-const { Interaction } = require('discord.js');
 const fs = require('fs');
 
-module.exports = async (client, Discord, message) => {
+module.exports = async (client, Discord, _message) => {
     const load_dir = (dirs) => {
         const event_files = fs.readdirSync(`./events/${dirs}`).filter(file => file.endsWith('.js'));
 

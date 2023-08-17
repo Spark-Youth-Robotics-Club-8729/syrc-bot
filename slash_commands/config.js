@@ -1,6 +1,4 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { CommandInteraction } = require("discord.js");
-const Discord = require("discord.js")
 const { pgClient } = require("../main");
 const fs = require("fs");
 
@@ -46,11 +44,11 @@ module.exports = {
                 .setDescription("the channel value of the setting")
                 .setRequired(false)
         ),
-    run: async (client, interaction, args) => {
+    run: async (client, interaction, _args) => {
         let rawdata = fs.readFileSync('./config.json');
         let config = JSON.parse(rawdata);
         let modroles = [];
-        for (i in config.modrole) {
+        for (let i in config.modrole) {
             modroles.push(config.modrole[i].role_id);
         }
         const target = interaction.guild.members.cache.get(interaction.user.id);
@@ -61,11 +59,11 @@ module.exports = {
             const channel = interaction.options.getChannel("channel");
             let rawdata = fs.readFileSync('./config.json');
             let config = JSON.parse(rawdata);
-            if (action == 'view') {
+            if (action === 'view') {
                 await interaction.reply({ content: JSON.stringify(config[setting]) });
-            } else if (action == 'add') {
+            } else if (action === 'add') {
                 print(channel.type)
-                if (setting == 'modrole') {
+                if (setting === 'modrole') {
                     let temp = JSON.stringify(config.modrole);
                     try {
                         config.modrole.push({"role_id": role.id});
@@ -78,8 +76,8 @@ module.exports = {
                         return await interaction.reply({ content: "Cannot insert into database (something on your end prob xd)" });
                     }
                     await interaction.reply({ content: `Modrole changed from ${temp} to ${JSON.stringify(config.modrole)}` });
-                } else if (setting == 'meetingchannel') {
-                    if (channel.type == 'voice') {
+                } else if (setting === 'meetingchannel') {
+                    if (channel.type === 'voice') {
                         return await interaction.reply({ content: "Voice channel not allowed for this setting" });
                     }
                     let temp = JSON.stringify(config.meetingchannel);
@@ -94,8 +92,8 @@ module.exports = {
                         return await interaction.reply({ content: "Cannot insert into database (something on your end prob xd)" });
                     }
                     await interaction.reply({ content: `Meeting channel changed from ${temp} to ${JSON.stringify(config.meetingchannel)}` });
-                } else if (setting == 'botcomchannel') {
-                    if (channel.type == 'voice') {
+                } else if (setting === 'botcomchannel') {
+                    if (channel.type === 'voice') {
                         return await interaction.reply({ content: "Voice channel not allowed for this setting" });
                     }
                     let temp = JSON.stringify(config.botcomchannel);
@@ -110,8 +108,8 @@ module.exports = {
                         return await interaction.reply({ content: "Cannot insert into database (something on your end prob xd)" });
                     }
                     await interaction.reply({ content: `Bot commands channel changed from ${temp} to ${JSON.stringify(config.botcomchannel)}` });
-                } else if (setting == 'musicchannel') {
-                    if (channel.type != 'GuildVoice') {
+                } else if (setting === 'musicchannel') {
+                    if (channel.type !== 'GuildVoice') {
                         return await interaction.reply({ content: "Text channel not allowed for this setting" });
                     }
                     let temp = JSON.stringify(config.musicchannel);
@@ -126,8 +124,8 @@ module.exports = {
                         return await interaction.reply({ content: "Cannot insert into database (something on your end prob xd)" });
                     }
                     await interaction.reply({ content: `Music channel changed from ${temp} to ${JSON.stringify(config.musicchannel)}` });
-                } else if (setting == 'welcomechannel') {
-                    if (channel.type == 'voice') {
+                } else if (setting === 'welcomechannel') {
+                    if (channel.type === 'voice') {
                         return await interaction.reply({ content: "Voice channel not allowed for this setting" });
                     }
                     let temp = JSON.stringify(config.welcomechannel);
@@ -142,8 +140,8 @@ module.exports = {
                         return await interaction.reply({ content: "Cannot insert into database (something on your end prob xd)" });
                     }
                     await interaction.reply({ content: `Welcome channel changed from ${temp} to ${JSON.stringify(config.welcomechannel)}` });
-                } else if (setting == 'countingchannel') {
-                    if (channel.type == 'voice') {
+                } else if (setting === 'countingchannel') {
+                    if (channel.type === 'voice') {
                         return await interaction.reply({ content: "Voice channel not allowed for this setting" });
                     }
                     let temp = JSON.stringify(config.countingchannel);
@@ -158,8 +156,8 @@ module.exports = {
                         return await interaction.reply({ content: "Cannot insert into database (something on your end prob xd)" });
                     }
                     await interaction.reply({ content: `Counting channel changed from ${temp} to ${JSON.stringify(config.countingchannel)}` });
-                } else if (setting == 'logchannel') {
-                    if (channel.type == 'voice') {
+                } else if (setting === 'logchannel') {
+                    if (channel.type === 'voice') {
                         return await interaction.reply({ content: "Voice channel not allowed for this setting" });
                     }
                     let temp = JSON.stringify(config.logchannel);
@@ -185,13 +183,13 @@ module.exports = {
                         console.log('Successfully fetched data!');
                     }
                 })
-            } else if (action == 'remove') {
-                if (setting == 'modrole') {
+            } else if (action === 'remove') {
+                if (setting === 'modrole') {
                     try {
                         let temp = JSON.stringify(config.modrole);
-                        var i = config.modrole.length;
+                        let i = config.modrole.length;
                         while (i--) {
-                            if (config.modrole[i] == {"role_id": role.id}) {
+                            if (config.modrole[i] === {"role_id": role.id}) {
                                 config.modrole.splice(config.modrole.indexOf({"role_id": role.id}), 1);
                             }
                         }
@@ -200,15 +198,15 @@ module.exports = {
                     } catch {
                         await interaction.reply({ content: "A role argument is required" });
                     }
-                } else if (setting == 'meetingchannel') {
-                    if (channel.type == 'voice') {
+                } else if (setting === 'meetingchannel') {
+                    if (channel.type === 'voice') {
                         return await interaction.reply({ content: "Voice channel not allowed for this setting" });
                     }
                     try {
                         let temp = JSON.stringify(config.meetingchannel);
-                        var i = config.meetingchannel.length;
+                        let i = config.meetingchannel.length;
                         while (i--) {
-                            if (config.meetingchannel[i] == {"channel_id": channel.id}) {
+                            if (config.meetingchannel[i] === {"channel_id": channel.id}) {
                                 config.meetingchannel.splice(config.meetingchannel.indexOf({"channel_id": channel.id}), 1);
                             }
                         }
@@ -217,15 +215,15 @@ module.exports = {
                     } catch {
                         await interaction.reply({ content: "A channel argument is required" });
                     }
-                } else if (setting == 'botcomchannel') {
-                    if (channel.type == 'voice') {
+                } else if (setting === 'botcomchannel') {
+                    if (channel.type === 'voice') {
                         return await interaction.reply({ content: "Voice channel not allowed for this setting" });
                     }
                     try {
                         let temp = JSON.stringify(config.botcomchannel);
-                        var i = config.botcomchannel.length;
+                        let i = config.botcomchannel.length;
                         while (i--) {
-                            if (config.botcomchannel[i] == {"channel_id": channel.id}) {
+                            if (config.botcomchannel[i] === {"channel_id": channel.id}) {
                                 config.botcomchannel.splice(config.botcomchannel.indexOf({"channel_id": channel.id}), 1);
                             }
                         }
@@ -234,15 +232,15 @@ module.exports = {
                     } catch {
                         await interaction.reply({ content: "A channel argument is required" });
                     }
-                } else if (setting == 'musicchannel') {
-                    if (channel.type != 'voice') {
+                } else if (setting === 'musicchannel') {
+                    if (channel.type !== 'voice') {
                         return await interaction.reply({ content: "Text channel not allowed for this setting" });
                     }
                     try {
                         let temp = JSON.stringify(config.musicchannel);
-                        var i = config.musicchannel.length;
+                        let i = config.musicchannel.length;
                         while (i--) {
-                            if (config.musicchannel[i] == {"channel_id": channel.id}) {
+                            if (config.musicchannel[i] === {"channel_id": channel.id}) {
                                 config.musicchannel.splice(config.musicchannel.indexOf({"channel_id": channel.id}), 1);
                             }
                         }
@@ -251,15 +249,15 @@ module.exports = {
                     } catch {
                         await interaction.reply({ content: "A channel argument is required" });
                     }
-                } else if (setting == 'welcomechannel') {
-                    if (channel.type == 'voice') {
+                } else if (setting === 'welcomechannel') {
+                    if (channel.type === 'voice') {
                         return await interaction.reply({ content: "Voice channel not allowed for this setting" });
                     }
                     try {
                         let temp = JSON.stringify(config.welcomechannel);
-                        var i = config.welcomechannel.length;
+                        let i = config.welcomechannel.length;
                         while (i--) {
-                            if (config.welcomechannel[i] == {"channel_id": channel.id}) {
+                            if (config.welcomechannel[i] === {"channel_id": channel.id}) {
                                 config.welcomechannel.splice(config.welcomechannel.indexOf({"channel_id": channel.id}), 1);
                             }
                         }
@@ -268,15 +266,15 @@ module.exports = {
                     } catch {
                         await interaction.reply({ content: "A channel argument is required" });
                     }
-                } else if (setting == 'countingchannel') {
-                    if (channel.type == 'voice') {
+                } else if (setting === 'countingchannel') {
+                    if (channel.type === 'voice') {
                         return await interaction.reply({ content: "Voice channel not allowed for this setting" });
                     }
                     try {
                         let temp = JSON.stringify(config.countingchannel);
-                        var i = config.countingchannel.length;
+                        let i = config.countingchannel.length;
                         while (i--) {
-                            if (config.countingchannel[i] == {"channel_id": channel.id}) {
+                            if (config.countingchannel[i] === {"channel_id": channel.id}) {
                                 config.countingchannel.splice(config.countingchannel.indexOf({"channel_id": channel.id}), 1);
                             }
                         }
@@ -285,15 +283,15 @@ module.exports = {
                     } catch {
                         await interaction.reply({ content: "A channel argument is required" });
                     }
-                } else if (setting == 'logchannel') {
-                    if (channel.type == 'voice') {
+                } else if (setting === 'logchannel') {
+                    if (channel.type === 'voice') {
                         return await interaction.reply({ content: "Voice channel not allowed for this setting" });
                     }
                     try {
                         let temp = JSON.stringify(config.logchannel);
-                        var i = config.logchannel.length;
+                        let i = config.logchannel.length;
                         while (i--) {
-                            if (config.logchannel[i] == {"channel_id": channel.id}) {
+                            if (config.logchannel[i] === {"channel_id": channel.id}) {
                                 config.logchannel.splice(config.logchannel.indexOf({"channel_id": channel.id}), 1);
                             }
                         }

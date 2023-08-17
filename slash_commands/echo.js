@@ -1,5 +1,4 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { CommandInteraction } = require("discord.js");
 
 module.exports = {
     ...new SlashCommandBuilder()
@@ -23,7 +22,7 @@ module.exports = {
                 .setDescription('Set the user you want to send a message to')
                 .setRequired(false)
         ),
-    run: async (client, interaction, args) => {
+    run: async (client, interaction, _args) => {
         const msg = interaction.options.getString("text");
         const channel = interaction.options.getChannel("channel");
         const user = interaction.options.getUser("user");

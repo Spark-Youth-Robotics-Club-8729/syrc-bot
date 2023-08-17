@@ -1,15 +1,11 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { CommandInteraction, MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
-const ytdl = require('ytdl-core');
-const ytSearch = require('yt-search');
-const { joinVoiceChannel, createAudioPlayer, createAudioResource } =  require("@discordjs/voice");
-// const { QueryType } = require("discord-player")
+const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
 
 module.exports = {
     ...new SlashCommandBuilder()
         .setName("queue")
         .setDescription("displays the song queue"),
-    run: async (client, interaction, args) => {
+    run: async (client, interaction, _args) => {
         if (!interaction.member.voice.channel) {
             return interaction.reply({ content: "You need to be in a VC to use this command", ephemeral: true });
         }
@@ -29,7 +25,7 @@ module.exports = {
             return await interaction.reply("There are no songs in the queue")
         }
         const totalPages = Math.ceil(queue.tracks.length / 10) || 1
-        var page = 0;
+        const page = 0;
         const queueString = queue.tracks.slice(page * 10, page * 10 + 10).map((song, i) => {
             return `**${page * 10 + i + 1}.** \`[${song.duration}]\` [${song.title}](${song.url}) | <@${song.requestedBy.id}>`
         }).join("\n")

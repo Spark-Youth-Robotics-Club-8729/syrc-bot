@@ -2,7 +2,8 @@
     "env": {
         "browser": true,
         "commonjs": true,
-        "es2021": true
+        "es2021": true,
+        "node": true
     },
     "extends": "eslint:recommended",
     "parserOptions": {
@@ -10,6 +11,8 @@
     },
     "rules": {
         "no-var": "error",
-        "eqeqeq": "error"
+        "eqeqeq": "error",
+        "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+        "no-constant-condition":"off"
     }
 }

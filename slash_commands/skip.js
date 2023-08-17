@@ -1,15 +1,11 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { CommandInteraction, MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
-const ytdl = require('ytdl-core');
-const ytSearch = require('yt-search');
-const { joinVoiceChannel, createAudioPlayer, createAudioResource } =  require("@discordjs/voice");
-// const { QueryType } = require("discord-player")
+const { MessageEmbed } = require("discord.js");
 
 module.exports = {
     ...new SlashCommandBuilder()
         .setName("skip")
         .setDescription("skips the current song"),
-    run: async (client, interaction, args) => {
+    run: async (client, interaction, _args) => {
         if (!interaction.member.voice.channel) {
             return interaction.reply({ content: "You need to be in a VC to use this command", ephemeral: true });
         }

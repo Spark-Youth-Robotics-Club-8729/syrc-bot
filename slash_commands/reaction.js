@@ -1,7 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { CommandInteraction } = require("discord.js");
 const Discord = require("discord.js");
-const { config } = require("dotenv");
 const fs = require("fs");
 const { pgClient } = require("../main");
 
@@ -44,11 +42,11 @@ module.exports = {
                 .setDescription("Message ID of the reaction role you want to delete")
                 .setRequired(false)
         ),
-    run: async (client, interaction, args) => {
+    run: async (client, interaction, _args) => {
         let rawdata = fs.readFileSync('./config.json');
         let config = JSON.parse(rawdata);
         let modroles = [];
-        for (i in config.modrole) {
+        for (let i in config.modrole) {
             modroles.push(config.modrole[i].role_id);
         }
         if (interaction.member.roles.cache.some(role => modroles.includes(role.id))) {
@@ -62,29 +60,29 @@ module.exports = {
             let rawdata = fs.readFileSync('./config.json');
             let config = JSON.parse(rawdata);
 
-            if (mode == "add") {
+            if (mode === "add") {
                 let newEmbed = {
                     title: "Reaction Role Creator",
-                    description: `**Send an emoji and a role to be added to the menu in the format <emoji> <role> (\"-\" to finish)**\n*empty*`,
+                    description: `**Send an emoji and a role to be added to the menu in the format <emoji> <role> ("-" to finish)**\n*empty*`,
                     color: '#5F75DE',
                 }
                 await interaction.reply({ content: "Beginning reaction role creation process...", ephemeral: true });
                 let menuMsg = await interactionChannel.send({ embeds: [newEmbed] });
-                var roles = [];
-                var rolefields = [];
+                let roles = [];
+                let rolefields = [];
                 let descriptionMsg = "Send an emoji and a role to be added to the menu in the format <emoji> <roleid> (\"-\" to finish)";
                 console.log("hi1");
-                const collector = new Discord.MessageCollector(interaction.channel, m => m.author.id == interaction.member.user.id, { time: 100000 });
+                const collector = new Discord.MessageCollector(interaction.channel, m => m.author.id === interaction.member.user.id, { time: 100000 });
                 collector.on('collect', async message => {
                     console.log("hi2");
-                    if (message.author.id == interaction.member.user.id) {
-                        if (message.content == '-') {
+                    if (message.author.id === interaction.member.user.id) {
+                        if (message.content === '-') {
                             console.log("hi6");
                             await message.react("✅");
                             collector.stop();
                         } else {
                             let msgSplit = message.content.split(' ');
-                            let role = await message.guild.roles.cache.find(r => r.id == msgSplit[1]);
+                            let role = await message.guild.roles.cache.find(r => r.id === msgSplit[1]);
                             console.log(role);
                             roles.push({ "emoji": msgSplit[0], "role": role });
                             rolefields.push({ name: msgSplit[0], value: "<@&" + role.id + ">", inline: true });
@@ -99,9 +97,9 @@ module.exports = {
                     }
                 })
                 console.log("hi3");
-                collector.on('end', async (collected, reason) => {
+                collector.on('end', async (_collected, _reason) => {
                     console.log("hi4");
-                    if (roles.length == 0) {
+                    if (roles.length === 0) {
                         return await interaction.channel.send({ content: "Please enter at least 1 reaction role", ephemeral: true });
                     }
                     let reactionEmbed = {
@@ -112,7 +110,7 @@ module.exports = {
                         timestamp: new Date()
                     }
                     let reactionMsg = await channel.send({ embeds: [reactionEmbed] });
-                    for (i in roles) {
+                    for (let i in roles) {
                         config.reaction.push({ "message_id": reactionMsg.id, "channel_id": channel.id, "emoji_id": roles[i]["emoji"], "role_id": roles[i]["role"].id });
                         pgClient.query(`INSERT INTO reaction (message_id, channel_id, emoji_id, role_id) VALUES ('${reactionMsg.id}', '${channel.id}', '${roles[i].emoji}', '${roles[i].role.id}')`);
                         await reactionMsg.react(roles[i]["emoji"]);
@@ -128,12 +126,10 @@ module.exports = {
                     console.log(config.reaction);
                 })
                 console.log("hi5");
-            } else if (mode == "delete") {
+            } else if (mode === "delete") {
                 let exists = false;
-                let channelID = '';
-                for (i in config.reaction) {
-                    if (msgID == config.reaction[i].message_id) {
-                        channelID = config.reaction[i].channel_id;
+                for (let i in config.reaction) {
+                    if (msgID === config.reaction[i].message_id) {
                         exists = true;
                         break;
                     }
@@ -155,18 +151,18 @@ module.exports = {
                 } else {
                     return interaction.reply({ content: 'Please enter a valid reaction role message ID and try again' });
                 }
-            } else if (mode == "list") {
-                var messages = {};
-                for (i in config.reaction) {
+            } else if (mode === "list") {
+                let messages = {};
+                for (let i in config.reaction) {
                     messages[config.reaction[i].message_id] = config.reaction[i].channel_id;
                 }
                 let description = '';
-                if (Object.keys(config.reaction).length == 0) {
+                if (Object.keys(config.reaction).length === 0) {
                     description = '*None*';
                 } else {
-                    for (key in messages) {
+                    for (let key in messages) {
                         description += `**https://discord.com/channels/${interaction.guild.id}/${messages[key]}/${key}**\n\n`
-                    };
+                    }
                 }
                 let newEmbed = {
                     title: "Reaction Role List",

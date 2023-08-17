@@ -1,5 +1,4 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { CommandInteraction } = require("discord.js");
 
 module.exports = {
     // channel, title, description - colour, footer, image url
@@ -42,14 +41,14 @@ module.exports = {
                 .setDescription("Image displayed in the embed as a url")
                 .setRequired(false)
         ),
-    run: async (client, interaction, args) => {
+    run: async (client, interaction, _args) => {
         const channel = interaction.options.getChannel("channel");
         const title = interaction.options.getString("title");
         const description = interaction.options.getString("description");
         let colour = interaction.options.getString("colour");
         if (!colour) {
             colour = "#5F75DE"
-        } else if (colour[0] != "#") {
+        } else if (colour[0] !== "#") {
             colour = "#" + colour;
         }
         const footer = interaction.options.getString("footer");
