@@ -1,5 +1,4 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { CommandInteraction } = require("discord.js");
 const reddit = require("reddit-fetch");
 const Discord = require("discord.js");
 
@@ -7,7 +6,7 @@ module.exports = {
     ...new SlashCommandBuilder()
         .setName("meme")
         .setDescription("mimema: unit of cultural information spread by imitation"),
-    run: async (client, interaction, args) => {
+    run: async (client, interaction, _args) => {
         reddit({
             subreddit: 'BreadStapledToTrees',
             sort: 'all',

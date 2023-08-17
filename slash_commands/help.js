@@ -1,15 +1,14 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { CommandInteraction } = require("discord.js");
 
 module.exports = {
     ...new SlashCommandBuilder()
         .setName("help")
         .setDescription("get info on all of sparky's commands"),
-    run: async (client, interaction, args) => {
+    run: async (client, interaction, _args) => {
         let commandFields = [];
         client.slashCommands.forEach((value, commandName) => {
             let commandArgs = " ";
-            value.options.forEach((value, key) => {
+            value.options.forEach((value, _key) => {
                 if (value.required) {
                     commandArgs += "<" + value.name + "> ";
                 } else {

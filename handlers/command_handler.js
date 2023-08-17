@@ -1,7 +1,6 @@
 const fs = require('fs')
-const { glob } = require("glob");
 
-module.exports = async (client, Discord) => {
+module.exports = async (client, _Discord) => {
     const command_files = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'))
     for (const file of command_files) {
         const command = require(`../commands/${file}`);

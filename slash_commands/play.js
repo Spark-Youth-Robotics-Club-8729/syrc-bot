@@ -1,17 +1,13 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { CommandInteraction, MessageEmbed } = require("discord.js");
-const ytdl = require('ytdl-core');
-const ytSearch = require('yt-search');
-const { joinVoiceChannel, createAudioPlayer, createAudioResource } =  require("@discordjs/voice");
+const { MessageEmbed } = require("discord.js");
 const { QueryType } = require("discord-player")
 const fs = require("fs");
-const { getAudioDurationInSeconds } = require('get-audio-duration');
 
-function sleep(ms) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, ms);
-    });
-}
+// function sleep(ms) {
+//     return new Promise((resolve) => {
+//         setTimeout(resolve, ms);
+//     });
+// }
 
 module.exports = {
     ...new SlashCommandBuilder()
@@ -23,14 +19,14 @@ module.exports = {
                 .setDescription("loads a song from a name or url")
                 .setRequired(true)
         ),
-    run: async (client, interaction, args) => {
+    run: async (client, interaction, _args) => {
         if (!interaction.member.voice.channel) {
             return interaction.reply({ content: "You need to be in a VC to use this command", ephemeral: true });
         }
         let rawdata = fs.readFileSync('./config.json');
         let config = JSON.parse(rawdata);
-        var allowed_channels = [];
-        for (i in config.musicchannel) {
+        let allowed_channels = [];
+        for (let i in config.musicchannel) {
             allowed_channels.push(config.musicchannel[i].channel_id);
         }
         if (!allowed_channels.includes(interaction.member.voice.channel.id)) {
@@ -38,7 +34,7 @@ module.exports = {
         }
         const queue = await client.player.createQueue(interaction.guild);
         await interaction.deferReply();
-	    // if (!queue.connection) {
+        // if (!queue.connection) {
         //     const audioPlayer = createAudioPlayer();
         //     const connection = joinVoiceChannel({
         //         channelId: interaction.member.voice.channel.id,
@@ -75,12 +71,12 @@ module.exports = {
                     searchEngine: QueryType.YOUTUBE_PLAYLIST
                 })
                 let song = null;
-                if (resultsong.tracks.length == 0 && resultplaylist.tracks.length == 0) {
+                if (resultsong.tracks.length === 0 && resultplaylist.tracks.length === 0) {
                     return interaction.editReply("No results brotha")
-                } else if (resultplaylist.tracks.length == 0) {
+                } else if (resultplaylist.tracks.length === 0) {
                     song = resultsong.tracks[0];
                     await queue.addTrack(song)
-                } else if (resultsong.tracks.length == 0) {
+                } else if (resultsong.tracks.length === 0) {
                     song = resultplaylist.tracks[0];
                     await queue.addTracks(resultplaylist.tracks);
                 }

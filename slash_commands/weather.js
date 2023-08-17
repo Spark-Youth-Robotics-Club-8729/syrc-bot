@@ -1,6 +1,4 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { CommandInteraction } = require("discord.js");
-const Discord = require("discord.js");
 const axios = require('axios');
 
 module.exports = {
@@ -13,7 +11,7 @@ module.exports = {
                 .setDescription("City you want to get the weather of")
                 .setRequired(true)
         ),
-    run: async (client, interaction, args) => {
+    run: async (client, interaction, _args) => {
         const weather_api_key = "046bc80be1c3e7a199f6995c46b6c94b";
         const loc = interaction.options.getString("place").replace(/\b\w/g, l => l.toUpperCase());
         try {

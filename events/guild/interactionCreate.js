@@ -1,17 +1,17 @@
-const { CommandInteraction, MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
+const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
 const { pgClient } = require("../../main");
-const queueFile = require("../../slash_commands/queue");
+// const queueFile = require("../../slash_commands/queue");
 const fs = require("fs");
 
 module.exports = async (Discord, client, interaction) => {
     let rawdata = fs.readFileSync('./config.json');
     let config = JSON.parse(rawdata);
-    var allowed_channels = [];
-    for (i in config.botcomchannel) {
+    let allowed_channels = [];
+    for (let i in config.botcomchannel) {
         allowed_channels.push(config.botcomchannel[i].channel_id);
     }
     const cmd = client.slashCommands.get(interaction.commandName);
-    if (interaction.member.permissions.has("ADMINISTRATOR") || allowed_channels.length == 0 || interaction.commandName == 'clear' || allowed_channels.includes(interaction.channelId)) {
+    if (interaction.member.permissions.has("ADMINISTRATOR") || allowed_channels.length === 0 || interaction.commandName === 'clear' || allowed_channels.includes(interaction.channelId)) {
         if (interaction.isCommand()) {
             if (!cmd)
                 return interaction.reply({ content: "An error has occured " });
@@ -27,15 +27,15 @@ module.exports = async (Discord, client, interaction) => {
             interaction.member = interaction.guild.members.cache.get(interaction.user.id);
             cmd.run(client, interaction, args);
         } else if (interaction.isSelectMenu()) {
-            if (interaction.customId == "placement") {
+            if (interaction.customId === "placement") {
                 pgClient.query(`SELECT * FROM typinglb`, async (err, res) => {
                     if (!err) {
-                        var typinglb = res.rows;
+                        const typinglb = res.rows;
                         let score = typinglb[parseInt(interaction.values)-1];
                         let member = await interaction.guild.members.fetch(score['member_id']);
                         let newEmbed = {
                             title: "#" + interaction.values.toString() + " - " + score["wpm"] + " wpm",
-                            description: `*\"${score["text"]}\"*`,
+                            description: `*"${score["text"]}"*`,
                             color: '#5F75DE',
                             timestamp: new Date(),
                             fields: [
@@ -53,7 +53,7 @@ module.exports = async (Discord, client, interaction) => {
                 });
             }
         } else if (interaction.isButton()) {
-            if (interaction.customId == "queue_previouspage") {
+            if (interaction.customId === "queue_previouspage") {
                 const row = new MessageActionRow()
                                 .addComponents(
                                     new MessageButton()
@@ -92,7 +92,7 @@ module.exports = async (Discord, client, interaction) => {
                     ],
                     components: [row]
                 })
-            } else if (interaction.customId == "queue_nextpage") {
+            } else if (interaction.customId === "queue_nextpage") {
                 const row = new MessageActionRow()
                                 .addComponents(
                                     new MessageButton()

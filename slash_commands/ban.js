@@ -1,6 +1,4 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { CommandInteraction } = require("discord.js");
-const mysql = require(`mysql2`);
 const Discord = require("discord.js")
 const fs = require("fs");
 
@@ -17,7 +15,7 @@ module.exports = {
             let rawdata = fs.readFileSync('./config.json');
             let config = JSON.parse(rawdata);
             let modroles = [];
-            for (i in config.modrole) {
+            for (let i in config.modrole) {
                 modroles.push(config.modrole[i].role_id);
             }
             if (interaction.member.roles.cache.some(role => modroles.includes(role.id))) {

@@ -1,5 +1,3 @@
-const ms = require('ms');
-const Discord = require("discord.js");
 module.exports = {
     name: 'mute',
     description: "Mute a member",

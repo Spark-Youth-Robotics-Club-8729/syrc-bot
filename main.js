@@ -3,8 +3,8 @@ const fs = require("fs");
 const pg = require('pg');
 const { Player } = require("discord-player")
 require("dotenv").config();
-var express = require('express');
-var app = express();
+let express = require('express');
+let app = express();
 
 const client = new Discord.Client({ 
     partials: ["MESSAGE", "CHANNEL", "REACTION"], 
@@ -14,7 +14,7 @@ const client = new Discord.Client({
 app.set('port', (process.env.PORT || 8080));
 
 app.get('/', function(request, response) {
-    var result = 'App is running'
+    let result = 'App is running'
     response.send(result);
 }).listen(app.get('port'), function() {
     console.log('App is running, server is listening on port ', app.get('port'));
@@ -62,9 +62,9 @@ client.on('messageReactionAdd', async (reaction, user) => {
     if (user.bot) return;
     if (!reaction.message.guild) return;
     let rawdata = fs.readFileSync('./config.json');
-    var config = JSON.parse(rawdata);
-    for (i in config.reaction) {
-        if (reaction.message.id == config.reaction[i].message_id && reaction.emoji.name == config.reaction[i].emoji_id) {
+    const config = JSON.parse(rawdata);
+    for (let i in config.reaction) {
+        if (reaction.message.id === config.reaction[i].message_id && reaction.emoji.name === config.reaction[i].emoji_id) {
             const member = reaction.message.guild.members.cache.get(user.id);
             const role = reaction.message.guild.roles.cache.get(config.reaction[i].role_id);
             await member.roles.add(config.reaction[i].role_id);
@@ -79,9 +79,9 @@ client.on('messageReactionRemove', async (reaction, user) => {
     if (user.bot) return;
     if (!reaction.message.guild) return;
     let rawdata = fs.readFileSync('./config.json');
-    var config = JSON.parse(rawdata);
-    for (i in config.reaction) {
-        if (reaction.message.id == config.reaction[i].message_id && reaction.emoji.name == config.reaction[i].emoji_id) {
+    const config = JSON.parse(rawdata);
+    for (let i in config.reaction) {
+        if (reaction.message.id === config.reaction[i].message_id && reaction.emoji.name === config.reaction[i].emoji_id) {
             const member = reaction.message.guild.members.cache.get(user.id);
             const role = reaction.message.guild.roles.cache.get(config.reaction[i].role_id);
             await member.roles.remove(config.reaction[i].role_id);

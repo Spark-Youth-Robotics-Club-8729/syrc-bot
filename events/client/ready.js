@@ -1,13 +1,12 @@
 // const mysql = require(`mysql2`);
-const Discord = require("discord.js");
 const { pgClient } = require("../../main");
 require("dotenv").config();
 const fs = require("fs");
 
 async function fetch_data() {
-    var config = {};
+    let config = {};
     let tables = await pgClient.query(`SELECT * FROM pg_catalog.pg_tables WHERE schemaname != 'pg_catalog' AND schemaname != 'information_schema'`);
-    for (i in tables.rows) {
+    for (let i in tables.rows) {
         let res = await pgClient.query(`SELECT * FROM ${tables.rows[i].tablename}`);
         config[tables.rows[i].tablename] = res.rows;
     }
@@ -25,7 +24,7 @@ async function fetch_data() {
 module.exports = async (Discord, client) => {
     const guilds = client.guilds.cache.map(guild => guild.id);
     let members = 0;
-    for (guild in guilds) {
+    for (let guild in guilds) {
         members += parseInt(client.guilds.cache.get(guilds[guild]).memberCount);
     }
     client.user.setPresence({
@@ -43,7 +42,7 @@ module.exports = async (Discord, client) => {
     let config = JSON.parse(rawdata);
     // im lazy imma just hardcode the reminder channel stfu darun no one asked >:(
     let reminderChannel = '1001656037243367514';
-    var interval = setInterval(async function () {
+    setInterval(async function () {
         try {
             client.channels.cache.get(config.botcomchannel[0].channel_id).sendTyping();
         } catch (TypeError) {
@@ -53,8 +52,8 @@ module.exports = async (Discord, client) => {
             if (err) {
                 throw err;
             } else {
-                var date = new Date();
-                for (i in syrc.rows) {
+                const date = new Date();
+                for (let i in syrc.rows) {
                     console.log(`${((syrc.rows[i].start_time - date.getTime() / 1000)/60)} minutes left`);
                     console.log(syrc.rows[i].start_time - date.getTime() / 1000);
                     let role = syrc.rows[i].subteam_id.toString();

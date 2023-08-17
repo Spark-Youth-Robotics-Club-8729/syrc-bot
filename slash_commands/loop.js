@@ -1,9 +1,4 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { CommandInteraction, MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
-const ytdl = require('ytdl-core');
-const ytSearch = require('yt-search');
-const { joinVoiceChannel, createAudioPlayer, createAudioResource } =  require("@discordjs/voice");
-const { QueryType } = require("discord-player")
 
 module.exports = {
     ...new SlashCommandBuilder()
@@ -20,7 +15,7 @@ module.exports = {
                     { name: 'off', value: 'OFF' },
                 )
         ),
-    run: async (client, interaction, args) => {
+    run: async (client, interaction, _args) => {
         if (!interaction.member.voice.channel) {
             return interaction.reply({ content: "You need to be in a VC to use this command", ephemeral: true });
         }
@@ -33,15 +28,15 @@ module.exports = {
             }
             return await interaction.reply({ embeds: [newEmbed] });
         }
-        const setting = interaction.options.getString("loopsetting");
+        let setting = interaction.options.getString("loopsetting");
         let value = 2;
-        if (setting == 'TRACK') {
+        if (setting === 'TRACK') {
             value = 1;
-        } else if (setting == 'OFF') {
+        } else if (setting === 'OFF') {
             value = 0;
-        } else if (setting == 'AUTOPLAY') {
+        } else if (setting === 'AUTOPLAY') {
             value = 3;
-        } else if (setting == '') {
+        } else if (setting === '') {
             setting = 'QUEUE';
         }
         queue.setRepeatMode(value);

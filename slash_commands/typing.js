@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { CommandInteraction, MessageActionRow, MessageSelectMenu } = require("discord.js");
+const { MessageActionRow, MessageSelectMenu } = require("discord.js");
 const stringSimilarity = require("string-similarity");
 const Jimp = require("jimp");
 const fs = require("fs");
@@ -22,7 +22,7 @@ function marginalize(text, margin) {
                 }
             }
             output.push(line);
-            if (wordcount == words.length) {
+            if (wordcount === words.length) {
                 break;
             }
         }
@@ -63,7 +63,7 @@ async function addText(lines, index) {
         image.print(font, 50, 150 + (i*36), lines[i]);
     }
     image.write(`output${index.toString()}.jpg`);
-};
+}
 
 function sleep(ms) {
     return new Promise((resolve) => {
@@ -84,14 +84,14 @@ module.exports = {
                     { name: 'view', value: 'view_lb' },
                 )
         ),
-    run: async (client, interaction, args) => {
-        if (interaction.options.getString("leaderboard") == "view_lb") {
+    run: async (client, interaction, _args) => {
+        if (interaction.options.getString("leaderboard") === "view_lb") {
             pgClient.query(`SELECT * FROM typinglb`, async (err, res) => {
                 if (!err) {
-                    var typinglb = res.rows;
+                    const typinglb = res.rows;
                     console.log("FETCHED TYPINGLB:");
                     console.log(typinglb);
-                    if (typinglb.length == 0) {
+                    if (typinglb.length === 0) {
                         let newEmbed = {
                             title: `SYRC's Typing Leaderboard`,
                             description: `*it's a bit empty in here at the moment... 🥺*`,
@@ -151,12 +151,12 @@ module.exports = {
                         await interaction.reply({ embeds: [newEmbed], components: [row] });
                     }
                 } else {
-                    throw error;
+                    throw err;
                 }
             })
         } else {
             let rawtext = "";
-            var index = 0;
+            let index = 0;
             for (; index < 10; index++) {
                 if (!fs.existsSync(`./output${index.toString()}.jpg`)) {
                     break;
@@ -188,7 +188,7 @@ module.exports = {
             await msg.delete();
             const collector = new Discord.MessageCollector(channel, m => m.author.id === interaction.member.user.id, { time: 10000 });
             collector.on('collect', async message => {
-                if (message.author.id == interaction.member.user.id) {
+                if (message.author.id === interaction.member.user.id) {
                     let endTime = new Date();
                     let timeAllotted = (endTime - startTime)/1000;
                     let sim = stringSimilarity.compareTwoStrings(rawtext, message.content);
@@ -214,7 +214,7 @@ module.exports = {
                     }
                     let newEmbed = {
                         title: `You just typed ${adjwpm.toFixed(2)} WPM!`,
-                        description: `*\"${rawtext}\"*`,
+                        description: `*"${rawtext}"*`,
                         color: colour,
                         timestamp: new Date(),
                         fields: [
@@ -227,7 +227,7 @@ module.exports = {
                     await channel.send({ embeds: [newEmbed] });
                     pgClient.query(`SELECT * FROM typinglb`, async (err, res) => {
                         if (!err) {
-                            var typinglb = res.rows;
+                            let typinglb = res.rows;
                             typinglb.push({
                                 "wpm": adjwpm.toFixed(2), 
                                 "member_id": interaction.member.user.id.toString(), 

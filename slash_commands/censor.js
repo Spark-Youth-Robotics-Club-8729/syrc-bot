@@ -1,6 +1,4 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { CommandInteraction } = require("discord.js");
-const Discord = require("discord.js");
 const fs = require("fs");
 const { pgClient } = require("../main");
 
@@ -19,11 +17,11 @@ module.exports = {
                 )
         )
         .addStringOption(option => option.setName("word").setDescription("Word to add to censor list").setRequired(true)),
-    run: async (client, interaction, args) => {
+    run: async (client, interaction, _args) => {
         let rawdata = fs.readFileSync('./config.json');
         let config = JSON.parse(rawdata);
         let modroles = [];
-        for (i in config.modrole) {
+        for (let i in config.modrole) {
             modroles.push(config.modrole[i].role_id);
         }
         if (interaction.member.roles.cache.some(role => modroles.includes(role.id))) {
@@ -31,11 +29,11 @@ module.exports = {
             const word = interaction.options.getString("word");
             let rawData = fs.readFileSync('./config.json');
             let config = JSON.parse(rawData);
-            if (option == "add") {
+            if (option === "add") {
                 interaction.reply("Word added: **" + word + "**");
                 config.censor.push({"word": word});
-                var found = config.uncensor.indexOf({"word": word});
-                while (found != -1) {
+                let found = config.uncensor.indexOf({"word": word});
+                while (found !== -1) {
                     config.uncensor.splice(found, 1);
                     found = config.uncensor.indexOf({"word": word});
                 }
@@ -49,11 +47,11 @@ module.exports = {
                         console.log('Successfully stored data!');
                     }
                 })
-            } else if (option == "remove") {
+            } else if (option === "remove") {
                 pgClient.query(`DELETE FROM censor WHERE word = '${word}'`);
                 pgClient.query(`INSERT INTO uncensor VALUES ('${word}')`)
-                var found = config.censor.indexOf({"word": word});
-                while (found != -1) {
+                let found = config.censor.indexOf({"word": word});
+                while (found !== -1) {
                     config.censor.splice(found, 1);
                     found = config.censor.indexOf({"word": word});
                 }

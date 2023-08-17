@@ -1,5 +1,4 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { CommandInteraction } = require("discord.js");
 // const mysql = require(`mysql2`);
 const Discord = require("discord.js");
 const { pgClient } = require("../main");
@@ -34,25 +33,25 @@ module.exports = {
                 .setDescription("Any notes for the meeting")
                 .setRequired(false)
         ),
-    run: async (client, interaction, args, message) => {
+    run: async (client, interaction, _args, _message) => {
         let rawdata = fs.readFileSync('./config.json');
         let config = JSON.parse(rawdata);
         let modroles = [];
-        for (i in config.modrole) {
+        for (let i in config.modrole) {
             modroles.push(config.modrole[i].role_id);
         }
         if (interaction.member.roles.cache.some(role => modroles.includes(role.id))) {
             console.log("hi");
             const datetime = interaction.options.getString("datetime");
             const subteams = interaction.options.getRole("subteam");
-            var notes = interaction.options.getString("notes");
-            const location = interaction.options.getString("location");
+            let notes = interaction.options.getString("notes");
+            // const location = interaction.options.getString("location");
             if (notes === null) {
                 notes = "N/A";
             }
             console.log(notes);
-            var date = new Date(datetime);
-            var curDate = new Date();
+            const date = new Date(datetime);
+            const curDate = new Date();
             if (Number.isNaN(date.getTime()/1000)) {
                 return await interaction.reply('Incorrect date and time formatting');
             } else if (curDate.getTime() > date.getTime()) {
@@ -77,7 +76,7 @@ module.exports = {
                 }
             })
             let formattedNotes = notes.replaceAll("'", "''");
-            await pgClient.query(`INSERT INTO meetings (start_time, subteam_id, notes, msg_link) VALUES ('${date.getTime() / 1000}','${subteams.id}','${formattedNotes}', '${link}')`, async (err, res) => {
+            await pgClient.query(`INSERT INTO meetings (start_time, subteam_id, notes, msg_link) VALUES ('${date.getTime() / 1000}','${subteams.id}','${formattedNotes}', '${link}')`, async (err, _res) => {
                 if (!err) {
                     await interaction.reply(`Meeting created`);
                 } else {

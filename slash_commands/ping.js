@@ -1,11 +1,10 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { CommandInteraction } = require("discord.js");
 
 module.exports = {
     ...new SlashCommandBuilder()
         .setName("ping")
         .setDescription("this is a ping command!"),
-    run: async (client, interaction, args) => {
+    run: async (client, interaction, _args) => {
         const newEmbed = {
             color: '#5F75DE',
             title: "Pong! 🏓",
