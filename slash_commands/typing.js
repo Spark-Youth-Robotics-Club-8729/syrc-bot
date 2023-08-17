@@ -157,8 +157,8 @@ module.exports = {
         } else {
             let rawtext = "";
             var index = 0;
-            for (; i < 10; i++) {
-                if (!fs.existsSync(`./output${i.toString()}.jpg`)) {
+            for (; index < 10; index++) {
+                if (!fs.existsSync(`./output${index.toString()}.jpg`)) {
                     break;
                 }
             }
