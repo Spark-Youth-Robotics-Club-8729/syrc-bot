@@ -17,6 +17,10 @@ After that, you can start up the bot by running:
 npm start
 ```
 
+## CI/CD - Auto Deploy to Fly.io
+Currently, this repo is set to auto deploy main to Fly.io every time a change is made to main. Be careful when merging it in! Because it is going straight to production.
+
+
 ## Running the Bot on Fly.io
 
 NOTE: Fly.io changes how stuff works fairly often so it is possible that if you are reading this a while down the road, this may no longer apply to you. In that case, just read the docs and figure it out yourself.
