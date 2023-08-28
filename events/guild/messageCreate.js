@@ -45,13 +45,12 @@ module.exports = async (Discord, client, message) => {
             .setFooter('shame')
         client.channels.cache.get(config.logchannel[0].channel_id).send({ embeds: [newEmbed] });
         // await message.delete();
-        message.react('TONY:1100599469608808538');
-        console.log("hi")
-        if (message.content.toLowerCase().includes("owo") || message.content.toLowerCase().includes("owo")) {
-            message.channel.send({ content: `<@${member}> chill fam chill fam`, tts: true });
-        } else {
-            message.channel.send({ content: `No swearing <@${member}> :)`, tts: true });
-        }
+        message.react('GP:1145731266067578910');
+        //if (message.content.toLowerCase().includes("owo") || message.content.toLowerCase().includes("owo")) {
+            //message.channel.send({ content: `<@${member}> chill fam chill fam`, tts: true });
+        //} else {
+            //message.channel.send({ content: `No swearing <@${member}> :)`, tts: true });
+        //}
     }
     const prefix = '!';
     //if(message.content.toLowerCase().includes(' gp ') || message.content.toLowerCase().includes(' gp') || message.content.toLowerCase().includes('gp ')){
